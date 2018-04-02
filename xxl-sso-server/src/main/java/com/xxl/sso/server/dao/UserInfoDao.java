@@ -20,6 +20,8 @@ public interface UserInfoDao {
 
 	List<UserInfo> findAll();
 
-	UserInfo load(int id);
+	UserInfo loadById(@Param("id") int id);
+
+	UserInfo findByUsername(@Param("username") String username);
 
 }

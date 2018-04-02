@@ -42,4 +42,10 @@
 		WHERE `id` = #{id}
 	</select>
 
+	<select id="findByUsername" resultType="com.xxl.sso.server.core.model.UserInfo">
+		SELECT <include refid="Base_Column_List" />
+		from xxl_sso_user
+		WHERE `username` = #{username}
+	</select>
+
 </mapper>
