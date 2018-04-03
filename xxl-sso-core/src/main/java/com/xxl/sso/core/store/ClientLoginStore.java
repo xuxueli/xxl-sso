@@ -12,9 +12,19 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ClientLoginStore {
 
     private static ConcurrentHashMap<String, XxlUser> loginStore = new ConcurrentHashMap<>();
+    private static ConcurrentHashMap<String, Long> loginStoreTim = new ConcurrentHashMap<>();
 
     public static XxlUser get(String sessionId) {
-        return loginStore.get(sessionId);
+
+        // valid info
+        Long timeoutTim = loginStoreTim.get(sessionId);
+        if (timeoutTim!=null && timeoutTim > System.currentTimeMillis()) {
+            return loginStore.get(sessionId);
+        }
+
+        // remove invalid info
+        remove(sessionId);
+        return null;
     }
 
     /**
@@ -24,10 +34,14 @@ public class ClientLoginStore {
      */
     public static void remove(String sessionId) {
         loginStore.remove(sessionId);
+        loginStoreTim.remove(sessionId);
     }
 
     public static void put(String sessionId, XxlUser xxlUser) {
         loginStore.put(sessionId, xxlUser);
+
+        long timeoutTim = System.currentTimeMillis() + (5 * 60 * 1000);
+        loginStoreTim.put(sessionId, timeoutTim);
     }
 
 

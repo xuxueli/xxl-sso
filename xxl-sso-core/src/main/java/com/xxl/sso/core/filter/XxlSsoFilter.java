@@ -69,7 +69,9 @@ public class XxlSsoFilter extends HttpServlet implements Filter {
                     + "?sessionId=" + sessionId;
 
             String resultStr = HttpClientUtil.post(loginCheckUrl, null);
-            xxlUser = JacksonUtil.readValue(resultStr, XxlUser.class);
+            if (resultStr!=null && resultStr.trim().length()>0) {
+                xxlUser = JacksonUtil.readValue(resultStr, XxlUser.class);
+            }
 
             if (xxlUser == null) {
 
