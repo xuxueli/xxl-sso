@@ -24,15 +24,15 @@ public class SsoLoginHelper {
         return cookieSessionId;
     }
 
-    /**
-     * set cookie sessionid
-     *
-     * @param response
-     * @param sessionId
-     */
     public static void cookieSessionIdSet(HttpServletResponse response, String sessionId) {
-        CookieUtil.set(response, Conf.SSO_SESSIONID, sessionId, false);
+        if (sessionId!=null && sessionId.trim().length()>0) {
+            CookieUtil.set(response, Conf.SSO_SESSIONID, sessionId, false);
+        }
     }
+    public static void cookieSessionIdRemove(HttpServletRequest request, HttpServletResponse response) {
+        CookieUtil.remove(request, response, Conf.SSO_SESSIONID);
+    }
+
 
     /**
      * login check
@@ -42,7 +42,10 @@ public class SsoLoginHelper {
      */
     public static XxlUser loginCheck(HttpServletRequest request){
         String cookieSessionId = cookieSessionId(request);
-        return loginCheck(cookieSessionId);
+        if (cookieSessionId!=null && cookieSessionId.trim().length()>0) {
+            return loginCheck(cookieSessionId);
+        }
+        return null;
     }
 
     /**

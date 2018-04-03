@@ -42,11 +42,13 @@ public class XxlSsoFilter extends HttpServlet implements Filter {
                 && logoutPath.trim().length()>0
                 && logoutPath.equals(servletPath)) {
 
-            SsoLoginHelper.logout(req, res);
+            // remove cookie
+            SsoLoginHelper.cookieSessionIdRemove(req, res);
 
+            // redirect logout
             String logoutPageUrl = ssoServer.concat(Conf.SSO_LOGOUT);
-
             res.sendRedirect(logoutPageUrl);
+
             return;
         }
 
@@ -57,8 +59,13 @@ public class XxlSsoFilter extends HttpServlet implements Filter {
         String cookieSessionId = SsoLoginHelper.cookieSessionId(req);
         xxlUser = SsoLoginHelper.loginCheck(cookieSessionId);
 
-        // valid param user
+        // valid param user, client login
         if (xxlUser == null) {
+
+            // remove old cookie
+            SsoLoginHelper.cookieSessionIdRemove(req, res);
+
+            // set new cookie
             String paramSessionId = request.getParameter(Conf.SSO_SESSIONID);
             if (paramSessionId != null) {
                 xxlUser = SsoLoginHelper.loginCheck(paramSessionId);
@@ -68,8 +75,11 @@ public class XxlSsoFilter extends HttpServlet implements Filter {
             }
         }
 
+        // valid login fail
         if (xxlUser == null) {
-            // login check fail, to login
+
+            // redirect logout
+
             String loginPageUrl = ssoServer.concat(Conf.SSO_LOGIN)
                     + "?" + Conf.REDIRECT_URL + "=" + link;
 
