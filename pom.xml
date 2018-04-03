@@ -29,6 +29,7 @@
         <commons-lang3.version>3.7</commons-lang3.version>
 
         <httpclient.version>4.5.5</httpclient.version>
+        <jedis.version>2.9.0</jedis.version>
 
         <spring-boot.version>1.5.10.RELEASE</spring-boot.version>
     </properties>

@@ -1,7 +1,7 @@
 package com.xxl.sso.server.core.loginstore;
 
 import com.xxl.sso.core.user.XxlUser;
-import com.xxl.sso.server.core.loginstore.impl.LocalLoginStore;
+import com.xxl.sso.server.core.loginstore.impl.RedisLoginStore;
 
 /**
  * login store
@@ -10,7 +10,7 @@ import com.xxl.sso.server.core.loginstore.impl.LocalLoginStore;
  */
 public abstract class LoginStore {
 
-    private static LoginStore loginStore = new LocalLoginStore();
+    private static LoginStore loginStore = new RedisLoginStore();
 
     public static LoginStore getInstance(){
         return loginStore;
@@ -26,7 +26,7 @@ public abstract class LoginStore {
     public abstract XxlUser get(String sessionId);
 
     /**
-     * remove login user, broadcase child client offline
+     * remove login user
      *
      * @param sessionId
      */
