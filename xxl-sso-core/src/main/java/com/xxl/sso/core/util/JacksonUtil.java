@@ -1,4 +1,4 @@
-package com.xxl.sso.server.core.util;
+package com.xxl.sso.core.util;
 
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonParseException;

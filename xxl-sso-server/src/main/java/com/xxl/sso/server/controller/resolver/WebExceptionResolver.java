@@ -1,8 +1,8 @@
 package com.xxl.sso.server.controller.resolver;
 
 import com.xxl.sso.core.exception.XxlSsoException;
+import com.xxl.sso.core.util.JacksonUtil;
 import com.xxl.sso.server.core.result.ReturnT;
-import com.xxl.sso.server.core.util.JacksonUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
