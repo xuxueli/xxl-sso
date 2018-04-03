@@ -2,6 +2,7 @@ package com.xxl.sso.sample.config;
 
 import com.xxl.sso.core.conf.Conf;
 import com.xxl.sso.core.filter.XxlSsoFilter;
+import com.xxl.sso.core.util.JedisUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -16,8 +17,16 @@ public class XxlSsoConfig {
     @Value("${xxl.sso.logout.path}")
     private String xxlSsoLogoutPath;
 
+    @Value("${xxl.sso.redis.address}")
+    private String xxlSsoRedisAddress;
+
     @Bean
     public FilterRegistrationBean xxlSsoFilterRegistration() {
+
+        // redis init
+        JedisUtil.init(xxlSsoRedisAddress);
+
+        // filter
         FilterRegistrationBean registration = new FilterRegistrationBean();
 
         registration.setName("XxlSsoFilter");

@@ -3,19 +3,19 @@ package com.xxl.sso.server.controller;
 import com.xxl.sso.core.conf.Conf;
 import com.xxl.sso.core.exception.XxlSsoException;
 import com.xxl.sso.core.user.XxlUser;
+import com.xxl.sso.core.util.SsoLoginHelper;
 import com.xxl.sso.server.core.model.UserInfo;
-import com.xxl.sso.server.core.util.ServerLoginHelper;
 import com.xxl.sso.server.dao.UserInfoDao;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.UUID;
 
 /**
  * @author xuxueli 2017-08-01 21:39:47
@@ -30,7 +30,7 @@ public class IndexController {
     public String index(Model model, HttpServletRequest request) {
 
         // login check
-        XxlUser xxlUser = ServerLoginHelper.loginCheck(request);
+        XxlUser xxlUser = SsoLoginHelper.loginCheck(request);
 
         if (xxlUser == null) {
             return "redirect:/login";
@@ -51,7 +51,7 @@ public class IndexController {
     public String login(Model model, HttpServletRequest request) {
 
         // login check
-        XxlUser xxlUser = ServerLoginHelper.loginCheck(request);
+        XxlUser xxlUser = SsoLoginHelper.loginCheck(request);
 
         if (xxlUser != null) {
 
@@ -59,7 +59,7 @@ public class IndexController {
             String redirectUrl = request.getParameter(Conf.REDIRECT_URL);
             if (StringUtils.isNotBlank(redirectUrl)) {
 
-                String sessionId = ServerLoginHelper.cookieSessionId(request);
+                String sessionId = SsoLoginHelper.cookieSessionId(request);
                 String redirectUrlFinal = redirectUrl + "?" + Conf.SSO_SESSIONID + "=" + sessionId;;
 
                 return "redirect:" + redirectUrlFinal;
@@ -122,7 +122,9 @@ public class IndexController {
         xxlUser.setUserid(existUser.getId());
         xxlUser.setUsername(existUser.getUsername());
 
-        String sessionId = ServerLoginHelper.login(request, response, xxlUser);
+        String sessionId = UUID.randomUUID().toString();
+
+        SsoLoginHelper.login(response, sessionId, xxlUser);
 
         // success redirect
         String redirectUrl = request.getParameter(Conf.REDIRECT_URL);
@@ -145,26 +147,11 @@ public class IndexController {
     public String logout(HttpServletRequest request, HttpServletResponse response, RedirectAttributes redirectAttributes) {
 
         // logout
-        ServerLoginHelper.logout(request, response);
+        SsoLoginHelper.logout(request, response);
 
         redirectAttributes.addAttribute(Conf.REDIRECT_URL, request.getParameter(Conf.REDIRECT_URL));
         return "redirect:/login";
     }
 
-    /**
-     * login check
-     *
-     * @param sessionId
-     * @return
-     */
-    @RequestMapping(Conf.SSO_LOGIN_CHECK)
-    @ResponseBody
-    public XxlUser loginCheck(String sessionId) {
-
-        // loginCheck
-        XxlUser xxlUser = ServerLoginHelper.loginCheck(sessionId);
-
-        return xxlUser;
-    }
 
 }

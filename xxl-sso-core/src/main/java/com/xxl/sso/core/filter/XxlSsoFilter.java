@@ -2,9 +2,7 @@ package com.xxl.sso.core.filter;
 
 import com.xxl.sso.core.conf.Conf;
 import com.xxl.sso.core.user.XxlUser;
-import com.xxl.sso.core.util.ClientLoginHelper;
-import com.xxl.sso.core.util.HttpClientUtil;
-import com.xxl.sso.core.util.JacksonUtil;
+import com.xxl.sso.core.util.SsoLoginHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,7 +42,7 @@ public class XxlSsoFilter extends HttpServlet implements Filter {
                 && logoutPath.trim().length()>0
                 && logoutPath.equals(servletPath)) {
 
-            ClientLoginHelper.logout(req, res);
+            SsoLoginHelper.logout(req, res);
 
             String logoutPageUrl = ssoServer.concat(Conf.SSO_LOGOUT);
 
@@ -53,40 +51,35 @@ public class XxlSsoFilter extends HttpServlet implements Filter {
         }
 
         // login filter
-        String paramSessionId = request.getParameter(Conf.SSO_SESSIONID);
-        String cookieSessionId = ClientLoginHelper.cookieSessionId(req);
+        XxlUser xxlUser = null;
 
-        String sessionId = paramSessionId;
-        if (sessionId == null) {
-            sessionId = cookieSessionId;
-        }
+        // valid cookie user
+        String cookieSessionId = SsoLoginHelper.cookieSessionId(req);
+        xxlUser = SsoLoginHelper.loginCheck(cookieSessionId);
 
-        XxlUser xxlUser = ClientLoginHelper.loginCheck(sessionId);
+        // valid param user
         if (xxlUser == null) {
-
-            // login check
-            String loginCheckUrl = ssoServer.concat(Conf.SSO_LOGIN_CHECK)
-                    + "?sessionId=" + sessionId;
-
-            String resultStr = HttpClientUtil.post(loginCheckUrl, null);
-            if (resultStr!=null && resultStr.trim().length()>0) {
-                xxlUser = JacksonUtil.readValue(resultStr, XxlUser.class);
+            String paramSessionId = request.getParameter(Conf.SSO_SESSIONID);
+            if (paramSessionId != null) {
+                xxlUser = SsoLoginHelper.loginCheck(paramSessionId);
+                if (xxlUser != null) {
+                    SsoLoginHelper.cookieSessionIdSet(res, paramSessionId);
+                }
             }
-
-            if (xxlUser == null) {
-
-                // login check fail, to login
-                String loginPageUrl = ssoServer.concat(Conf.SSO_LOGIN)
-                        + "?" + Conf.REDIRECT_URL + "=" + link;
-
-                res.sendRedirect(loginPageUrl);
-                return;
-            }
-
-            ClientLoginHelper.login(res, sessionId, xxlUser);
-
         }
+
+        if (xxlUser == null) {
+            // login check fail, to login
+            String loginPageUrl = ssoServer.concat(Conf.SSO_LOGIN)
+                    + "?" + Conf.REDIRECT_URL + "=" + link;
+
+            res.sendRedirect(loginPageUrl);
+            return;
+        }
+
+        // ser sso user
         request.setAttribute(Conf.SSO_USER, xxlUser);
+
 
         // already login, allow
         chain.doFilter(request, response);

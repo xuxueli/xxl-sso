@@ -1,7 +1,7 @@
 package com.xxl.sso.core.util;
 
 import com.xxl.sso.core.conf.Conf;
-import com.xxl.sso.core.store.ClientLoginStore;
+import com.xxl.sso.core.store.SsoLoginStore;
 import com.xxl.sso.core.user.XxlUser;
 
 import javax.servlet.http.HttpServletRequest;
@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * @author xuxueli 2018-04-03
  */
-public class ClientLoginHelper {
+public class SsoLoginHelper {
 
 
     /**
@@ -24,6 +24,26 @@ public class ClientLoginHelper {
         return cookieSessionId;
     }
 
+    /**
+     * set cookie sessionid
+     *
+     * @param response
+     * @param sessionId
+     */
+    public static void cookieSessionIdSet(HttpServletResponse response, String sessionId) {
+        CookieUtil.set(response, Conf.SSO_SESSIONID, sessionId, false);
+    }
+
+    /**
+     * login check
+     *
+     * @param request
+     * @return
+     */
+    public static XxlUser loginCheck(HttpServletRequest request){
+        String cookieSessionId = cookieSessionId(request);
+        return loginCheck(cookieSessionId);
+    }
 
     /**
      * login check
@@ -32,8 +52,8 @@ public class ClientLoginHelper {
      * @return
      */
     public static XxlUser loginCheck(String  sessionId){
-        if (sessionId != null) {
-            XxlUser xxlUser = ClientLoginStore.get(sessionId);
+        if (sessionId!=null && sessionId.trim().length()>0) {
+            XxlUser xxlUser = SsoLoginStore.get(sessionId);
             if (xxlUser != null) {
                 return xxlUser;
             }
@@ -51,7 +71,7 @@ public class ClientLoginHelper {
                              String sessionId,
                              XxlUser xxlUser) {
 
-        ClientLoginStore.put(sessionId, xxlUser);
+        SsoLoginStore.put(sessionId, xxlUser);
         CookieUtil.set(response, Conf.SSO_SESSIONID, sessionId, false);
     }
 
@@ -68,7 +88,7 @@ public class ClientLoginHelper {
         String cookieSessionId = cookieSessionId(request);
 
         if (cookieSessionId != null) {
-            ClientLoginStore.remove(cookieSessionId);
+            SsoLoginStore.remove(cookieSessionId);
         }
         CookieUtil.remove(request, response, Conf.SSO_SESSIONID);
     }

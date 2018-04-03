@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 /**
  * common return
+ *
  * @author xuxueli 2015-12-4 16:32:31
  * @param <T>
  */
@@ -45,11 +46,6 @@ public class ReturnT<T> implements Serializable {
 	}
 	public void setData(T data) {
 		this.data = data;
-	}
-
-	@Override
-	public String toString() {
-		return "ReturnT [code=" + code + ", msg=" + msg + ", data=" + data + "]";
 	}
 
 }

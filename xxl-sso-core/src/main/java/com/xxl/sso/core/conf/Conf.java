@@ -34,10 +34,6 @@ public class Conf {
      * logout url
      */
     public static final String SSO_LOGOUT = "/logout";
-    /**
-     * login check
-     */
-    public static final String SSO_LOGIN_CHECK = "/loginCheck";
 
 
 
