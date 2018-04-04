@@ -159,9 +159,9 @@ spring.mvc.static-path-pattern=/static/**
 spring.resources.static-locations=classpath:/static/
 
 ### xxl-sso (CLient端SSO配置)
-##### SSO Server认证中心地址
-xxl.sso.server=http://127.0.0.1:8080/xxl-sso-server
-##### 注销请求path，对应Client端应用的相对路径
+##### SSO Server认证中心地址（推荐以域名方式配置认证中心，本机可参考章节"2.5"修改host文件配置域名指向）
+xxl.sso.server=http://xxlssoserver.com:8080/xxl-sso-server
+##### 注销登陆path，值为Client端应用的相对路径
 xxl.sso.logout.path=/logout
 ##### （sessionid 分布式存储共享Redis）
 xxl.sso.redis.address=127.0.0.1:6379
@@ -171,21 +171,36 @@ xxl.sso.redis.address=127.0.0.1:6379
 
 - 环境准备：启动Redis、初始化Mysql表数据；
 
-- 运行 "xxl-sso-server" 与 "xxl-sso-sample-springboot"
+- 修改Host文件：域名方式访问认证中心，模拟跨域与线上真实环境
 ```
-认证中心（SSO Server）：http://127.0.0.1:8080/xxl-sso-server/login
-单点登陆Client端接入示例项目：http://localhost:8081/xxl-sso-sample-springboot
+### 在host文件中添加以下内容0
+127.0.0.1 xxlssoserver.com
+127.0.0.1 xxlssoclient1.com
+127.0.0.1 xxlssoclient2.com
 ```
 
-- 访问受限资源，SSO登录/注销流程验证
+- 分别运行 "xxl-sso-server" 与 "xxl-sso-sample-springboot"
+```
+### SSO认证中心地址
+http://xxlssoserver.com:8080/xxl-sso-server
+
+### Client01应用地址
+http://xxlssoclient1.com:8081/xxl-sso-sample-springboot/
+
+### Client02应用地址
+http://xxlssoclient2.com:8081/xxl-sso-sample-springboot/
+```
+
+- SSO登录/注销流程验证
 ```
 正常情况下，登录流程如下：
-1、访问Client端应用 "xxl-sso-sample-springboot" ，将会自动 redirect 到 SSO认证中心 "xxl-sso-server" 登录界面；
-2、SSO认证中心，成功登录后，将会自动 redirect 到 Client端应用，并切换为登录态；
-……
+1、访问 "Client01应用地址" ，将会自动 redirect 到 "SSO认证中心地址" 登录界面；
+2、成功登录后，将会自动 redirect 返回到 "Client01应用地址"，并切换为已登录状态；
+3、此时，访问 "Client02应用地址"，不需登陆将会自动切换为已登录状态；
+
 正常情况下，注销流程如下：
-1、访问Client端配置的 "注销请求path" ，将会自动 redirect 到SSO认证中心 "xxl-sso-server"并自动注销登陆状态。
-2、用户在全部Client端应用与SSO认证中心，均切换为未登录状态。
+1、访问 "Client01应用地址" 配置的 "注销登陆path"，将会自动 redirect 到 "SSO认证中心地址" 并自动注销登陆状态；
+2、此时，访问 "Client02应用地址"，也将会自动注销登陆状态；
 ```
 
 
