@@ -36,10 +36,6 @@
         <jedis.version>2.9.0</jedis.version>
 
         <spring-boot.version>1.5.10.RELEASE</spring-boot.version>
-
-        <!-- entity format lib -->
-        <lombok.version>1.16.18</lombok.version>
-
     </properties>
 
     <build>
