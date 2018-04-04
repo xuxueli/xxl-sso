@@ -66,7 +66,7 @@ XXL-SSO 是一个分布式单点登录框架。只需要登录一次就可以访
 项目名：xxl-sso-server
 ```
 
-##### 配置说明
+#### 配置说明
 
 配置文件位置：application.properties
 ```
@@ -107,7 +107,7 @@ redis.address=127.0.0.1:6379
 项目名：xxl-sso-sample-springboot
 ```
 
-##### maven依赖
+#### maven依赖
 
 ```
 <dependency>
@@ -117,7 +117,7 @@ redis.address=127.0.0.1:6379
 </dependency>
 ```
 
-##### 配置 XxlSsoFilter
+#### 配置 XxlSsoFilter
 
 参考代码：com.xxl.sso.sample.config.XxlSsoConfig
 ```
@@ -142,7 +142,7 @@ public FilterRegistrationBean xxlSsoFilterRegistration() {
 ```
 
 
-##### 配置说明
+#### 配置说明
 
 配置文件位置：application.properties
 ```
