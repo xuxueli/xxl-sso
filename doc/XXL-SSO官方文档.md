@@ -183,28 +183,29 @@ xxl.sso.redis.address=127.0.0.1:6379
 ```
 
 - 分别运行 "xxl-sso-server" 与 "xxl-sso-sample-springboot"
-```
-### SSO认证中心地址
-http://xxlssoserver.com:8080/xxl-sso-server
 
-### Client01应用地址
-http://xxlssoclient1.com:8081/xxl-sso-sample-springboot/
 
-### Client02应用地址
-http://xxlssoclient2.com:8081/xxl-sso-sample-springboot/
-```
+    1、SSO认证中心地址：
+    http://xxlssoserver.com:8080/xxl-sso-server
+    
+    2、Client01应用地址：
+    http://xxlssoclient1.com:8081/xxl-sso-sample-springboot/
+    
+    3、Client02应用地址：
+    http://xxlssoclient2.com:8081/xxl-sso-sample-springboot/
+
 
 - SSO登录/注销流程验证
-```
-正常情况下，登录流程如下：
-1、访问 "Client01应用地址" ，将会自动 redirect 到 "SSO认证中心地址" 登录界面；
-2、成功登录后，将会自动 redirect 返回到 "Client01应用地址"，并切换为已登录状态；
-3、此时，访问 "Client02应用地址"，不需登陆将会自动切换为已登录状态；
 
-正常情况下，注销流程如下：
-1、访问 "Client01应用地址" 配置的 "注销登陆path"，将会自动 redirect 到 "SSO认证中心地址" 并自动注销登陆状态；
-2、此时，访问 "Client02应用地址"，也将会自动注销登陆状态；
-```
+
+    正常情况下，登录流程如下：
+    1、访问 "Client01应用地址" ，将会自动 redirect 到 "SSO认证中心地址" 登录界面；
+    2、成功登录后，将会自动 redirect 返回到 "Client01应用地址"，并切换为已登录状态；
+    3、此时，访问 "Client02应用地址"，不需登陆将会自动切换为已登录状态；
+    
+    正常情况下，注销流程如下：
+    1、访问 "Client01应用地址" 配置的 "注销登陆path"，将会自动 redirect 到 "SSO认证中心地址" 并自动注销登陆状态；
+    2、此时，访问 "Client02应用地址"，也将会自动注销登陆状态；
 
 
 ## 三、总体设计
