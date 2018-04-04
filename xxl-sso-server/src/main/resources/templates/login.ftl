@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8" />
-    <title>SSO Server</title>
+    <title>统一认证中心</title>
 
     <#import "common/common.macro.ftl" as netCommon>
     <@netCommon.commonStyle />
@@ -40,6 +40,7 @@
                         </div>
                     </div><!-- /.col -->
                     <div class="col-xs-4">
+                        <input type="hidden" name="redirect_url" value="${redirect_url!''}" />
                         <button type="submit" class="btn btn-primary btn-block btn-flat">Login</button>
                     </div>
                 </div>

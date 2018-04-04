@@ -7,10 +7,9 @@
 <body>
 
     <div style="text-align: center;margin-top: 100px;">
-        <h1> Hi, ${xxlUser.username} </h1>
+        <h1>【${xxlUser.username}】login success.</h1>
 
-        <a href="${request.contextPath}/logout"><input type="button" value="Logout" /></a>
-
+        <a href="${request.contextPath}/logout">Logout</a>
 
     </div>
 
