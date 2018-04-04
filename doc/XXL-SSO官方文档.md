@@ -60,7 +60,7 @@ XXL-SSO 是一个分布式单点登录框架。只需要登录一次就可以访
     - xxl-sso-sample-springboot：springboot版本
 ```
 
-### 2、3 部署 "认证中心（SSO Server）"
+### 2.3 部署 "认证中心（SSO Server）"
 
 ```
 项目名：xxl-sso-server
@@ -101,7 +101,7 @@ redis.address=127.0.0.1:6379
 
 ```
 
-### 2、4 部署 "单点登陆Client端接入示例项目"
+### 2.4 部署 "单点登陆Client端接入示例项目"
 
 ```
 项目名：xxl-sso-sample-springboot
@@ -167,7 +167,7 @@ xxl.sso.logout.path=/logout
 xxl.sso.redis.address=127.0.0.1:6379
 ```
 
-### 2、5 验证
+### 2.5 验证
 
 - 环境准备：启动Redis、初始化Mysql表数据；
 
@@ -221,7 +221,7 @@ SSO User | 登录用户信息，与 SSO SessionId 相对应；
 
 ## 四、版本更新日志
 
-### 版本 V0.0.1，新特性[2018-04-04]
+### 版本 V0.0.1，新特性[2018-04]
 - 1、简洁：API直观简洁，可快速上手；
 - 2、轻量级：环境依赖小，部署与接入成本较低；
 - 3、单点登录：只需要登录一次就可以访问所有相互信任的应用系统。
