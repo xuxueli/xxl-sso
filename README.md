@@ -4,7 +4,7 @@
     <p align="center">
         XXL-SSO, A Distributed Single-Sign-On Framework.
         <br>
-        <a href="https://github.com/xuxueli/xxl-sso"><strong>-- Home Page --</strong></a>
+        <a href="http://www.xuxueli.com/xxl-sso/"><strong>-- Home Page --</strong></a>
         <br>
         <br>
         <a href="https://maven-badges.herokuapp.com/maven-central/com.xuxueli/xxl-sso/">
