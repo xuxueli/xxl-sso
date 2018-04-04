@@ -27,7 +27,7 @@ XXL-SSO 是一个分布式单点登录框架。只需要登录一次就可以访
 其核心设计目标是开发迅速、学习简单、轻量级、易扩展。现已开放源代码，开箱即用。
 
 ## Documentation
-- 整理中
+- [中文文档](http://www.xuxueli.com/xxl-sso/)
 
 
 ## Features
@@ -38,6 +38,7 @@ XXL-SSO 是一个分布式单点登录框架。只需要登录一次就可以访
 - 5、HA：Server端与Client端，均支持集群部署，提高系统可用性；
 - 6、实时性：系统登陆、注销状态，全部Server与Client端实时共享；
 - 7、CS结构：基于CS结构，包括Server"认证中心"与Client"受保护应用"；
+- 8、跨域：支持跨域应用接入SSO认证中心；
 
 
 ## Communication
