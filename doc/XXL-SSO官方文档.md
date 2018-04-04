@@ -33,7 +33,8 @@ XXL-SSO 是一个分布式单点登录框架。只需要登录一次就可以访
 源码仓库地址 | Release Download
 --- | ---
 [https://github.com/xuxueli/xxl-sso](https://github.com/xuxueli/xxl-sso) | [Download](https://github.com/xuxueli/xxl-sso/releases)
-  
+[https://gitee.com/xuxueli0323/xxl-sso](https://gitee.com/xuxueli0323/xxl-sso) | [Download](https://gitee.com/xuxueli0323/xxl-sso/releases)  
+
 
 #### 技术交流
 - [社区交流](http://www.xuxueli.com/page/community.html)
