@@ -6,7 +6,7 @@
     <parent>
         <artifactId>xxl-sso-samples</artifactId>
         <groupId>com.xuxueli</groupId>
-        <version>0.1.0</version>
+        <version>0.1.1-SNAPSHOT</version>
     </parent>
     <artifactId>xxl-sso-sample-springboot</artifactId>
     <packaging>jar</packaging>
