@@ -8,9 +8,13 @@
     <version>0.1.0</version>
     <packaging>pom</packaging>
 
+    <name>${project.artifactId}</name>
+    <description>a distributed single-sign-on framework.</description>
+    <url>http://www.xuxueli.com/</url>
+
     <modules>
-        <module>xxl-sso-server</module>
         <module>xxl-sso-core</module>
+        <module>xxl-sso-server</module>
         <module>xxl-sso-samples</module>
     </modules>
 

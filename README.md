@@ -7,6 +7,12 @@
         <a href="https://github.com/xuxueli/xxl-sso"><strong>-- Home Page --</strong></a>
         <br>
         <br>
+        <a href="https://maven-badges.herokuapp.com/maven-central/com.xuxueli/xxl-sso/">
+            <img src="https://maven-badges.herokuapp.com/maven-central/com.xuxueli/xxl-sso/badge.svg" >
+        </a>
+         <a href="https://github.com/xuxueli/xxl-sso/releases">
+             <img src="https://img.shields.io/github/release/xuxueli/xxl-sso.svg" >
+         </a>
         <a href="http://www.gnu.org/licenses/gpl-3.0.html">
             <img src="https://img.shields.io/badge/license-GPLv3-blue.svg" >
         </a>
@@ -19,7 +25,7 @@
 
 ## Introduction
 
-XXL-SSO is a distributed single-sign-on Framework. Users only need to log in once to access all trusted applications
+XXL-SSO is a distributed single-sign-on framework. Users only need to log in once to access all trusted applications
 It's core design goal is to develop quickly and learn simple, lightweight, and easy to expand. 
 Now, it's already open source, real "out-of-the-box".
 
