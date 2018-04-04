@@ -42,4 +42,55 @@
 <#-- jquery.slimscroll -->
 <script src="${request.contextPath}/static/adminlte/plugins/slimScroll/jquery.slimscroll.min.js"></script>
 
+<script src="${request.contextPath}/static/js/common.1.js"></script>
+
+</#macro>
+
+<#macro commonHeader>
+    <header class="main-header">
+        <a href="${request.contextPath}/" class="logo">
+            <span class="logo-mini"><b>XXL</b></span>
+            <span class="logo-lg"><b>XXL SSO</b></span>
+        </a>
+        <nav class="navbar navbar-static-top" role="navigation">
+            <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button"><span class="sr-only">切换导航</span></a>
+            <div class="navbar-custom-menu">
+                <ul class="nav navbar-nav">
+                    <li class="dropdown user user-menu">
+                        <a href="${request.contextPath}/logout"   >
+                            <span class="hidden-xs">注销【${xxlUser.username}】</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+</#macro>
+
+<#macro commonLeft pageName >
+    <!-- Left side column. contains the logo and sidebar -->
+    <aside class="main-sidebar">
+        <!-- sidebar: style can be found in sidebar.less -->
+        <section class="sidebar">
+            <!-- sidebar menu: : style can be found in sidebar.less -->
+            <ul class="sidebar-menu">
+                <li class="header">导航</li>
+                <li class="nav-click <#if pageName == "help">active</#if>" ><a href="${request.contextPath}/"><i class="fa fa-circle-o text-gray"></i><span>使用教程</span></a></li>
+            </ul>
+        </section>
+        <!-- /.sidebar -->
+    </aside>
+</#macro>
+
+<#macro commonFooter >
+    <footer class="main-footer">
+        Powered by <b>XXL-SSO</b> 0.0.1
+        <div class="pull-right hidden-xs">
+            <strong>Copyright &copy; 2018-${.now?string('yyyy')} &nbsp;
+                <a href="http://www.xuxueli.com/" target="_blank" >xuxueli</a>
+                &nbsp;
+                <a href="https://github.com/xuxueli/xxl-sso" target="_blank" >github</a>
+            </strong><!-- All rights reserved. -->
+        </div>
+    </footer>
 </#macro>

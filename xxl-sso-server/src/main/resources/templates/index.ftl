@@ -1,99 +1,49 @@
 <!DOCTYPE html>
 <html>
-<head lang="en">
+<head>
     <meta charset="UTF-8" />
     <title>SSO Server</title>
 
     <#import "common/common.macro.ftl" as netCommon>
     <@netCommon.commonStyle />
-
 </head>
-<body class="hold-transition skin-blue layout-top-nav">
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="wrapper">
+        <!-- header -->
+    <@netCommon.commonHeader />
+        <!-- left -->
+    <@netCommon.commonLeft "help" />
 
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <h1>使用教程</h1>
+        </section>
 
-    <div class="wrapper">
+        <!-- Main content -->
+        <section class="content">
+            <div class="callout callout-info">
+                <h4>分布式单点登录框架</h4>
+                <br>
+                <p>
+                    <a target="_blank" href="https://github.com/xuxueli/xxl-sso">Github</a>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <iframe src="https://ghbtns.com/github-btn.html?user=xuxueli&repo=xxl-sso&type=star&count=true" frameborder="0" scrolling="0" width="170px" height="20px" style="margin-bottom:-5px;"></iframe>
+                    <br><br>
+                    <a target="_blank" href="http://www.xuxueli.com/xxl-sso/">文档地址</a>
+                    <br><br>
 
-        <header class="main-header">
-            <nav class="navbar navbar-static-top">
-                <div class="container">
-                    <div class="navbar-header">
-                        <a href="${request.contextPath}/" class="navbar-brand"><b>XXL SSO</b></a>
-                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse">
-                            <i class="fa fa-bars"></i>
-                        </button>
-                    </div>
-
-                    <!-- Navbar Right Menu -->
-                    <div class="navbar-custom-menu">
-                        <ul class="nav navbar-nav">
-
-                            <!-- user -->
-                            <li class="dropdown active">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                    <span class="hidden-xs">${xxlUser.username}</span>
-                                </a>
-                                <ul class="dropdown-menu">
-                                    <li><a href="${request.contextPath}/logout">注销</a></li>
-                                </ul>
-                            </li>
-
-                        </ul>
-                    </div>
-                    <!-- /.navbar-custom-menu -->
-                </div>
-                <!-- /.container-fluid -->
-            </nav>
-        </header>
-
-
-        <!-- Full Width Column -->
-        <div class="content-wrapper">
-            <div class="container">
-
-                <!-- Main content -->
-                <section class="content">
-
-                    <div class="box box-default">
-                        <div class="box-header with-border">
-                            <h3 class="box-title">SSO Server</h3>
-                        </div>
-                        <div class="box-body">
-                            Hi, ${xxlUser.username}
-                        </div>
-                        <!-- /.box-body -->
-                    </div>
-                    <!-- /.box -->
-                </section>
-                <!-- /.content -->
+                </p>
+                <p></p>
             </div>
-            <!-- /.container -->
-        </div>
-
-        <!-- /.content-wrapper -->
-        <footer class="main-footer">
-            <div class="container">
-                <div class="pull-right hidden-xs">
-                    <b>Version</b> 2.4.0
-                </div>
-                <strong>Copyright &copy; 2014-2016 <a href="https://adminlte.io">Almsaeed Studio</a>.</strong> All rights
-                reserved.
-            </div>
-            <!-- /.container -->
-        </footer>
-
+        </section>
+        <!-- /.content -->
     </div>
-    <!-- ./wrapper -->
+    <!-- /.content-wrapper -->
 
-
-
-    <div style="text-align: center;margin-top: 100px;">
-        <h1> Hi, ${xxlUser.username} </h1>
-
-        <a href="${request.contextPath}/logout"><input type="button" value="Logout" /></a>
-
-
-    </div>
-
-</body>
+    <!-- footer -->
+<@netCommon.commonFooter />
+</div>
 <@netCommon.commonScript />
+</body>
 </html>
