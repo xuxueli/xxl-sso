@@ -254,6 +254,7 @@ SSO User | 登录用户信息，与 SSO SessionId 相对应；
 
 ### TODO LIST
 - 1、认证中心与接入端交互数据加密，增强安全性；
+- 2、APP接入支持；除了常规Web应用接入方式外，支持APP应用接入，并提供Sample项目；
 
 ## 五、其他
 
