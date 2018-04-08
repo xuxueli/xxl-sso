@@ -83,7 +83,7 @@ public class IndexController {
      * @return
      */
     @RequestMapping("/doLogin")
-    public String login(HttpServletRequest request,
+    public String doLogin(HttpServletRequest request,
                         HttpServletResponse response,
                         RedirectAttributes redirectAttributes,
                         String username,
@@ -129,7 +129,7 @@ public class IndexController {
         // success redirect
         String redirectUrl = request.getParameter(Conf.REDIRECT_URL);
         if (StringUtils.isNotBlank(redirectUrl)) {
-            String redirectUrlFinal = redirectUrl + "?" + Conf.SSO_SESSIONID + "=" + sessionId;;
+            String redirectUrlFinal = redirectUrl + "?" + Conf.SSO_SESSIONID + "=" + sessionId;
             return "redirect:" + redirectUrlFinal;
         } else {
             return "redirect:/";
