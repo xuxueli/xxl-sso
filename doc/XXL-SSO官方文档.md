@@ -297,6 +297,7 @@ APP应用接入SSO时，系统角色汇总如下：
 - SSO登录/注销流程验证
 > 可参考测试用例 ：com.xxl.app.sample.test.AppClientTest
 
+
     正常情况下，登录流程如下：
     1、获取用户输入的账号密码后，请求SSO Server的登录接口，获取用户 sso sessionid ；（参考代码：AppClientTest.loginTest）
     2、登陆成功后，获取到 sso sessionid 可存储在APP客户端内部，后续请求受SSO保护的APP引用
