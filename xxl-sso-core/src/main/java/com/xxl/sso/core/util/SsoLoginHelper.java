@@ -14,21 +14,35 @@ public class SsoLoginHelper {
 
 
     /**
-     * load cookie sessionid (web)
+     * get sessionid by cookie (web)
      *
      * @param request
      * @return
      */
-    public static String cookieSessionId(HttpServletRequest request) {
+    public static String getSessionIdByCookie(HttpServletRequest request) {
         String cookieSessionId = CookieUtil.getValue(request, Conf.SSO_SESSIONID);
         return cookieSessionId;
     }
-    public static void cookieSessionIdSet(HttpServletResponse response, String sessionId) {
+
+    /**
+     * set sessionid in cookie (web)
+     *
+     * @param response
+     * @param sessionId
+     */
+    public static void setSessionIdInCookie(HttpServletResponse response, String sessionId) {
         if (sessionId!=null && sessionId.trim().length()>0) {
             CookieUtil.set(response, Conf.SSO_SESSIONID, sessionId, false);
         }
     }
-    public static void cookieSessionIdRemove(HttpServletRequest request, HttpServletResponse response) {
+
+    /**
+     * remove sessionId in cookie (web)
+     *
+     * @param request
+     * @param response
+     */
+    public static void removeSessionIdInCookie(HttpServletRequest request, HttpServletResponse response) {
         CookieUtil.remove(request, response, Conf.SSO_SESSIONID);
     }
 
@@ -50,7 +64,7 @@ public class SsoLoginHelper {
      * @return
      */
     public static XxlUser loginCheck(HttpServletRequest request){
-        String cookieSessionId = cookieSessionId(request);
+        String cookieSessionId = getSessionIdByCookie(request);
         if (cookieSessionId!=null && cookieSessionId.trim().length()>0) {
             return loginCheck(cookieSessionId);
         }
@@ -109,7 +123,7 @@ public class SsoLoginHelper {
     public static void logout(HttpServletRequest request,
                               HttpServletResponse response) {
 
-        String cookieSessionId = cookieSessionId(request);
+        String cookieSessionId = getSessionIdByCookie(request);
 
         if (cookieSessionId != null) {
             SsoLoginStore.remove(cookieSessionId);

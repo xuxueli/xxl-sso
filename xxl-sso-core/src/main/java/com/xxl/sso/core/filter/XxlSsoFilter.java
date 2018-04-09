@@ -48,7 +48,7 @@ public class XxlSsoFilter extends HttpServlet implements Filter {
                 && logoutPath.equals(servletPath)) {
 
             // remove cookie
-            SsoLoginHelper.cookieSessionIdRemove(req, res);
+            SsoLoginHelper.removeSessionIdInCookie(req, res);
 
             // redirect logout
             String logoutPageUrl = ssoServer.concat(Conf.SSO_LOGOUT);
@@ -61,21 +61,21 @@ public class XxlSsoFilter extends HttpServlet implements Filter {
         XxlUser xxlUser = null;
 
         // valid cookie user
-        String cookieSessionId = SsoLoginHelper.cookieSessionId(req);
+        String cookieSessionId = SsoLoginHelper.getSessionIdByCookie(req);
         xxlUser = SsoLoginHelper.loginCheck(cookieSessionId);
 
         // valid param user, client login
         if (xxlUser == null) {
 
             // remove old cookie
-            SsoLoginHelper.cookieSessionIdRemove(req, res);
+            SsoLoginHelper.removeSessionIdInCookie(req, res);
 
             // set new cookie
             String paramSessionId = request.getParameter(Conf.SSO_SESSIONID);
             if (paramSessionId != null) {
                 xxlUser = SsoLoginHelper.loginCheck(paramSessionId);
                 if (xxlUser != null) {
-                    SsoLoginHelper.cookieSessionIdSet(res, paramSessionId);
+                    SsoLoginHelper.setSessionIdInCookie(res, paramSessionId);
                 }
             }
         }

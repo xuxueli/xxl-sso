@@ -61,7 +61,7 @@ public class IndexController {
             String redirectUrl = request.getParameter(Conf.REDIRECT_URL);
             if (StringUtils.isNotBlank(redirectUrl)) {
 
-                String sessionId = SsoLoginHelper.cookieSessionId(request);
+                String sessionId = SsoLoginHelper.getSessionIdByCookie(request);
                 String redirectUrlFinal = redirectUrl + "?" + Conf.SSO_SESSIONID + "=" + sessionId;;
 
                 return "redirect:" + redirectUrlFinal;
