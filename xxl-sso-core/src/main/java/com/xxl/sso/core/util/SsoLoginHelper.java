@@ -14,7 +14,7 @@ public class SsoLoginHelper {
 
 
     /**
-     * load cookie sessionid
+     * load cookie sessionid (web)
      *
      * @param request
      * @return
@@ -23,7 +23,6 @@ public class SsoLoginHelper {
         String cookieSessionId = CookieUtil.getValue(request, Conf.SSO_SESSIONID);
         return cookieSessionId;
     }
-
     public static void cookieSessionIdSet(HttpServletResponse response, String sessionId) {
         if (sessionId!=null && sessionId.trim().length()>0) {
             CookieUtil.set(response, Conf.SSO_SESSIONID, sessionId, false);
@@ -33,6 +32,16 @@ public class SsoLoginHelper {
         CookieUtil.remove(request, response, Conf.SSO_SESSIONID);
     }
 
+    /**
+     * load cookie sessionid (app)
+     *
+     * @param request
+     * @return
+     */
+    public static String cookieSessionIdGetByHeader(HttpServletRequest request) {
+        String cookieSessionId = request.getHeader(Conf.SSO_SESSIONID);
+        return cookieSessionId;
+    }
 
     /**
      * login check
@@ -65,10 +74,11 @@ public class SsoLoginHelper {
     }
 
     /**
-     * client login
+     * client login (web)
      *
      * @param response
      * @param sessionId
+     * @param xxlUser
      */
     public static void login(HttpServletResponse response,
                              String sessionId,
@@ -78,9 +88,20 @@ public class SsoLoginHelper {
         CookieUtil.set(response, Conf.SSO_SESSIONID, sessionId, false);
     }
 
+    /**
+     * client login (app)
+     *
+     * @param sessionId
+     * @param xxlUser
+     */
+    public static void login(String sessionId,
+                             XxlUser xxlUser) {
+        SsoLoginStore.put(sessionId, xxlUser);
+    }
+
 
     /**
-     * client logout
+     * client logout (web)
      *
      * @param request
      * @param response
@@ -94,6 +115,15 @@ public class SsoLoginHelper {
             SsoLoginStore.remove(cookieSessionId);
         }
         CookieUtil.remove(request, response, Conf.SSO_SESSIONID);
+    }
+
+    /**
+     * client logout (app)
+     *
+     * @param sessionId
+     */
+    public static void logout(String sessionId) {
+        SsoLoginStore.remove(sessionId);
     }
 
 }

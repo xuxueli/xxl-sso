@@ -18,6 +18,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.UUID;
 
 /**
+ * sso server (for web)
+ *
  * @author xuxueli 2017-08-01 21:39:47
  */
 @Controller

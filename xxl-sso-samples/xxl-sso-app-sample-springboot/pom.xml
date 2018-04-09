@@ -8,7 +8,7 @@
         <groupId>com.xuxueli</groupId>
         <version>0.1.1-SNAPSHOT</version>
     </parent>
-    <artifactId>xxl-sso-sample-springboot</artifactId>
+    <artifactId>xxl-sso-app-sample-springboot</artifactId>
     <packaging>jar</packaging>
 
     <dependencyManagement>
@@ -22,7 +22,6 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -65,6 +64,14 @@
             <optional>true</optional>
         </dependency>
 
+        <!-- httpclient -->
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>${httpclient.version}</version>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -78,6 +85,5 @@
             </plugin>
         </plugins>
     </build>
-
 
 </project>

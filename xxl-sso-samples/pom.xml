@@ -13,6 +13,7 @@
 
     <modules>
         <module>xxl-sso-sample-springboot</module>
+        <module>xxl-sso-app-sample-springboot</module>
     </modules>
 
 </project>

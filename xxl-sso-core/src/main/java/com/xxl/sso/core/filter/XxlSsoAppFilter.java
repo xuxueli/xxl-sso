@@ -1,7 +1,9 @@
 package com.xxl.sso.core.filter;
 
 import com.xxl.sso.core.conf.Conf;
+import com.xxl.sso.core.entity.ReturnT;
 import com.xxl.sso.core.user.XxlUser;
+import com.xxl.sso.core.util.JacksonUtil;
 import com.xxl.sso.core.util.SsoLoginHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,12 +15,12 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * web sso filter
+ * app sso filter
  *
- * @author xuxueli 2018-04-03
+ * @author xuxueli 2018-04-08 21:30:54
  */
-public class XxlSsoFilter extends HttpServlet implements Filter {
-    private static Logger logger = LoggerFactory.getLogger(XxlSsoFilter.class);
+public class XxlSsoAppFilter extends HttpServlet implements Filter {
+    private static Logger logger = LoggerFactory.getLogger(XxlSsoAppFilter.class);
 
     private String ssoServer;
     private String logoutPath;
@@ -42,53 +44,32 @@ public class XxlSsoFilter extends HttpServlet implements Filter {
         String servletPath = ((HttpServletRequest) request).getServletPath();
         String link = req.getRequestURL().toString();
 
+        String sessionid = SsoLoginHelper.cookieSessionIdGetByHeader(req);
+        XxlUser xxlUser = SsoLoginHelper.loginCheck(sessionid);
+
         // logout filter
         if (logoutPath!=null
                 && logoutPath.trim().length()>0
                 && logoutPath.equals(servletPath)) {
 
-            // remove cookie
-            SsoLoginHelper.cookieSessionIdRemove(req, res);
+            if (xxlUser != null) {
+                SsoLoginHelper.logout(sessionid);
+            }
 
-            // redirect logout
-            String logoutPageUrl = ssoServer.concat(Conf.SSO_LOGOUT);
-            res.sendRedirect(logoutPageUrl);
-
+            // response
+            res.setStatus(HttpServletResponse.SC_OK);
+            res.setContentType("application/json;charset=UTF-8");
+            res.getWriter().println(JacksonUtil.writeValueAsString(new ReturnT(ReturnT.SUCCESS_CODE, null)));
             return;
         }
 
         // login filter
-        XxlUser xxlUser = null;
-
-        // valid cookie user
-        String cookieSessionId = SsoLoginHelper.cookieSessionId(req);
-        xxlUser = SsoLoginHelper.loginCheck(cookieSessionId);
-
-        // valid param user, client login
         if (xxlUser == null) {
 
-            // remove old cookie
-            SsoLoginHelper.cookieSessionIdRemove(req, res);
-
-            // set new cookie
-            String paramSessionId = request.getParameter(Conf.SSO_SESSIONID);
-            if (paramSessionId != null) {
-                xxlUser = SsoLoginHelper.loginCheck(paramSessionId);
-                if (xxlUser != null) {
-                    SsoLoginHelper.cookieSessionIdSet(res, paramSessionId);
-                }
-            }
-        }
-
-        // valid login fail
-        if (xxlUser == null) {
-
-            // redirect logout
-
-            String loginPageUrl = ssoServer.concat(Conf.SSO_LOGIN)
-                    + "?" + Conf.REDIRECT_URL + "=" + link;
-
-            res.sendRedirect(loginPageUrl);
+            // response
+            res.setStatus(HttpServletResponse.SC_OK);
+            res.setContentType("application/json;charset=UTF-8");
+            res.getWriter().println(JacksonUtil.writeValueAsString(new ReturnT(501, "sso not login.")));
             return;
         }
 
@@ -100,5 +81,6 @@ public class XxlSsoFilter extends HttpServlet implements Filter {
         chain.doFilter(request, response);
         return;
     }
+
 
 }
