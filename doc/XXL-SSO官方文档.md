@@ -337,7 +337,16 @@ SSO User | 登录用户信息，与 SSO SessionId 相对应；
 - 在Client端的SSO Filter里验证 SSO SessionId 无误，将 SSO SessionId 写入到用户浏览器Client端域名下 cookie 中。
 - SSO Filter验证 SSO SessionId 通过，受限资源请求放行；
 
+### 4.5 注销流程剖析
 
+- 用户与Client端应用请求注销Path时，将会 redirect 到 SSO Server 自动销毁全局 SSO SessionId，实现全局销毁；
+- 然后，访问接入SSO保护的任意Client端应用时，SSO Filter 均会拦截请求并 redirect 到 SSO Server 的统一登录界面。
+
+### 4.6 APP接入SSO
+
+目前，支持Web与APP两种接入SSO方式，登陆凭证存储与校验方式不同：
+- Web方式接入：底层通过Cookie存储用户登录凭证；Client端应用通过校验请求Cookie中的登录凭证，校验登陆状态；
+- APP方式接入：底层通过APP客户端存储用户登录凭证，如Sqlite；Client端应用通过校验请求Header中的登录凭证，校验登陆状态；
 
 ## 五、版本更新日志
 
