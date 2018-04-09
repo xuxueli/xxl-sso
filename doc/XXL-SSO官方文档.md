@@ -357,6 +357,7 @@ SSO User | 登录用户信息，与 SSO SessionId 相对应；
 - 1、缓存失效优化：失效周期默认2H、记住密码时72H；失效前1H有请求则缓存时间顺延一个周期；
 - 2、除了 sessionid-user KV外，新增 userid-user KV，避免用户信息冗余缓存，登陆时主动清理旧KV数据；
 - 3、认证中心与接入端交互数据加密，增强安全性；redirect_url必须和临时AccessToken配合才会生效，AccessToken有效期60s；
+- 4、Redis增加password验证；
 
 
 ## 六、其他
