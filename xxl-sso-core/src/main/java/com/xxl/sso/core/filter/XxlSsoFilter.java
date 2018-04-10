@@ -2,6 +2,7 @@ package com.xxl.sso.core.filter;
 
 import com.xxl.sso.core.conf.Conf;
 import com.xxl.sso.core.user.XxlUser;
+import com.xxl.sso.core.util.JacksonUtil;
 import com.xxl.sso.core.util.SsoLoginHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -83,13 +84,24 @@ public class XxlSsoFilter extends HttpServlet implements Filter {
         // valid login fail
         if (xxlUser == null) {
 
-            // redirect logout
+            String header = req.getHeader("content-type");
+            boolean isJson=  header!=null && header.contains("json");
+            if (isJson) {
 
-            String loginPageUrl = ssoServer.concat(Conf.SSO_LOGIN)
-                    + "?" + Conf.REDIRECT_URL + "=" + link;
+                // json msg
+                res.setContentType("application/json;charset=utf-8");
+                res.getWriter().println(JacksonUtil.writeValueAsString(Conf.SSO_LOGIN_FAIL_RESULT));
+                return;
+            } else {
 
-            res.sendRedirect(loginPageUrl);
-            return;
+                // redirect logout
+                String loginPageUrl = ssoServer.concat(Conf.SSO_LOGIN)
+                        + "?" + Conf.REDIRECT_URL + "=" + link;
+
+                res.sendRedirect(loginPageUrl);
+                return;
+            }
+
         }
 
         // ser sso user

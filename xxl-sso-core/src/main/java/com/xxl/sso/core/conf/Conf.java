@@ -1,5 +1,7 @@
 package com.xxl.sso.core.conf;
 
+import com.xxl.sso.core.entity.ReturnT;
+
 /**
  * conf
  *
@@ -41,6 +43,8 @@ public class Conf {
      * filter logout path
      */
     public static final String SSO_LOGOUT_PATH = "logoutPath";
+
+    public static final ReturnT<String> SSO_LOGIN_FAIL_RESULT = new ReturnT(501, "sso not login.");
 
 
 }

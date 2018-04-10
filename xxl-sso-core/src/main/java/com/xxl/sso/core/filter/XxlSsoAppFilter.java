@@ -69,7 +69,7 @@ public class XxlSsoAppFilter extends HttpServlet implements Filter {
             // response
             res.setStatus(HttpServletResponse.SC_OK);
             res.setContentType("application/json;charset=UTF-8");
-            res.getWriter().println(JacksonUtil.writeValueAsString(new ReturnT(501, "sso not login.")));
+            res.getWriter().println(JacksonUtil.writeValueAsString(Conf.SSO_LOGIN_FAIL_RESULT));
             return;
         }
 
