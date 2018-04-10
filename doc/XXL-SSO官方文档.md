@@ -354,7 +354,21 @@ APP接入SSO：特殊接入方式，此时接入的Client端Web应用，为APP�
     - Client应用：受SSO保护的Client端Web应用，为APP客户端提供接口服务；
     - APP客户端：用户访问受SSO保护的Client应用的客户端，如Android、IOS、桌面客户端等，登陆后APP客户端主动存储登陆凭证，后续请求时header参数携带；
         
+### 4.8 未登录状态请求处理
 
+Web接入情况下，未登录状态请求：
+- 页面请求：redirect 到SSO Server登录界面；
+- JSON请求：返回未登录的JSON格式响应数据
+    - 数据格式：
+        - code：501 错误码
+        - msg：sso not login.
+        
+APP接入情况下，未登录状态请求：
+- 返回未登录的JSON格式响应数据
+    - 数据格式：
+        - code：501 错误码
+        - msg：sso not login.
+        
 
 ## 五、版本更新日志
 
