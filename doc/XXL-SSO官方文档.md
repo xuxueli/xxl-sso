@@ -46,7 +46,7 @@ XXL-SSO 是一个分布式单点登录框架。只需要登录一次就可以访
 - Mysql：5.6+
 
 
-## 二、快速入门
+## 二、快速入门（Web接入SSO）
 
 ### 2.1：系统数据库初始化
 
@@ -112,10 +112,7 @@ redis.address=127.0.0.1:6379
 项目名：xxl-sso-sample-springboot
 ```
 
-Web应用接入SSO时，系统角色汇总如下：
-- SSO Server：认证中心，提供用户登陆、注销以及登陆状态校验等功能。
-- Client应用：受SSO保护的Client端应用，供用户浏览器访问；
-- 用户浏览器：用户访问受SSO保护的Client应用的浏览器，登陆后浏览器Cookie中会存储登陆凭证，后续请求时携带；
+Web接入SSO时，相关概念可参考 "章节 4.6"；
 
 #### maven依赖
 
@@ -215,20 +212,12 @@ xxl.sso.redis.address=127.0.0.1:6379
     2、此时，访问 "Client02应用地址"，也将会自动注销登陆状态；
 
 
-## 三、APP接入SSO
 
-APP接入SSO时可参考本章节，否则可以忽略。
+## 三、快速入门（APP接入SSO）
 
-APP方式接入与Web方式接入SSO原理有所不同，差异如下：
-- Web方式接入：底层通过Cookie存储用户登录凭证；Client端应用通过校验请求Cookie中的登录凭证，校验登陆状态；
-- APP方式接入：底层通过APP客户端存储用户登录凭证，如Sqlite；Client端应用通过校验请求Header中的登录凭证，校验登陆状态；
+> APP接入SSO时可参考本章节，否则可以忽略本章节。
 
-
-APP应用接入SSO时，系统角色汇总如下：
-- SSO Server：认证中心，提供用户登陆、注销以及登陆状态校验等功能。
-- Client应用：受SSO保护的Client端应用，供APP客户端访问；
-- APP客户端：用户访问受SSO保护的Client应用的客户端，如Android、IOS、桌面客户端等，登陆后APP客户端存储登陆凭证，后续请求时携带；
-
+APP接入SSO时，相关概念可参考 "章节 4.7"；
 
 ### 3.1 "认证中心（SSO Server）" 搭建
 > 可参考 "章节二" 搭建；
@@ -342,11 +331,30 @@ SSO User | 登录用户信息，与 SSO SessionId 相对应；
 - 用户与Client端应用请求注销Path时，将会 redirect 到 SSO Server 自动销毁全局 SSO SessionId，实现全局销毁；
 - 然后，访问接入SSO保护的任意Client端应用时，SSO Filter 均会拦截请求并 redirect 到 SSO Server 的统一登录界面。
 
-### 4.6 APP接入SSO
+### 4.6 Web接入SSO
 
-目前，支持Web与APP两种接入SSO方式，登陆凭证存储与校验方式不同：
-- Web方式接入：底层通过Cookie存储用户登录凭证；Client端应用通过校验请求Cookie中的登录凭证，校验登陆状态；
-- APP方式接入：底层通过APP客户端存储用户登录凭证，如Sqlite；Client端应用通过校验请求Header中的登录凭证，校验登陆状态；
+Web接入SSO：常规接入方式，此时接入的Client端Web应用，为用户浏览器访问提供服务；
+
+- 登陆凭证存储：登陆成功后，用户登陆凭证被自动存储在浏览器Cookie中；
+- Client端校验登陆状态：通过校验请求Cookie中的是否包含用户登录凭证判断；
+- 系统角色模型：
+    - SSO Server：认证中心，提供用户登陆、注销以及登陆状态校验等功能。
+    - Client应用：受SSO保护的Client端Web应用，为用户浏览器访问提供服务；
+    - 用户浏览器：用户访问受SSO保护的Client应用的浏览器，登陆后浏览器Cookie中会存储登陆凭证，后续请求时携带；
+
+    
+### 4.7 APP接入SSO
+
+APP接入SSO：特殊接入方式，此时接入的Client端Web应用，为APP客户端提供接口服务；
+
+- 登陆凭证存储：登陆成功后，APP客户端获取到登录凭证（xxl_sso_sessionid=xxx），需要主动存储，如存储在Sqlite中；
+- Client端校验登陆状态：通过校验请求Header参数中的是否包含用户登录凭证（xxl_sso_sessionid=xxx）判断；因此，APP客户端发送接口请求时，需要在header参数中设置登陆凭证；
+- 系统角色模型：
+    - SSO Server：认证中心，提供用户登陆、注销以及登陆状态校验等功能。
+    - Client应用：受SSO保护的Client端Web应用，为APP客户端提供接口服务；
+    - APP客户端：用户访问受SSO保护的Client应用的客户端，如Android、IOS、桌面客户端等，登陆后APP客户端主动存储登陆凭证，后续请求时header参数携带；
+        
+
 
 ## 五、版本更新日志
 
