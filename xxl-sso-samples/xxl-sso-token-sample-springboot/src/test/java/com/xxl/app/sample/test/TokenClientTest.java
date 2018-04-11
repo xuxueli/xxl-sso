@@ -14,13 +14,13 @@ import java.util.Map;
 /**
  * @author xuxueli 2018-04-09 11:38:15
  */
-public class AppClientTest {
-	private static Logger logger = LoggerFactory.getLogger(AppClientTest.class);
+public class TokenClientTest {
+	private static Logger logger = LoggerFactory.getLogger(TokenClientTest.class);
 
 	public static String ssoServer = "http://xxlssoserver.com:8080/xxl-sso-server";
 
-	public static String client01 = "http://xxlssoclient1.com:8082/xxl-sso-app-sample-springboot/";
-	public static String client02 = "http://xxlssoclient2.com:8082/xxl-sso-app-sample-springboot/";
+	public static String client01 = "http://xxlssoclient1.com:8082/xxl-sso-token-sample-springboot/";
+	public static String client02 = "http://xxlssoclient2.com:8082/xxl-sso-token-sample-springboot/";
 
 	@Test
 	public void test() throws Exception {

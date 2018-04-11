@@ -8,7 +8,7 @@
         <groupId>com.xuxueli</groupId>
         <version>0.1.1-SNAPSHOT</version>
     </parent>
-    <artifactId>xxl-sso-app-sample-springboot</artifactId>
+    <artifactId>xxl-sso-token-sample-springboot</artifactId>
     <packaging>jar</packaging>
 
     <dependencyManagement>

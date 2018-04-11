@@ -64,8 +64,8 @@ XXL-SSO 是一个分布式单点登录框架。只需要登录一次就可以访
 - xxl-sso-server：中央认证服务，支持集群；
 - xxl-sso-core：Client端依赖；
 - xxl-sso-samples：单点登陆Client端接入示例项目；
-    - xxl-sso-sample-springboot：web方式接入，供用户浏览器访问，springboot版本
-    - xxl-sso-app-sample-springboot：app方式接入，供APP客户端进行接口请求，springboot版本
+    - xxl-sso-sample-springboot：基于Cookie接入方式，供用户浏览器访问，springboot版本
+    - xxl-sso-token-sample-springboot：基于Token接入方式，常用于无法使用Cookie的场景使用，如APP、Cookie被禁用等，springboot版本
 ```
 
 ### 2.3 部署 "认证中心（SSO Server）"
@@ -252,7 +252,7 @@ xxl.sso.redis.address=127.0.0.1:6379
 ### 2.2 部署 "单点登陆Client端接入示例项目" (APP 应用)
 
 ```
-项目名：xxl-sso-app-sample-springboot
+项目名：xxl-sso-token-sample-springboot
 ```
 
 > 可参考 "章节 2.4" 部署 "单点登陆Client端接入示例项目"，唯一不同点是：将web应用的 "XxlSsoFilter" 更换为app应用 "XxlSsoTokenFilter"；
@@ -269,32 +269,32 @@ xxl.sso.redis.address=127.0.0.1:6379
 127.0.0.1 xxlssoclient2.com
 ```
 
-- 分别运行 "xxl-sso-server" 与 "xxl-sso-app-sample-springboot"
+- 分别运行 "xxl-sso-server" 与 "xxl-sso-token-sample-springboot"
 
 
     1、SSO认证中心地址：
     http://xxlssoserver.com:8080/xxl-sso-server
     
     2、Client01应用地址：
-    http://xxlssoclient1.com:8082/xxl-sso-app-sample-springboot/
+    http://xxlssoclient1.com:8082/xxl-sso-token-sample-springboot/
     
     3、Client02应用地址：
-    http://xxlssoclient2.com:8082/xxl-sso-app-sample-springboot/
+    http://xxlssoclient2.com:8082/xxl-sso-token-sample-springboot/
 
 
 - SSO登录/注销流程验证
-> 可参考测试用例 ：com.xxl.app.sample.test.AppClientTest
+> 可参考测试用例 ：com.xxl.app.sample.test.TokenClientTest
 
 
     正常情况下，登录流程如下：
-    1、获取用户输入的账号密码后，请求SSO Server的登录接口，获取用户 sso sessionid ；（参考代码：AppClientTest.loginTest）
+    1、获取用户输入的账号密码后，请求SSO Server的登录接口，获取用户 sso sessionid ；（参考代码：TokenClientTest.loginTest）
     2、登陆成功后，获取到 sso sessionid 可存储在APP客户端内部，后续请求受SSO保护的APP引用
-    3、此时，使用 sso sessionid 访问受保护的 "Client01应用" 和 "Client02应用" 提供的接口，接口均正常返回；（参考代码：AppClientTest.clientApiRequestTest）
+    3、此时，使用 sso sessionid 访问受保护的 "Client01应用" 和 "Client02应用" 提供的接口，接口均正常返回；（参考代码：TokenClientTest.clientApiRequestTest）
     
     正常情况下，注销流程如下：
-    1、请求SSO Server的注销接口，注销登陆凭证 sso sessionid ；（参考代码：AppClientTest.logoutTest）
+    1、请求SSO Server的注销接口，注销登陆凭证 sso sessionid ；（参考代码：TokenClientTest.logoutTest）
     2、注销成功后，sso sessionid 将会全局失效；
-    3、此时，使用 sso sessionid 访问受保护的 "Client01应用" 和 "Client02应用" 提供的接口，接口请求将会被拦截，提示未登录并返回状态码 501 ；（参考代码：AppClientTest.clientApiRequestTest）
+    3、此时，使用 sso sessionid 访问受保护的 "Client01应用" 和 "Client02应用" 提供的接口，接口请求将会被拦截，提示未登录并返回状态码 501 ；（参考代码：TokenClientTest.clientApiRequestTest）
 
 
 ## 四、总体设计
