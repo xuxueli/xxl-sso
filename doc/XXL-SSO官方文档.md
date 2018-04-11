@@ -222,7 +222,7 @@ xxl.sso.redis.address=127.0.0.1:6379
 ### 3.1 "认证中心（SSO Server）" 搭建
 > 可参考 "章节二" 搭建；
 
-"认证中心" 搭建成功后，默认为APP登陆提供API接口如下：
+"认证中心" 搭建成功后，默认为Token方式登陆提供API接口如下：
 
 - 1、登陆接口：/app/login
     - 参数：POST参数
@@ -250,7 +250,7 @@ xxl.sso.redis.address=127.0.0.1:6379
             - userid：用户ID
             - username：用户名
 
-### 2.2 部署 "单点登陆Client端接入示例项目" (APP 应用)
+### 2.2 部署 "单点登陆Client端接入示例项目" (Token方式)
 
 ```
 项目名：xxl-sso-token-sample-springboot
@@ -258,7 +258,7 @@ xxl.sso.redis.address=127.0.0.1:6379
 
 > 可参考 "章节 2.4" 部署 "单点登陆Client端接入示例项目"，唯一不同点是：将web应用的 "XxlSsoFilter" 更换为app应用 "XxlSsoTokenFilter"；
 
-### 2.3 验证  (模拟 APP 客户端)
+### 2.3 验证  (模拟请求 Token 方式接入SSO的接口)
 
 - 环境准备：启动Redis、初始化Mysql表数据；
 
@@ -289,7 +289,7 @@ xxl.sso.redis.address=127.0.0.1:6379
 
     正常情况下，登录流程如下：
     1、获取用户输入的账号密码后，请求SSO Server的登录接口，获取用户 sso sessionid ；（参考代码：TokenClientTest.loginTest）
-    2、登陆成功后，获取到 sso sessionid 可存储在APP客户端内部，后续请求受SSO保护的APP引用
+    2、登陆成功后，获取到 sso sessionid ，需要主动存储，后续请求时需要设置在 Header参数 中；
     3、此时，使用 sso sessionid 访问受保护的 "Client01应用" 和 "Client02应用" 提供的接口，接口均正常返回；（参考代码：TokenClientTest.clientApiRequestTest）
     
     正常情况下，注销流程如下：
@@ -338,7 +338,7 @@ SSO User | 登录用户信息，与 SSO SessionId 相对应；
 - 系统角色模型：
     - SSO Server：认证中心，提供用户登陆、注销以及登陆状态校验等功能。
     - Client应用：受SSO保护的Client端Web应用，为用户浏览器访问提供服务；
-    - 用户浏览器：用户访问受SSO保护的Client应用的浏览器，登陆后浏览器Cookie中会存储登陆凭证，后续请求时携带；
+    - 用户：发起请求的用户，使用浏览器访问。
 
     
 ### 4.7 基于Token，相关感念
@@ -347,8 +347,8 @@ SSO User | 登录用户信息，与 SSO SessionId 相对应；
 - Client端校验登陆状态：通过校验请求 Header参数 中的是否包含用户登录凭证（xxl_sso_sessionid=xxx）判断；因此，发送请求时需要在 Header参数 中设置登陆凭证；
 - 系统角色模型：
     - SSO Server：认证中心，提供用户登陆、注销以及登陆状态校验等功能。
-    - Client应用：受SSO保护的Client端Web应用，为APP客户端提供接口服务；
-    - APP客户端：用户访问受SSO保护的Client应用的客户端，如Android、IOS、桌面客户端等，登陆后APP客户端主动存储登陆凭证，后续请求时header参数携带；
+    - Client应用：受SSO保护的Client端Web应用，为用户请求提供接口服务；
+    - 用户：发起请求的用户，如使用Android、IOS、桌面客户端等请求访问。
         
 ### 4.8 未登录状态请求处理
 
@@ -379,7 +379,7 @@ SSO User | 登录用户信息，与 SSO SessionId 相对应；
 - 8、跨域：支持跨域应用接入SSO认证中心；
 
 ### 5.2 版本 v0.1.1，新特性[迭代中]
-- 1、APP接入支持；除了常规Web应用接入方式外，支持APP应用接入，并提供Sample项目；
+- 1、Token接入方式；除了常规Cookie方式外，新增Token接入方式，并提供Sample项目；
 - 2、Client端依赖Core包，slf4j依赖优化，移除log4j强依赖；
 - 3、Ajax请求未登录处理逻辑优化，返回JSON格式提示数据；
 
