@@ -255,7 +255,7 @@ xxl.sso.redis.address=127.0.0.1:6379
 项目名：xxl-sso-app-sample-springboot
 ```
 
-> 可参考 "章节 2.4" 部署 "单点登陆Client端接入示例项目"，唯一不同点是：将web应用的 "XxlSsoFilter" 更换为app应用 "XxlSsoAppFilter"；
+> 可参考 "章节 2.4" 部署 "单点登陆Client端接入示例项目"，唯一不同点是：将web应用的 "XxlSsoFilter" 更换为app应用 "XxlSsoTokenFilter"；
 
 ### 2.3 验证  (模拟 APP 客户端)
 
