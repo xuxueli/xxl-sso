@@ -29,9 +29,8 @@ XXL-SSO is a distributed single-sign-on framework. You only need to log in once 
 It has "lightweight, scalable, distributed, cross-domain, Web+APP support access" features. 
 Now, it's already open source code, real "out-of-the-box".
 
-
 XXL-SSO 是一个分布式单点登录框架。只需要登录一次就可以访问所有相互信任的应用系统。
-拥有"轻量级、易扩展、分布式、跨域、Web+APP均支持接入"等特性。现已开放源代码，开箱即用。
+拥有"轻量级、分布式、跨域、Cookie+Token均支持、Web+APP均支持"等特性；。现已开放源代码，开箱即用。
 
 
 ## Documentation
@@ -47,7 +46,8 @@ XXL-SSO 是一个分布式单点登录框架。只需要登录一次就可以访
 - 6、实时性：系统登陆、注销状态，全部Server与Client端实时共享；
 - 7、CS结构：基于CS结构，包括Server"认证中心"与Client"受保护应用"；
 - 8、跨域：支持跨域应用接入SSO认证中心；
-- 9、Web+APP均支持：支持基于Cookie和基于Token两种接入方式，从而支持Web+APP接入，并均提供Sample项目；
+- 9、Cookie+Token均支持：支持基于Cookie和基于Token两种接入方式，并均提供Sample项目；
+- 10、Web+APP均支持：支持Web和APP接入；
 
 
 ## Communication

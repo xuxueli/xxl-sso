@@ -9,7 +9,7 @@
 
 ### 1.1 概述
 XXL-SSO 是一个分布式单点登录框架。只需要登录一次就可以访问所有相互信任的应用系统。
-拥有"轻量级、易扩展、分布式、跨域、Web+APP均支持接入"等特性；。现已开放源代码，开箱即用。
+拥有"轻量级、分布式、跨域、Cookie+Token均支持、Web+APP均支持"等特性；。现已开放源代码，开箱即用。
 
 ### 1.2 特性
 - 1、简洁：API直观简洁，可快速上手；
@@ -20,7 +20,8 @@ XXL-SSO 是一个分布式单点登录框架。只需要登录一次就可以访
 - 6、实时性：系统登陆、注销状态，全部Server与Client端实时共享；
 - 7、CS结构：基于CS结构，包括Server"认证中心"与Client"受保护应用"；
 - 8、跨域：支持跨域应用接入SSO认证中心；
-- 9、Web+APP均支持：支持基于Cookie和基于Token两种接入方式，从而支持Web+APP接入，并均提供Sample项目；
+- 9、Cookie+Token均支持：支持基于Cookie和基于Token两种接入方式，并均提供Sample项目；
+- 10、Web+APP均支持：支持Web和APP接入；
 
 
 ### 1.3 下载
@@ -387,6 +388,7 @@ SSO User | 登录用户信息，与 SSO SessionId 相对应；
 - 2、除了 sessionid-user KV外，新增 userid-user KV，避免用户信息冗余缓存，登陆时主动清理旧KV数据；
 - 3、认证中心与接入端交互数据加密，增强安全性；redirect_url必须和临时AccessToken配合才会生效，AccessToken有效期60s；
 - 4、Redis增加password验证；
+- 5、支持设置exclude路径；
 
 
 ## 六、其他
