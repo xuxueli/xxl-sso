@@ -47,7 +47,7 @@ XXL-SSO 是一个分布式单点登录框架。只需要登录一次就可以访
 - 6、实时性：系统登陆、注销状态，全部Server与Client端实时共享；
 - 7、CS结构：基于CS结构，包括Server"认证中心"与Client"受保护应用"；
 - 8、跨域：支持跨域应用接入SSO认证中心；
-- 9、APP接入支持；除了常规Web应用接入方式外，支持APP应用接入，并提供Sample项目；
+- 9、Web+APP均支持：支持基于Cookie和基于Token两种接入方式，从而支持Web+APP接入，并均提供Sample项目；
 
 
 ## Communication

@@ -20,7 +20,7 @@ XXL-SSO 是一个分布式单点登录框架。只需要登录一次就可以访
 - 6、实时性：系统登陆、注销状态，全部Server与Client端实时共享；
 - 7、CS结构：基于CS结构，包括Server"认证中心"与Client"受保护应用"；
 - 8、跨域：支持跨域应用接入SSO认证中心；
-- 9、APP接入支持；除了常规Web应用接入方式外，支持APP应用接入，并提供Sample项目；
+- 9、Web+APP均支持：支持基于Cookie和基于Token两种接入方式，从而支持Web+APP接入，并均提供Sample项目；
 
 
 ### 1.3 下载
@@ -46,7 +46,10 @@ XXL-SSO 是一个分布式单点登录框架。只需要登录一次就可以访
 - Mysql：5.6+
 
 
-## 二、快速入门（Web接入SSO）
+## 二、快速入门（基于Cookie）
+
+> 基于Cookie，相关概念可参考 "章节 4.6"；
+
 
 ### 2.1：系统数据库初始化
 
@@ -111,8 +114,6 @@ redis.address=127.0.0.1:6379
 ```
 项目名：xxl-sso-sample-springboot
 ```
-
-Web接入SSO时，相关概念可参考 "章节 4.6"；
 
 #### maven依赖
 
@@ -213,11 +214,9 @@ xxl.sso.redis.address=127.0.0.1:6379
 
 
 
-## 三、快速入门（APP接入SSO）
+## 三、快速入门（基于Token）
 
-> APP接入SSO时可参考本章节，否则可以忽略本章节。
-
-APP接入SSO时，相关概念可参考 "章节 4.7"；
+> 基于Token，相关概念可参考 "章节 4.7"；（在一些无法使用Cookie的场景下，可使用该方式，否则可以忽略本章节）
 
 ### 3.1 "认证中心（SSO Server）" 搭建
 > 可参考 "章节二" 搭建；
@@ -331,9 +330,7 @@ SSO User | 登录用户信息，与 SSO SessionId 相对应；
 - 用户与Client端应用请求注销Path时，将会 redirect 到 SSO Server 自动销毁全局 SSO SessionId，实现全局销毁；
 - 然后，访问接入SSO保护的任意Client端应用时，SSO Filter 均会拦截请求并 redirect 到 SSO Server 的统一登录界面。
 
-### 4.6 Web接入SSO
-
-Web接入SSO：常规接入方式，此时接入的Client端Web应用，为用户浏览器访问提供服务；
+### 4.6 基于Cookie，相关感念
 
 - 登陆凭证存储：登陆成功后，用户登陆凭证被自动存储在浏览器Cookie中；
 - Client端校验登陆状态：通过校验请求Cookie中的是否包含用户登录凭证判断；
@@ -343,12 +340,10 @@ Web接入SSO：常规接入方式，此时接入的Client端Web应用，为用�
     - 用户浏览器：用户访问受SSO保护的Client应用的浏览器，登陆后浏览器Cookie中会存储登陆凭证，后续请求时携带；
 
     
-### 4.7 APP接入SSO
+### 4.7 基于Token，相关感念
 
-APP接入SSO：特殊接入方式，此时接入的Client端Web应用，为APP客户端提供接口服务；
-
-- 登陆凭证存储：登陆成功后，APP客户端获取到登录凭证（xxl_sso_sessionid=xxx），需要主动存储，如存储在Sqlite中；
-- Client端校验登陆状态：通过校验请求Header参数中的是否包含用户登录凭证（xxl_sso_sessionid=xxx）判断；因此，APP客户端发送接口请求时，需要在header参数中设置登陆凭证；
+- 登陆凭证存储：登陆成功后，获取到登录凭证（xxl_sso_sessionid=xxx），需要主动存储，如存储在 localStorage、Sqlite 中；
+- Client端校验登陆状态：通过校验请求 Header参数 中的是否包含用户登录凭证（xxl_sso_sessionid=xxx）判断；因此，发送请求时需要在 Header参数 中设置登陆凭证；
 - 系统角色模型：
     - SSO Server：认证中心，提供用户登陆、注销以及登陆状态校验等功能。
     - Client应用：受SSO保护的Client端Web应用，为APP客户端提供接口服务；
@@ -356,14 +351,14 @@ APP接入SSO：特殊接入方式，此时接入的Client端Web应用，为APP�
         
 ### 4.8 未登录状态请求处理
 
-Web接入情况下，未登录状态请求：
+基于Cookie，未登录状态请求：
 - 页面请求：redirect 到SSO Server登录界面；
 - JSON请求：返回未登录的JSON格式响应数据
     - 数据格式：
         - code：501 错误码
         - msg：sso not login.
         
-APP接入情况下，未登录状态请求：
+基于Token，未登录状态请求：
 - 返回未登录的JSON格式响应数据
     - 数据格式：
         - code：501 错误码
