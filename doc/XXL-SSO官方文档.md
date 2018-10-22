@@ -382,6 +382,7 @@ SSO User | 登录用户信息，与 SSO SessionId 相对应；
 - 1、Token接入方式；除了常规Cookie方式外，新增Token接入方式，并提供Sample项目；
 - 2、Client端依赖Core包，slf4j依赖优化，移除log4j强依赖；
 - 3、Ajax请求未登录处理逻辑优化，返回JSON格式提示数据；
+- 4、[ING]新增属性：includedUriList、excludedUriList；
 
 ### TODO LIST
 - 1、缓存失效优化：失效周期默认2H、记住密码时72H；失效前1H有请求则缓存时间顺延一个周期；
