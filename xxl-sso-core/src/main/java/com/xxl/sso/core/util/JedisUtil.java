@@ -375,7 +375,7 @@ public class JedisUtil {
     }
 
     public static void main(String[] args) {
-        init("http://username:password@127.0.0.1:6379/2");
+        init("redis://username:password@127.0.0.1:6379/2");
 
         setObjectValue("key", "666", 2*60*60);
         System.out.println(getObjectValue("key"));

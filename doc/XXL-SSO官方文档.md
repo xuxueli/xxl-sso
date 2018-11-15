@@ -78,7 +78,7 @@ XXL-SSO 是一个分布式单点登录框架。只需要登录一次就可以访
 ……
 
 ### redis   （sessionid 分布式存储共享Redis，多地址逗号分隔）
-xxl.sso.redis.address=http://username:password@127.0.0.1:6379/2
+xxl.sso.redis.address=redis://username:password@127.0.0.1:6379/2
 
 ```
 
@@ -138,7 +138,7 @@ xxl.sso.server=http://xxlssoserver.com:8080/xxl-sso-server
 xxl.sso.logout.path=/logout
 
 ### redis   （sessionid 分布式存储共享Redis，多地址逗号分隔）
-xxl.sso.redis.address=http://username:password@127.0.0.1:6379/2
+xxl.sso.redis.address=redis://username:password@127.0.0.1:6379/2
 ```
 
 ### 2.5 验证
