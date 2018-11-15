@@ -46,7 +46,7 @@ public class SsoLoginStore {
      */
     public static void put(String sessionId, XxlUser xxlUser) {
         String redisKey = redisKey(sessionId);
-        JedisUtil.setObjectValue(redisKey, xxlUser);
+        JedisUtil.setObjectValue(redisKey, xxlUser, 24 * 60 *60);   // 25H, TODO, auto incr
     }
 
     private static String redisKey(String sessionId){

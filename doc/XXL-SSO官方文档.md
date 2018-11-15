@@ -105,8 +105,8 @@ spring.datasource.initial-size=5
 mybatis.mapper-locations=classpath:/mybatis-mapper/*Mapper.xml
 mybatis.type-aliases-package=com.xxl.sso.server.model
 
-### redis   （sessionid 分布式存储共享Redis）
-redis.address=127.0.0.1:6379
+### redis   （sessionid 分布式存储共享Redis，多地址逗号分隔）
+redis.address=http://username:password@127.0.0.1:6379/2
 
 ```
 
@@ -172,8 +172,8 @@ spring.resources.static-locations=classpath:/static/
 xxl.sso.server=http://xxlssoserver.com:8080/xxl-sso-server
 ##### 注销登陆path，值为Client端应用的相对路径
 xxl.sso.logout.path=/logout
-##### （sessionid 分布式存储共享Redis）
-xxl.sso.redis.address=127.0.0.1:6379
+### redis   （sessionid 分布式存储共享Redis，多地址逗号分隔）
+xxl.sso.redis.address=http://username:password@127.0.0.1:6379/2
 ```
 
 ### 2.5 验证

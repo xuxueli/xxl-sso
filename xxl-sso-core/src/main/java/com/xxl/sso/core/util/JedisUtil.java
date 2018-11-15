@@ -15,32 +15,30 @@ import java.util.concurrent.locks.ReentrantLock;
 
 
 /**
- * Redis client base on jedis 根据继承类的不同,
- * jedis实例方式不用:JedisSimpleFactry/JedisPoolFactry/ShardedJedisPoolFactry
+ * Redis client base on jedis
  *
  * @author xuxueli 2015-7-10 18:34:07
- * <p>
- * # for redis (sharded.jedis.address=host01:port,host02:port)
- * sharded.jedis.address=127.0.0.1:6379,127.0.0.1:6379,127.0.0.1:6379
  */
 public class JedisUtil {
     private static Logger logger = LoggerFactory.getLogger(JedisUtil.class);
 
-    private static final int DEFAULT_EXPIRE_TIME = 7200; // 默认过期时间,单位/秒, 60*60*2=2H, 两小时
     private static String address;
-
     public static void init(String address) {
         JedisUtil.address = address;
+
+        getInstance();
     }
 
     // ------------------------ ShardedJedisPool ------------------------
     /**
-     * 方式01: Redis单节点 + Jedis单例 : Redis单节点压力过重, Jedis单例存在并发瓶颈 》》不可用于线上
-     * new Jedis("127.0.0.1", 6379).get("cache_key");
-     * 方式02: Redis单节点 + JedisPool单节点连接池 》》 Redis单节点压力过重，负载和容灾比较差
-     * new JedisPool(new JedisPoolConfig(), "127.0.0.1", 6379, 10000).getResource().get("cache_key");
-     * 方式03: Redis集群(通过client端集群,一致性哈希方式实现) + Jedis多节点连接池 》》Redis集群,负载和容灾较好, ShardedJedisPool一致性哈希分片,读写均匀，动态扩充
-     * new ShardedJedisPool(new JedisPoolConfig(), new LinkedList<JedisShardInfo>());
+     *  方式01: Redis单节点 + Jedis单例 : Redis单节点压力过重, Jedis单例存在并发瓶颈 》》不可用于线上
+     *      new Jedis("127.0.0.1", 6379).get("cache_key");
+     *  方式02: Redis单节点 + JedisPool单节点连接池 》》 Redis单节点压力过重，负载和容灾比较差
+     *      new JedisPool(new JedisPoolConfig(), "127.0.0.1", 6379, 10000).getResource().get("cache_key");
+     *  方式03: Redis分片(通过client端集群,一致性哈希方式实现) + Jedis多节点连接池 》》Redis集群,负载和容灾较好, ShardedJedisPool一致性哈希分片,读写均匀，动态扩充
+     *      new ShardedJedisPool(new JedisPoolConfig(), new LinkedList<JedisShardInfo>());
+     *  方式03: Redis集群；
+     *      new JedisCluster(jedisClusterNodes);    // TODO
      */
 
     private static ShardedJedisPool shardedJedisPool;
@@ -59,18 +57,20 @@ public class JedisUtil {
                     try {
 
                         if (shardedJedisPool == null) {
+
                             // JedisPoolConfig
                             JedisPoolConfig config = new JedisPoolConfig();
-                            config.setMaxTotal(200);            // 最大连接数, 默认8个
-                            config.setMaxIdle(50);                // 最大空闲连接数, 默认8个
-                            config.setMinIdle(8);                // 设置最小空闲数
-                            config.setMaxWaitMillis(10000);        // 获取连接时的最大等待毫秒数(如果设置为阻塞时BlockWhenExhausted),如果超时就抛异常, 小于零:阻塞不确定的时间,  默认-1
-                            config.setTestOnBorrow(true);        // 在获取连接的时候检查有效性, 默认false
-                            config.setTestOnReturn(true);       // 调用returnObject方法时，是否进行有效检查
-                            config.setTestWhileIdle(true);        // Idle时进行连接扫描
-                            config.setTimeBetweenEvictionRunsMillis(30000);    //表示idle object evitor两次扫描之间要sleep的毫秒数
-                            config.setNumTestsPerEvictionRun(10);            //表示idle object evitor每次扫描的最多的对象数
-                            config.setMinEvictableIdleTimeMillis(60000);    //表示一个对象至少停留在idle状态的最短时间，然后才能被idle object evitor扫描并驱逐；这一项只有在timeBetweenEvictionRunsMillis大于0时才有意义
+                            config.setMaxTotal(200);
+                            config.setMaxIdle(50);
+                            config.setMinIdle(8);
+                            config.setMaxWaitMillis(10000);         // 获取连接时的最大等待毫秒数(如果设置为阻塞时BlockWhenExhausted),如果超时就抛异常, 小于零:阻塞不确定的时间,  默认-1
+                            config.setTestOnBorrow(true);           // 在获取连接的时候检查有效性, 默认false
+                            config.setTestOnReturn(false);          // 调用returnObject方法时，是否进行有效检查
+                            config.setTestWhileIdle(true);          // Idle时进行连接扫描
+                            config.setTimeBetweenEvictionRunsMillis(30000);     // 表示idle object evitor两次扫描之间要sleep的毫秒数
+                            config.setNumTestsPerEvictionRun(10);               // 表示idle object evitor每次扫描的最多的对象数
+                            config.setMinEvictableIdleTimeMillis(60000);        // 表示一个对象至少停留在idle状态的最短时间，然后才能被idle object evitor扫描并驱逐；这一项只有在timeBetweenEvictionRunsMillis大于0时才有意义
+
 
                             // JedisShardInfo List
                             List<JedisShardInfo> jedisShardInfos = new LinkedList<JedisShardInfo>();
@@ -102,6 +102,13 @@ public class JedisUtil {
         return shardedJedis;
     }
 
+    public static void close() throws IOException {
+        if(shardedJedisPool != null) {
+            shardedJedisPool.close();
+        }
+    }
+
+
     // ------------------------ serialize and unserialize ------------------------
 
     /**
@@ -121,13 +128,13 @@ public class JedisUtil {
             byte[] bytes = baos.toByteArray();
             return bytes;
         } catch (Exception e) {
-            logger.error("{}", e);
+            logger.error(e.getMessage(), e);
         } finally {
             try {
                 oos.close();
                 baos.close();
             } catch (IOException e) {
-                logger.error("{}", e);
+                logger.error(e.getMessage(), e);
             }
         }
         return null;
@@ -147,12 +154,12 @@ public class JedisUtil {
             ObjectInputStream ois = new ObjectInputStream(bais);
             return ois.readObject();
         } catch (Exception e) {
-            logger.error("{}", e);
+            logger.error(e.getMessage(), e);
         } finally {
             try {
                 bais.close();
             } catch (IOException e) {
-                logger.error("{}", e);
+                logger.error(e.getMessage(), e);
             }
         }
         return null;
@@ -179,22 +186,13 @@ public class JedisUtil {
         try {
             result = client.setex(key, seconds, value);
         } catch (Exception e) {
-            logger.info("{}", e);
+            logger.error(e.getMessage(), e);
         } finally {
-            client.close();
+            if (client != null) {
+                client.close();
+            }
         }
         return result;
-    }
-
-    /**
-     * Set String (默认存活时间, 2H)
-     *
-     * @param key
-     * @param value
-     * @return
-     */
-    public static String setStringValue(String key, String value) {
-        return setStringValue(key, value, DEFAULT_EXPIRE_TIME);
     }
 
     /**
@@ -210,22 +208,13 @@ public class JedisUtil {
         try {
             result = client.setex(key.getBytes(), seconds, serialize(obj));
         } catch (Exception e) {
-            logger.info("{}", e);
+            logger.error(e.getMessage(), e);
         } finally {
-            client.close();
+            if (client != null) {
+                client.close();
+            }
         }
         return result;
-    }
-
-    /**
-     * Set Object (默认存活时间, 2H)
-     *
-     * @param key
-     * @param obj
-     * @return
-     */
-    public static String setObjectValue(String key, Object obj) {
-        return setObjectValue(key, obj, DEFAULT_EXPIRE_TIME);
     }
 
     /**
@@ -240,9 +229,11 @@ public class JedisUtil {
         try {
             value = client.get(key);
         } catch (Exception e) {
-            logger.info("", e);
+            logger.error(e.getMessage(), e);
         } finally {
-            client.close();
+            if (client != null) {
+                client.close();
+            }
         }
         return value;
     }
@@ -262,15 +253,17 @@ public class JedisUtil {
                 obj = unserialize(bytes);
             }
         } catch (Exception e) {
-            logger.info("", e);
+            logger.error(e.getMessage(), e);
         } finally {
-            client.close();
+            if (client != null) {
+                client.close();
+            }
         }
         return obj;
     }
 
     /**
-     * Delete
+     * Delete key
      *
      * @param key
      * @return Integer reply, specifically:
@@ -283,15 +276,17 @@ public class JedisUtil {
         try {
             result = client.del(key);
         } catch (Exception e) {
-            logger.info("{}", e);
+            logger.error(e.getMessage(), e);
         } finally {
-            client.close();
+            if (client != null) {
+                client.close();
+            }
         }
         return result;
     }
 
     /**
-     * incrBy	value值加i
+     * incrBy i(+i)
      *
      * @param key
      * @param i
@@ -303,15 +298,17 @@ public class JedisUtil {
         try {
             result = client.incrBy(key, i);
         } catch (Exception e) {
-            logger.info("{}", e);
+            logger.error(e.getMessage(), e);
         } finally {
-            client.close();
+            if (client != null) {
+                client.close();
+            }
         }
         return result;
     }
 
     /**
-     * exists
+     * exists valid
      *
      * @param key
      * @return Boolean reply, true if the key exists, otherwise false
@@ -322,15 +319,17 @@ public class JedisUtil {
         try {
             result = client.exists(key);
         } catch (Exception e) {
-            logger.info("{}", e);
+            logger.error(e.getMessage(), e);
         } finally {
-            client.close();
+            if (client != null) {
+                client.close();
+            }
         }
         return result;
     }
 
     /**
-     * expire	重置存活时间
+     * expire reset
      *
      * @param key
      * @param seconds 存活时间,单位/秒
@@ -344,18 +343,20 @@ public class JedisUtil {
         try {
             result = client.expire(key, seconds);
         } catch (Exception e) {
-            logger.info("{}", e);
+            logger.error(e.getMessage(), e);
         } finally {
-            client.close();
+            if (client != null) {
+                client.close();
+            }
         }
         return result;
     }
 
     /**
-     * expireAt		设置存活截止时间
+     * expire at unixTime
      *
      * @param key
-     * @param unixTime 存活截止时间戳
+     * @param unixTime
      * @return
      */
     public static long expireAt(String key, long unixTime) {
@@ -364,17 +365,19 @@ public class JedisUtil {
         try {
             result = client.expireAt(key, unixTime);
         } catch (Exception e) {
-            logger.info("{}", e);
+            logger.error(e.getMessage(), e);
         } finally {
-            client.close();
+            if (client != null) {
+                client.close();
+            }
         }
         return result;
     }
 
     public static void main(String[] args) {
-        init("127.0.0.1:6379");
+        init("http://username:password@127.0.0.1:6379/2");
 
-        setObjectValue("key", "666");
+        setObjectValue("key", "666", 2*60*60);
         System.out.println(getObjectValue("key"));
 
     }
