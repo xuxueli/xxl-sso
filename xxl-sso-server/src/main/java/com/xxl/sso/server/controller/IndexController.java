@@ -1,12 +1,12 @@
 package com.xxl.sso.server.controller;
 
 import com.xxl.sso.core.conf.Conf;
-import com.xxl.sso.core.exception.XxlSsoException;
-import com.xxl.sso.core.user.XxlUser;
+import com.xxl.sso.core.user.XxlSsoUser;
+import com.xxl.sso.core.util.SessionIdHelper;
 import com.xxl.sso.core.util.SsoLoginHelper;
 import com.xxl.sso.server.core.model.UserInfo;
-import com.xxl.sso.server.dao.UserInfoDao;
-import org.apache.commons.lang3.StringUtils;
+import com.xxl.sso.server.core.result.ReturnT;
+import com.xxl.sso.server.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,7 +15,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.UUID;
 
 /**
  * sso server (for web)
@@ -26,13 +25,13 @@ import java.util.UUID;
 public class IndexController {
 
     @Autowired
-    private UserInfoDao userInfoDao;
+    private UserService userService;
 
     @RequestMapping("/")
     public String index(Model model, HttpServletRequest request) {
 
         // login check
-        XxlUser xxlUser = SsoLoginHelper.loginCheck(request);
+        XxlSsoUser xxlUser = SsoLoginHelper.loginCheck(request);
 
         if (xxlUser == null) {
             return "redirect:/login";
@@ -53,13 +52,13 @@ public class IndexController {
     public String login(Model model, HttpServletRequest request) {
 
         // login check
-        XxlUser xxlUser = SsoLoginHelper.loginCheck(request);
+        XxlSsoUser xxlUser = SsoLoginHelper.loginCheck(request);
 
         if (xxlUser != null) {
 
             // success redirect
             String redirectUrl = request.getParameter(Conf.REDIRECT_URL);
-            if (StringUtils.isNotBlank(redirectUrl)) {
+            if (redirectUrl!=null && redirectUrl.trim().length()>0) {
 
                 String sessionId = SsoLoginHelper.getSessionIdByCookie(request);
                 String redirectUrlFinal = redirectUrl + "?" + Conf.SSO_SESSIONID + "=" + sessionId;;
@@ -91,46 +90,28 @@ public class IndexController {
                         String username,
                         String password) {
 
-        String errorMsg = null;
-        // valid
-        UserInfo existUser = null;
-        try {
-            if (StringUtils.isBlank(username)) {
-                throw new XxlSsoException("Please input username.");
-            }
-            if (StringUtils.isBlank(password)) {
-                throw new XxlSsoException("Please input password.");
-            }
-            existUser = userInfoDao.findByUsername(username);
-            if (existUser == null) {
-                throw new XxlSsoException("username is invalid.");
-            }
-            if (!existUser.getPassword().equals(password)) {
-                throw new XxlSsoException("password is invalid.");
-            }
-        } catch (XxlSsoException e) {
-            errorMsg = e.getMessage();
-        }
-
-        if (StringUtils.isNotBlank(errorMsg)) {
-            redirectAttributes.addAttribute("errorMsg", errorMsg);
+        // valid login
+        ReturnT<UserInfo> result = userService.findUser(username, password);
+        if (result.getCode() != ReturnT.SUCCESS_CODE) {
+            redirectAttributes.addAttribute("errorMsg", result.getMsg());
 
             redirectAttributes.addAttribute(Conf.REDIRECT_URL, request.getParameter(Conf.REDIRECT_URL));
             return "redirect:/login";
         }
 
-        // login success
-        XxlUser xxlUser = new XxlUser();
-        xxlUser.setUserid(existUser.getId());
-        xxlUser.setUsername(existUser.getUsername());
+        // make xxl-sso user
+        XxlSsoUser xxlUser = new XxlSsoUser();
+        xxlUser.setUserid(result.getData().getUserid());
+        xxlUser.setUsername(result.getData().getUsername());
 
-        String sessionId = UUID.randomUUID().toString();
+        // make session id
+        String sessionId = SessionIdHelper.makeSessionId(SessionIdHelper.SessionIdGroup.WEB, xxlUser);
 
         SsoLoginHelper.login(response, sessionId, xxlUser);
 
         // success redirect
         String redirectUrl = request.getParameter(Conf.REDIRECT_URL);
-        if (StringUtils.isNotBlank(redirectUrl)) {
+        if (redirectUrl!=null && redirectUrl.trim().length()>0) {
             String redirectUrlFinal = redirectUrl + "?" + Conf.SSO_SESSIONID + "=" + sessionId;
             return "redirect:" + redirectUrlFinal;
         } else {

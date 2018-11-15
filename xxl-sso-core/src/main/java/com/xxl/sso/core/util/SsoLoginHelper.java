@@ -2,7 +2,7 @@ package com.xxl.sso.core.util;
 
 import com.xxl.sso.core.conf.Conf;
 import com.xxl.sso.core.store.SsoLoginStore;
-import com.xxl.sso.core.user.XxlUser;
+import com.xxl.sso.core.user.XxlSsoUser;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -63,7 +63,7 @@ public class SsoLoginHelper {
      * @param request
      * @return
      */
-    public static XxlUser loginCheck(HttpServletRequest request){
+    public static XxlSsoUser loginCheck(HttpServletRequest request){
         String cookieSessionId = getSessionIdByCookie(request);
         if (cookieSessionId!=null && cookieSessionId.trim().length()>0) {
             return loginCheck(cookieSessionId);
@@ -77,9 +77,9 @@ public class SsoLoginHelper {
      * @param sessionId
      * @return
      */
-    public static XxlUser loginCheck(String  sessionId){
+    public static XxlSsoUser loginCheck(String  sessionId){
         if (sessionId!=null && sessionId.trim().length()>0) {
-            XxlUser xxlUser = SsoLoginStore.get(sessionId);
+            XxlSsoUser xxlUser = SsoLoginStore.get(sessionId);
             if (xxlUser != null) {
                 return xxlUser;
             }
@@ -96,7 +96,7 @@ public class SsoLoginHelper {
      */
     public static void login(HttpServletResponse response,
                              String sessionId,
-                             XxlUser xxlUser) {
+                             XxlSsoUser xxlUser) {
 
         SsoLoginStore.put(sessionId, xxlUser);
         CookieUtil.set(response, Conf.SSO_SESSIONID, sessionId, false);
@@ -109,7 +109,7 @@ public class SsoLoginHelper {
      * @param xxlUser
      */
     public static void login(String sessionId,
-                             XxlUser xxlUser) {
+                             XxlSsoUser xxlUser) {
         SsoLoginStore.put(sessionId, xxlUser);
     }
 

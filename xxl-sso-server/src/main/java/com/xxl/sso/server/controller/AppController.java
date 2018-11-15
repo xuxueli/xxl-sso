@@ -1,17 +1,15 @@
 package com.xxl.sso.server.controller;
 
-import com.xxl.sso.core.user.XxlUser;
+import com.xxl.sso.core.user.XxlSsoUser;
+import com.xxl.sso.core.util.SessionIdHelper;
 import com.xxl.sso.core.util.SsoLoginHelper;
 import com.xxl.sso.server.core.model.UserInfo;
 import com.xxl.sso.server.core.result.ReturnT;
-import com.xxl.sso.server.dao.UserInfoDao;
-import org.apache.commons.lang3.StringUtils;
+import com.xxl.sso.server.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import java.util.UUID;
 
 /**
  * sso server (for app)
@@ -23,7 +21,7 @@ import java.util.UUID;
 public class AppController {
 
     @Autowired
-    private UserInfoDao userInfoDao;
+    private UserService userService;
 
 
     /**
@@ -37,26 +35,19 @@ public class AppController {
     @ResponseBody
     public ReturnT<String> login(String username, String password) {
 
-        if (StringUtils.isBlank(username)) {
-            return new ReturnT<String>(ReturnT.FAIL_CODE, "Please input username.");
-        }
-        if (StringUtils.isBlank(password)) {
-            return new ReturnT<String>(ReturnT.FAIL_CODE, "Please input password.");
-        }
-        UserInfo existUser = userInfoDao.findByUsername(username);
-        if (existUser == null) {
-            return new ReturnT<String>(ReturnT.FAIL_CODE, "username is invalid.");
-        }
-        if (!existUser.getPassword().equals(password)) {
-            return new ReturnT<String>(ReturnT.FAIL_CODE, "password is invalid.");
+        // valid login
+        ReturnT<UserInfo> result = userService.findUser(username, password);
+        if (result.getCode() != ReturnT.SUCCESS_CODE) {
+            return new ReturnT<String>(result.getCode(), result.getMsg());
         }
 
-        // login success
-        XxlUser xxlUser = new XxlUser();
-        xxlUser.setUserid(existUser.getId());
-        xxlUser.setUsername(existUser.getUsername());
+        // make xxl-sso user
+        XxlSsoUser xxlUser = new XxlSsoUser();
+        xxlUser.setUserid(result.getData().getUserid());
+        xxlUser.setUsername(result.getData().getUsername());
 
-        String sessionId = UUID.randomUUID().toString();
+        // make session id
+        String sessionId = SessionIdHelper.makeSessionId(SessionIdHelper.SessionIdGroup.WEB, xxlUser);
 
         SsoLoginHelper.login(sessionId, xxlUser);
 
@@ -88,14 +79,14 @@ public class AppController {
      */
     @RequestMapping("/logincheck")
     @ResponseBody
-    public ReturnT<XxlUser> logincheck(String sessionId) {
+    public ReturnT<XxlSsoUser> logincheck(String sessionId) {
 
         // logout
-        XxlUser xxlUser = SsoLoginHelper.loginCheck(sessionId);
+        XxlSsoUser xxlUser = SsoLoginHelper.loginCheck(sessionId);
         if (xxlUser == null) {
-            return new ReturnT<XxlUser>(ReturnT.FAIL_CODE, "sso not login.");
+            return new ReturnT<XxlSsoUser>(ReturnT.FAIL_CODE, "sso not login.");
         }
-        return new ReturnT<XxlUser>(xxlUser);
+        return new ReturnT<XxlSsoUser>(xxlUser);
     }
 
 }

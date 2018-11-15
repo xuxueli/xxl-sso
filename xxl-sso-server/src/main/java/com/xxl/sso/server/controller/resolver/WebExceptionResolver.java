@@ -1,7 +1,6 @@
 package com.xxl.sso.server.controller.resolver;
 
 import com.xxl.sso.core.exception.XxlSsoException;
-import com.xxl.sso.core.util.JacksonUtil;
 import com.xxl.sso.server.core.result.ReturnT;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,7 +56,7 @@ public class WebExceptionResolver implements HandlerExceptionResolver {
         if (isJson) {
             try {
                 response.setContentType("application/json;charset=utf-8");
-                response.getWriter().print(JacksonUtil.writeValueAsString(errorResult));
+                response.getWriter().print("{\"code\":"+errorResult.getCode()+", \"msg\":\""+ errorResult.getMsg() +"\"}");
             } catch (IOException e) {
                 logger.error(e.getMessage(), e);
             }

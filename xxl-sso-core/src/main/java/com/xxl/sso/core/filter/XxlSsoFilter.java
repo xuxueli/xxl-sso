@@ -1,8 +1,7 @@
 package com.xxl.sso.core.filter;
 
 import com.xxl.sso.core.conf.Conf;
-import com.xxl.sso.core.user.XxlUser;
-import com.xxl.sso.core.util.JacksonUtil;
+import com.xxl.sso.core.user.XxlSsoUser;
 import com.xxl.sso.core.util.SsoLoginHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,7 +58,7 @@ public class XxlSsoFilter extends HttpServlet implements Filter {
         }
 
         // login filter
-        XxlUser xxlUser = null;
+        XxlSsoUser xxlUser = null;
 
         // valid cookie user
         String cookieSessionId = SsoLoginHelper.getSessionIdByCookie(req);
@@ -90,7 +89,7 @@ public class XxlSsoFilter extends HttpServlet implements Filter {
 
                 // json msg
                 res.setContentType("application/json;charset=utf-8");
-                res.getWriter().println(JacksonUtil.writeValueAsString(Conf.SSO_LOGIN_FAIL_RESULT));
+                res.getWriter().println("{\"code\":"+Conf.SSO_LOGIN_FAIL_RESULT.getCode()+", \"msg\":\""+ Conf.SSO_LOGIN_FAIL_RESULT.getMsg() +"\"}");
                 return;
             } else {
 

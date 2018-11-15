@@ -2,8 +2,7 @@ package com.xxl.sso.core.filter;
 
 import com.xxl.sso.core.conf.Conf;
 import com.xxl.sso.core.entity.ReturnT;
-import com.xxl.sso.core.user.XxlUser;
-import com.xxl.sso.core.util.JacksonUtil;
+import com.xxl.sso.core.user.XxlSsoUser;
 import com.xxl.sso.core.util.SsoLoginHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,7 +44,7 @@ public class XxlSsoTokenFilter extends HttpServlet implements Filter {
         String link = req.getRequestURL().toString();
 
         String sessionid = SsoLoginHelper.cookieSessionIdGetByHeader(req);
-        XxlUser xxlUser = SsoLoginHelper.loginCheck(sessionid);
+        XxlSsoUser xxlUser = SsoLoginHelper.loginCheck(sessionid);
 
         // logout filter
         if (logoutPath!=null
@@ -59,7 +58,8 @@ public class XxlSsoTokenFilter extends HttpServlet implements Filter {
             // response
             res.setStatus(HttpServletResponse.SC_OK);
             res.setContentType("application/json;charset=UTF-8");
-            res.getWriter().println(JacksonUtil.writeValueAsString(new ReturnT(ReturnT.SUCCESS_CODE, null)));
+            res.getWriter().println("{\"code\":"+ReturnT.SUCCESS_CODE+", \"msg\":\"\"}");
+
             return;
         }
 
@@ -69,7 +69,7 @@ public class XxlSsoTokenFilter extends HttpServlet implements Filter {
             // response
             res.setStatus(HttpServletResponse.SC_OK);
             res.setContentType("application/json;charset=UTF-8");
-            res.getWriter().println(JacksonUtil.writeValueAsString(Conf.SSO_LOGIN_FAIL_RESULT));
+            res.getWriter().println("{\"code\":"+Conf.SSO_LOGIN_FAIL_RESULT.getCode()+", \"msg\":\""+ Conf.SSO_LOGIN_FAIL_RESULT.getMsg() +"\"}");
             return;
         }
 

@@ -27,13 +27,6 @@
             <version>${slf4j-api.version}</version>
         </dependency>
 
-        <!-- jackson -->
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <version>${jackson.version}</version>
-        </dependency>
-
         <!-- jedis -->
         <dependency>
             <groupId>redis.clients</groupId>

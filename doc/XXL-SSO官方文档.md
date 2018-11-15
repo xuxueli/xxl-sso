@@ -54,10 +54,6 @@ XXL-SSO 是一个分布式单点登录框架。只需要登录一次就可以访
 
 ### 2.1：系统数据库初始化
 
-建表SQL位置：
-```
-/xxl-sso/doc/db/xxl-sso-mysql.sql
-```
 
 ### 2.2：源码编译
 
@@ -65,7 +61,7 @@ XXL-SSO 是一个分布式单点登录框架。只需要登录一次就可以访
 - xxl-sso-server：中央认证服务，支持集群；
 - xxl-sso-core：Client端依赖；
 - xxl-sso-samples：单点登陆Client端接入示例项目；
-    - xxl-sso-sample-springboot：基于Cookie接入方式，供用户浏览器访问，springboot版本
+    - xxl-sso-web-sample-springboot：基于Cookie接入方式，供用户浏览器访问，springboot版本
     - xxl-sso-token-sample-springboot：基于Token接入方式，常用于无法使用Cookie的场景使用，如APP、Cookie被禁用等，springboot版本
 ```
 
@@ -79,41 +75,17 @@ XXL-SSO 是一个分布式单点登录框架。只需要登录一次就可以访
 
 配置文件位置：application.properties
 ```
-### web
-server.port=8080
-server.context-path=/xxl-sso-server
-
-### freemarker
-spring.freemarker.request-context-attribute=request
-spring.freemarker.cache=false
-
-### resource (default: /**  + classpath:/static/ )
-spring.mvc.static-path-pattern=/static/**
-spring.resources.static-locations=classpath:/static/
-
-### jdbc    （登陆用户信息，账号密码等，可根据业务灵活调整定制；）
-spring.datasource.url=jdbc:mysql://127.0.0.1:3306/xxl-sso
-spring.datasource.username=root
-spring.datasource.password=root_pwd
-spring.datasource.driver-class-name=com.mysql.jdbc.Driver
-spring.datasource.max-idle=10
-spring.datasource.max-wait=10000
-spring.datasource.min-idle=5
-spring.datasource.initial-size=5
-
-### mybatis
-mybatis.mapper-locations=classpath:/mybatis-mapper/*Mapper.xml
-mybatis.type-aliases-package=com.xxl.sso.server.model
+……
 
 ### redis   （sessionid 分布式存储共享Redis，多地址逗号分隔）
-redis.address=http://username:password@127.0.0.1:6379/2
+xxl.sso.redis.address=http://username:password@127.0.0.1:6379/2
 
 ```
 
 ### 2.4 部署 "单点登陆Client端接入示例项目"
 
 ```
-项目名：xxl-sso-sample-springboot
+项目名：xxl-sso-web-sample-springboot
 ```
 
 #### maven依赖
@@ -155,23 +127,16 @@ public FilterRegistrationBean xxlSsoFilterRegistration() {
 
 配置文件位置：application.properties
 ```
-### web
-server.port=8081
-server.context-path=/xxl-sso-sample-springboot
+……
 
-### freemarker
-spring.freemarker.request-context-attribute=request
-spring.freemarker.cache=false
+### xxl-sso     (CLient端SSO配置)
 
-### resource (default: /**  + classpath:/static/ )
-spring.mvc.static-path-pattern=/static/**
-spring.resources.static-locations=classpath:/static/
-
-### xxl-sso (CLient端SSO配置)
 ##### SSO Server认证中心地址（推荐以域名方式配置认证中心，本机可参考章节"2.5"修改host文件配置域名指向）
 xxl.sso.server=http://xxlssoserver.com:8080/xxl-sso-server
+
 ##### 注销登陆path，值为Client端应用的相对路径
 xxl.sso.logout.path=/logout
+
 ### redis   （sessionid 分布式存储共享Redis，多地址逗号分隔）
 xxl.sso.redis.address=http://username:password@127.0.0.1:6379/2
 ```
@@ -188,17 +153,17 @@ xxl.sso.redis.address=http://username:password@127.0.0.1:6379/2
 127.0.0.1 xxlssoclient2.com
 ```
 
-- 分别运行 "xxl-sso-server" 与 "xxl-sso-sample-springboot"
+- 分别运行 "xxl-sso-server" 与 "xxl-sso-web-sample-springboot"
 
 
     1、SSO认证中心地址：
     http://xxlssoserver.com:8080/xxl-sso-server
     
     2、Client01应用地址：
-    http://xxlssoclient1.com:8081/xxl-sso-sample-springboot/
+    http://xxlssoclient1.com:8081/xxl-sso-web-sample-springboot/
     
     3、Client02应用地址：
-    http://xxlssoclient2.com:8081/xxl-sso-sample-springboot/
+    http://xxlssoclient2.com:8081/xxl-sso-web-sample-springboot/
 
 
 - SSO登录/注销流程验证
@@ -382,7 +347,10 @@ SSO User | 登录用户信息，与 SSO SessionId 相对应；
 - 1、Token接入方式；除了常规Cookie方式外，新增Token接入方式，并提供Sample项目；
 - 2、Client端依赖Core包，slf4j依赖优化，移除log4j强依赖；
 - 3、Ajax请求未登录处理逻辑优化，返回JSON格式提示数据；
-- 4、[ING]新增属性：includedUriList、excludedUriList；
+- 4、认证中心用户登录校验改为Mock数据方式，取消对DB强依赖，降低部署难度；
+- 5、Redis密码配置增强；
+- 6、项目结构梳理，清理冗余依赖，升级多项依赖版本至较近版本；
+- 7、[ING]新增属性：includedUriList、excludedUriList；
 
 ### TODO LIST
 - 1、缓存失效优化：失效周期默认2H、记住密码时72H；失效前1H有请求则缓存时间顺延一个周期；

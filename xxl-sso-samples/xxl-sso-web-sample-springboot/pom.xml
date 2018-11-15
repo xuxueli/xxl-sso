@@ -8,7 +8,7 @@
         <groupId>com.xuxueli</groupId>
         <version>0.1.1-SNAPSHOT</version>
     </parent>
-    <artifactId>xxl-sso-sample-springboot</artifactId>
+    <artifactId>xxl-sso-web-sample-springboot</artifactId>
     <packaging>jar</packaging>
 
     <dependencyManagement>
@@ -24,20 +24,13 @@
     </dependencyManagement>
 
 
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <java.version>1.7</java.version>
-    </properties>
-
     <dependencies>
 
-        <!-- spring-webmvc(spring-boot-starter = spring + autoconfigure + logback + yaml) + tomcat -->
+        <!-- web -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
-        <!-- junit + spring-test + mockito -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>

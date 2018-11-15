@@ -1,19 +1,20 @@
 package com.xxl.sso.core.user;
 
 import java.io.Serializable;
+import java.util.Map;
 
 /**
  * xxl sso user
  *
  * @author xuxueli 2018-04-02 19:59:49
  */
-public class XxlUser implements Serializable {
+public class XxlSsoUser implements Serializable {
     private static final long serialVersionUID = 42L;
 
     private int userid;
     private String username;
 
-    // TODO，custome
+    private Map<String, String> plugininfo;
 
     public int getUserid() {
         return userid;
@@ -29,6 +30,14 @@ public class XxlUser implements Serializable {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public Map<String, String> getPlugininfo() {
+        return plugininfo;
+    }
+
+    public void setPlugininfo(Map<String, String> plugininfo) {
+        this.plugininfo = plugininfo;
     }
 
 }

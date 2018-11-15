@@ -1,7 +1,7 @@
 package com.xxl.sso.core.store;
 
 import com.xxl.sso.core.conf.Conf;
-import com.xxl.sso.core.user.XxlUser;
+import com.xxl.sso.core.user.XxlSsoUser;
 import com.xxl.sso.core.util.JedisUtil;
 
 /**
@@ -17,12 +17,12 @@ public class SsoLoginStore {
      * @param sessionId
      * @return
      */
-    public static XxlUser get(String sessionId) {
+    public static XxlSsoUser get(String sessionId) {
 
         String redisKey = redisKey(sessionId);
         Object objectValue = JedisUtil.getObjectValue(redisKey);
         if (objectValue != null) {
-            XxlUser xxlUser = (XxlUser) objectValue;
+            XxlSsoUser xxlUser = (XxlSsoUser) objectValue;
             return xxlUser;
         }
         return null;
@@ -44,7 +44,7 @@ public class SsoLoginStore {
      * @param sessionId
      * @param xxlUser
      */
-    public static void put(String sessionId, XxlUser xxlUser) {
+    public static void put(String sessionId, XxlSsoUser xxlUser) {
         String redisKey = redisKey(sessionId);
         JedisUtil.setObjectValue(redisKey, xxlUser, 24 * 60 *60);   // 25H, TODO, auto incr
     }

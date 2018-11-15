@@ -1,13 +1,14 @@
 package com.xxl.app.sample.test;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.xxl.app.sample.test.util.HttpClientUtil;
 import com.xxl.sso.core.conf.Conf;
-import com.xxl.sso.core.util.JacksonUtil;
 import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -54,14 +55,14 @@ public class TokenClientTest {
 	 * @param clientApiUrl
 	 * @return
 	 */
-	private void clientApiRequestTest(String clientApiUrl, String sessionId){
+	private void clientApiRequestTest(String clientApiUrl, String sessionId) throws IOException {
 
 		Map<String, String> headerParam = new HashMap<>();
 		headerParam.put(Conf.SSO_SESSIONID, sessionId);
 
 
 		String resultJson = HttpClientUtil.post(clientApiUrl, null, headerParam);
-		Map<String, Object> loginResult = JacksonUtil.readValue(resultJson, Map.class);
+		Map<String, Object> loginResult = new ObjectMapper().readValue(resultJson, Map.class);
 
 		int code = (int) loginResult.get("code");
 		if (code == 200) {
@@ -83,7 +84,7 @@ public class TokenClientTest {
 	 *
 	 * @return
 	 */
-	private String loginTest(){
+	private String loginTest() throws IOException {
 		// login url
 		String loginUrl = ssoServer + "/app/login";
 
@@ -93,7 +94,7 @@ public class TokenClientTest {
 		loginParam.put("password", "123456");
 
 		String loginResultJson = HttpClientUtil.post(loginUrl, loginParam, null);
-		Map<String, Object> loginResult = JacksonUtil.readValue(loginResultJson, Map.class);
+		Map<String, Object> loginResult = new ObjectMapper().readValue(loginResultJson, Map.class);
 
 		int code = (int) loginResult.get("code");
 		if (code == 200) {
@@ -118,7 +119,7 @@ public class TokenClientTest {
 	 * @param sessionId
 	 * @return
 	 */
-	private boolean logoutTest(String sessionId){
+	private boolean logoutTest(String sessionId) throws IOException {
 		// logout url
 		String logoutUrl = ssoServer + "/app/logout";
 
@@ -127,7 +128,7 @@ public class TokenClientTest {
 		logoutParam.put("sessionId", sessionId);
 
 		String logoutResultJson = HttpClientUtil.post(logoutUrl, logoutParam, null);
-		Map<String, Object> logoutResult = JacksonUtil.readValue(logoutResultJson, Map.class);
+		Map<String, Object> logoutResult = new ObjectMapper().readValue(logoutResultJson, Map.class);
 
 		int code = (int) logoutResult.get("code");
 		if (code == 200) {
@@ -150,7 +151,7 @@ public class TokenClientTest {
 	 * @param sessionId
 	 * @return
 	 */
-	private String logincheckTest(String sessionId){
+	private String logincheckTest(String sessionId) throws IOException {
 		// logout url
 		String logincheckUrl = ssoServer + "/app/logincheck";
 
@@ -159,7 +160,7 @@ public class TokenClientTest {
 		logincheckParam.put("sessionId", sessionId);
 
 		String logincheckResultJson = HttpClientUtil.post(logincheckUrl, logincheckParam, null);
-		Map<String, Object> logincheckResult = JacksonUtil.readValue(logincheckResultJson, Map.class);
+		Map<String, Object> logincheckResult = new ObjectMapper().readValue(logincheckResultJson, Map.class);
 
 		int code = (int) logincheckResult.get("code");
 		if (code == 200) {
