@@ -22,7 +22,11 @@ import java.util.concurrent.locks.ReentrantLock;
 public class JedisUtil {
     private static Logger logger = LoggerFactory.getLogger(JedisUtil.class);
 
+    /**
+     * redis address, like "{ip}"、"{ip}:{port}"、"{redis/rediss}://xxl-sso:{password}@{ip}:{port:6379}/{db}"；Multiple "," separated
+     */
     private static String address;
+
     public static void init(String address) {
         JedisUtil.address = address;
 
@@ -375,7 +379,8 @@ public class JedisUtil {
     }
 
     public static void main(String[] args) {
-        init("redis://username:password@127.0.0.1:6379/2");
+        String xxlSsoRedisAddress = "redis://xxl-sso:password@127.0.0.1:6379/0";
+        init(xxlSsoRedisAddress);
 
         setObjectValue("key", "666", 2*60*60);
         System.out.println(getObjectValue("key"));
