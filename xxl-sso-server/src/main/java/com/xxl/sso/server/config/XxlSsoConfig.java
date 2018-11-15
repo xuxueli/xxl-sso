@@ -1,5 +1,6 @@
 package com.xxl.sso.server.config;
 
+import com.xxl.sso.core.store.SsoLoginStore;
 import com.xxl.sso.core.util.JedisUtil;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
@@ -15,8 +16,12 @@ public class XxlSsoConfig implements InitializingBean, DisposableBean {
     @Value("${xxl.sso.redis.address}")
     private String redisAddress;
 
+    @Value("${xxl.sso.redis.expire.minite}")
+    private int redisExpireMinite;
+
     @Override
     public void afterPropertiesSet() throws Exception {
+        SsoLoginStore.setRedisExpireMinite(redisExpireMinite);
         JedisUtil.init(redisAddress);
     }
 

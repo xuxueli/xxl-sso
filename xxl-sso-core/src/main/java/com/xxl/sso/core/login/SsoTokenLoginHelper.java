@@ -22,7 +22,7 @@ public class SsoTokenLoginHelper {
 
         String storeKey = SsoSessionIdHelper.parseStoreKey(sessionId);
         if (storeKey == null) {
-            return;
+            throw new RuntimeException("parseStoreKey Fail, sessionId:" + sessionId);
         }
 
         SsoLoginStore.put(storeKey, xxlUser);
@@ -70,6 +70,13 @@ public class SsoTokenLoginHelper {
         if (xxlUser != null) {
             String version = SsoSessionIdHelper.parseVersion(sessionId);
             if (xxlUser.getVersion().equals(version)) {
+
+                // After the expiration time has passed half, Auto refresh
+                if ((System.currentTimeMillis() - xxlUser.getExpireFreshTime()) > xxlUser.getExpireMinite()/2) {
+                    xxlUser.setExpireFreshTime(System.currentTimeMillis());
+                    SsoLoginStore.put(storeKey, xxlUser);
+                }
+
                 return xxlUser;
             }
         }

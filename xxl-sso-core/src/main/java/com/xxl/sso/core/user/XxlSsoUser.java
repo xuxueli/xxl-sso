@@ -14,9 +14,11 @@ public class XxlSsoUser implements Serializable {
     // field
     private String userid;
     private String username;
-    private String version;
-
     private Map<String, String> plugininfo;
+
+    private String version;
+    private int expireMinite;
+    private long expireFreshTime;
 
 
     // set get
@@ -36,6 +38,14 @@ public class XxlSsoUser implements Serializable {
         this.username = username;
     }
 
+    public Map<String, String> getPlugininfo() {
+        return plugininfo;
+    }
+
+    public void setPlugininfo(Map<String, String> plugininfo) {
+        this.plugininfo = plugininfo;
+    }
+
     public String getVersion() {
         return version;
     }
@@ -44,12 +54,20 @@ public class XxlSsoUser implements Serializable {
         this.version = version;
     }
 
-    public Map<String, String> getPlugininfo() {
-        return plugininfo;
+    public int getExpireMinite() {
+        return expireMinite;
     }
 
-    public void setPlugininfo(Map<String, String> plugininfo) {
-        this.plugininfo = plugininfo;
+    public void setExpireMinite(int expireMinite) {
+        this.expireMinite = expireMinite;
+    }
+
+    public long getExpireFreshTime() {
+        return expireFreshTime;
+    }
+
+    public void setExpireFreshTime(long expireFreshTime) {
+        this.expireFreshTime = expireFreshTime;
     }
 
 }

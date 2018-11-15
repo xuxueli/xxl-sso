@@ -2,6 +2,7 @@ package com.xxl.sso.server.controller;
 
 import com.xxl.sso.core.conf.Conf;
 import com.xxl.sso.core.login.SsoWebLoginHelper;
+import com.xxl.sso.core.store.SsoLoginStore;
 import com.xxl.sso.core.user.XxlSsoUser;
 import com.xxl.sso.core.util.SsoSessionIdHelper;
 import com.xxl.sso.server.core.model.UserInfo;
@@ -89,7 +90,10 @@ public class WebController {
                         HttpServletResponse response,
                         RedirectAttributes redirectAttributes,
                         String username,
-                        String password) {
+                        String password,
+                        String ifRemember) {
+
+        boolean ifRem = (ifRemember!=null&&"on".equals(ifRemember))?true:false;
 
         // valid login
         ReturnT<UserInfo> result = userService.findUser(username, password);
@@ -105,12 +109,15 @@ public class WebController {
         xxlUser.setUserid(String.valueOf(result.getData().getUserid()));
         xxlUser.setUsername(result.getData().getUsername());
         xxlUser.setVersion(UUID.randomUUID().toString());
+        xxlUser.setExpireMinite(SsoLoginStore.getRedisExpireMinite());
+        xxlUser.setExpireFreshTime(System.currentTimeMillis());
+
 
         // 2、make session id
         String sessionId = SsoSessionIdHelper.makeSessionId(xxlUser);
 
         // 3、login, store storeKey + cookie sessionId
-        SsoWebLoginHelper.login(response, sessionId, xxlUser);
+        SsoWebLoginHelper.login(response, sessionId, xxlUser, ifRem);
 
         // 4、return, redirect sessionId
         String redirectUrl = request.getParameter(Conf.REDIRECT_URL);

@@ -1,6 +1,7 @@
 package com.xxl.sso.server.controller;
 
 import com.xxl.sso.core.login.SsoTokenLoginHelper;
+import com.xxl.sso.core.store.SsoLoginStore;
 import com.xxl.sso.core.user.XxlSsoUser;
 import com.xxl.sso.core.util.SsoSessionIdHelper;
 import com.xxl.sso.server.core.model.UserInfo;
@@ -48,6 +49,9 @@ public class AppController {
         xxlUser.setUserid(String.valueOf(result.getData().getUserid()));
         xxlUser.setUsername(result.getData().getUsername());
         xxlUser.setVersion(UUID.randomUUID().toString());
+        xxlUser.setExpireMinite(SsoLoginStore.getRedisExpireMinite());
+        xxlUser.setExpireFreshTime(System.currentTimeMillis());
+
 
         // 2、generate sessionId + storeKey
         String sessionId = SsoSessionIdHelper.makeSessionId(xxlUser);

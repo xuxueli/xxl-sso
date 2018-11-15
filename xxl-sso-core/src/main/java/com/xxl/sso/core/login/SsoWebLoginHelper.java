@@ -19,19 +19,21 @@ public class SsoWebLoginHelper {
      *
      * @param response
      * @param sessionId
+     * @param ifRemember    true: cookie not expire, false: expire when browser close （server cookie）
      * @param xxlUser
      */
     public static void login(HttpServletResponse response,
                              String sessionId,
-                             XxlSsoUser xxlUser) {
+                             XxlSsoUser xxlUser,
+                             boolean ifRemember) {
 
         String storeKey = SsoSessionIdHelper.parseStoreKey(sessionId);
         if (storeKey == null) {
-            return;
+            throw new RuntimeException("parseStoreKey Fail, sessionId:" + sessionId);
         }
 
         SsoLoginStore.put(storeKey, xxlUser);
-        CookieUtil.set(response, Conf.SSO_SESSIONID, sessionId, false);
+        CookieUtil.set(response, Conf.SSO_SESSIONID, sessionId, ifRemember);
     }
 
     /**
@@ -84,7 +86,7 @@ public class SsoWebLoginHelper {
         String paramSessionId = request.getParameter(Conf.SSO_SESSIONID);
         xxlUser = SsoTokenLoginHelper.loginCheck(paramSessionId);
         if (xxlUser != null) {
-            CookieUtil.set(response, Conf.SSO_SESSIONID, paramSessionId, false);
+            CookieUtil.set(response, Conf.SSO_SESSIONID, paramSessionId, false);    // expire when browser close （client cookie）
             return xxlUser;
         }
 
