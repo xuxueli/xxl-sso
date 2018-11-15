@@ -32,7 +32,7 @@ public class XxlSsoTokenFilter extends HttpServlet implements Filter {
             logoutPath = filterConfig.getInitParameter(Conf.SSO_LOGOUT_PATH);
         }
 
-        logger.info("XxlSsoFilter init.");
+        logger.info("XxlSsoWebFilter init.");
     }
 
     @Override

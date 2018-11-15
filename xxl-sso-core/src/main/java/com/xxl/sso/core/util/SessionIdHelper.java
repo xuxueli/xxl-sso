@@ -9,6 +9,13 @@ import java.util.UUID;
  */
 public class SessionIdHelper {
 
+    @Deprecated
+    public static String makeSessionId(){
+        String sessionId = UUID.randomUUID().toString();
+        return sessionId;
+    }
+
+
     public enum SessionIdGroup{
         WEB,APP;
     }
@@ -20,7 +27,7 @@ public class SessionIdHelper {
      * @param xxlSsoUser
      * @return  like "WEB#10001#xsadfaslzxlkdalkdf"
      */
-    public static String makeSessionId(SessionIdGroup sessionIdGroup, XxlSsoUser xxlSsoUser){
+    public static String makeSessionId2(SessionIdGroup sessionIdGroup, XxlSsoUser xxlSsoUser){
         String sessionId = sessionIdGroup.name()
                 .concat("#").concat(String.valueOf(xxlSsoUser.getUserid()))
                 .concat("#").concat(UUID.randomUUID().toString());

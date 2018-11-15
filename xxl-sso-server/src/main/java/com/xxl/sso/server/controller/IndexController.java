@@ -105,7 +105,7 @@ public class IndexController {
         xxlUser.setUsername(result.getData().getUsername());
 
         // make session id
-        String sessionId = SessionIdHelper.makeSessionId(SessionIdHelper.SessionIdGroup.WEB, xxlUser);
+        String sessionId = SessionIdHelper.makeSessionId();
 
         SsoLoginHelper.login(response, sessionId, xxlUser);
 

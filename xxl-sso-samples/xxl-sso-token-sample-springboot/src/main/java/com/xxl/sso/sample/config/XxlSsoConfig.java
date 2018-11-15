@@ -31,7 +31,7 @@ public class XxlSsoConfig implements DisposableBean {
         // xxl-sso, filter init
         FilterRegistrationBean registration = new FilterRegistrationBean();
 
-        registration.setName("XxlSsoFilter");
+        registration.setName("XxlSsoWebFilter");
         registration.setOrder(1);
         registration.addUrlPatterns("/*");
         registration.setFilter(new XxlSsoTokenFilter());

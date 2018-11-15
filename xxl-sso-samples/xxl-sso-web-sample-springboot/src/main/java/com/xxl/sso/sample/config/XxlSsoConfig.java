@@ -1,7 +1,7 @@
 package com.xxl.sso.sample.config;
 
 import com.xxl.sso.core.conf.Conf;
-import com.xxl.sso.core.filter.XxlSsoTokenFilter;
+import com.xxl.sso.core.filter.XxlSsoWebFilter;
 import com.xxl.sso.core.util.JedisUtil;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,10 +31,10 @@ public class XxlSsoConfig implements DisposableBean {
         // xxl-sso, filter init
         FilterRegistrationBean registration = new FilterRegistrationBean();
 
-        registration.setName("XxlSsoFilter");
+        registration.setName("XxlSsoWebFilter");
         registration.setOrder(1);
         registration.addUrlPatterns("/*");
-        registration.setFilter(new XxlSsoTokenFilter());
+        registration.setFilter(new XxlSsoWebFilter());
         registration.addInitParameter(Conf.SSO_SERVER, xxlSsoServer);
         registration.addInitParameter(Conf.SSO_LOGOUT_PATH, xxlSsoLogoutPath);
 

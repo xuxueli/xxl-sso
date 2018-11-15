@@ -17,8 +17,8 @@ import java.io.IOException;
  *
  * @author xuxueli 2018-04-03
  */
-public class XxlSsoFilter extends HttpServlet implements Filter {
-    private static Logger logger = LoggerFactory.getLogger(XxlSsoFilter.class);
+public class XxlSsoWebFilter extends HttpServlet implements Filter {
+    private static Logger logger = LoggerFactory.getLogger(XxlSsoWebFilter.class);
 
     private String ssoServer;
     private String logoutPath;
@@ -31,7 +31,7 @@ public class XxlSsoFilter extends HttpServlet implements Filter {
             logoutPath = filterConfig.getInitParameter(Conf.SSO_LOGOUT_PATH);
         }
 
-        logger.info("XxlSsoFilter init.");
+        logger.info("XxlSsoWebFilter init.");
     }
 
     @Override
