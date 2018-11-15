@@ -351,7 +351,8 @@ SSO User | 登录用户信息，与 SSO SessionId 相对应；
 - 5、Redis密码配置增强；
 - 6、项目结构梳理，清理冗余依赖，升级多项依赖版本至较近版本；
 - 7、认证数据存储结构调整，避免登陆信息存储冗余；
-- 8、[ING]新增属性：includedUriList、excludedUriList；
+- 8、sessionId数据结构优化，进一步提升暴露破解难度；
+- 9、[ING]新增属性：includedUriList、excludedUriList；
 
 ### TODO LIST
 - 1、缓存失效优化：失效周期默认2H、记住密码时72H；失效前1H有请求则缓存时间顺延一个周期；
