@@ -2,8 +2,8 @@ package com.xxl.sso.core.filter;
 
 import com.xxl.sso.core.conf.Conf;
 import com.xxl.sso.core.entity.ReturnT;
+import com.xxl.sso.core.login.SsoTokenLoginHelper;
 import com.xxl.sso.core.user.XxlSsoUser;
-import com.xxl.sso.core.util.SsoLoginHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,7 +32,7 @@ public class XxlSsoTokenFilter extends HttpServlet implements Filter {
             logoutPath = filterConfig.getInitParameter(Conf.SSO_LOGOUT_PATH);
         }
 
-        logger.info("XxlSsoWebFilter init.");
+        logger.info("XxlSsoTokenFilter init.");
     }
 
     @Override
@@ -43,8 +43,7 @@ public class XxlSsoTokenFilter extends HttpServlet implements Filter {
         String servletPath = ((HttpServletRequest) request).getServletPath();
         String link = req.getRequestURL().toString();
 
-        String sessionid = SsoLoginHelper.cookieSessionIdGetByHeader(req);
-        XxlSsoUser xxlUser = SsoLoginHelper.loginCheck(sessionid);
+        XxlSsoUser xxlUser = SsoTokenLoginHelper.loginCheck(req);
 
         // logout filter
         if (logoutPath!=null
@@ -52,7 +51,7 @@ public class XxlSsoTokenFilter extends HttpServlet implements Filter {
                 && logoutPath.equals(servletPath)) {
 
             if (xxlUser != null) {
-                SsoLoginHelper.logout(sessionid);
+                SsoTokenLoginHelper.logout(req);
             }
 
             // response

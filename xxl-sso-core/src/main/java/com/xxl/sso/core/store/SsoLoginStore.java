@@ -14,12 +14,12 @@ public class SsoLoginStore {
     /**
      * get
      *
-     * @param sessionId
+     * @param storeKey
      * @return
      */
-    public static XxlSsoUser get(String sessionId) {
+    public static XxlSsoUser get(String storeKey) {
 
-        String redisKey = redisKey(sessionId);
+        String redisKey = redisKey(storeKey);
         Object objectValue = JedisUtil.getObjectValue(redisKey);
         if (objectValue != null) {
             XxlSsoUser xxlUser = (XxlSsoUser) objectValue;
@@ -31,21 +31,21 @@ public class SsoLoginStore {
     /**
      * remove
      *
-     * @param sessionId
+     * @param storeKey
      */
-    public static void remove(String sessionId) {
-        String redisKey = redisKey(sessionId);
+    public static void remove(String storeKey) {
+        String redisKey = redisKey(storeKey);
         JedisUtil.del(redisKey);
     }
 
     /**
      * put
      *
-     * @param sessionId
+     * @param storeKey
      * @param xxlUser
      */
-    public static void put(String sessionId, XxlSsoUser xxlUser) {
-        String redisKey = redisKey(sessionId);
+    public static void put(String storeKey, XxlSsoUser xxlUser) {
+        String redisKey = redisKey(storeKey);
         JedisUtil.setObjectValue(redisKey, xxlUser, 24 * 60 *60);   // 25H, TODO, auto incr
     }
 

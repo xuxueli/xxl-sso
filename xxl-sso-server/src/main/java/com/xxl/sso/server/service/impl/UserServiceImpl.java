@@ -15,6 +15,7 @@ public class UserServiceImpl implements UserService {
     static {
         for (int i = 0; i <5; i++) {
             UserInfo userInfo = new UserInfo();
+            userInfo.setUserid(1000+i);
             userInfo.setUsername("user" + (i>0?String.valueOf(i):""));
             userInfo.setPassword("123456");
             mockUserList.add(userInfo);

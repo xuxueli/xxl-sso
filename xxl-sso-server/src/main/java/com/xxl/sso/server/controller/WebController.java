@@ -1,9 +1,9 @@
 package com.xxl.sso.server.controller;
 
 import com.xxl.sso.core.conf.Conf;
+import com.xxl.sso.core.login.SsoWebLoginHelper;
 import com.xxl.sso.core.user.XxlSsoUser;
-import com.xxl.sso.core.util.SessionIdHelper;
-import com.xxl.sso.core.util.SsoLoginHelper;
+import com.xxl.sso.core.util.SsoSessionIdHelper;
 import com.xxl.sso.server.core.model.UserInfo;
 import com.xxl.sso.server.core.result.ReturnT;
 import com.xxl.sso.server.service.UserService;
@@ -15,6 +15,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.UUID;
 
 /**
  * sso server (for web)
@@ -22,16 +23,16 @@ import javax.servlet.http.HttpServletResponse;
  * @author xuxueli 2017-08-01 21:39:47
  */
 @Controller
-public class IndexController {
+public class WebController {
 
     @Autowired
     private UserService userService;
 
     @RequestMapping("/")
-    public String index(Model model, HttpServletRequest request) {
+    public String index(Model model, HttpServletRequest request, HttpServletResponse response) {
 
         // login check
-        XxlSsoUser xxlUser = SsoLoginHelper.loginCheck(request);
+        XxlSsoUser xxlUser = SsoWebLoginHelper.loginCheck(request, response);
 
         if (xxlUser == null) {
             return "redirect:/login";
@@ -49,10 +50,10 @@ public class IndexController {
      * @return
      */
     @RequestMapping(Conf.SSO_LOGIN)
-    public String login(Model model, HttpServletRequest request) {
+    public String login(Model model, HttpServletRequest request, HttpServletResponse response) {
 
         // login check
-        XxlSsoUser xxlUser = SsoLoginHelper.loginCheck(request);
+        XxlSsoUser xxlUser = SsoWebLoginHelper.loginCheck(request, response);
 
         if (xxlUser != null) {
 
@@ -60,7 +61,7 @@ public class IndexController {
             String redirectUrl = request.getParameter(Conf.REDIRECT_URL);
             if (redirectUrl!=null && redirectUrl.trim().length()>0) {
 
-                String sessionId = SsoLoginHelper.getSessionIdByCookie(request);
+                String sessionId = SsoWebLoginHelper.getSessionIdByCookie(request);
                 String redirectUrlFinal = redirectUrl + "?" + Conf.SSO_SESSIONID + "=" + sessionId;;
 
                 return "redirect:" + redirectUrlFinal;
@@ -99,17 +100,19 @@ public class IndexController {
             return "redirect:/login";
         }
 
-        // make xxl-sso user
+        // 1、make xxl-sso user
         XxlSsoUser xxlUser = new XxlSsoUser();
-        xxlUser.setUserid(result.getData().getUserid());
+        xxlUser.setUserid(String.valueOf(result.getData().getUserid()));
         xxlUser.setUsername(result.getData().getUsername());
+        xxlUser.setVersion(UUID.randomUUID().toString());
 
-        // make session id
-        String sessionId = SessionIdHelper.makeSessionId();
+        // 2、make session id
+        String sessionId = SsoSessionIdHelper.makeSessionId(xxlUser);
 
-        SsoLoginHelper.login(response, sessionId, xxlUser);
+        // 3、login, store storeKey + cookie sessionId
+        SsoWebLoginHelper.login(response, sessionId, xxlUser);
 
-        // success redirect
+        // 4、return, redirect sessionId
         String redirectUrl = request.getParameter(Conf.REDIRECT_URL);
         if (redirectUrl!=null && redirectUrl.trim().length()>0) {
             String redirectUrlFinal = redirectUrl + "?" + Conf.SSO_SESSIONID + "=" + sessionId;
@@ -117,6 +120,7 @@ public class IndexController {
         } else {
             return "redirect:/";
         }
+
     }
 
     /**
@@ -130,7 +134,7 @@ public class IndexController {
     public String logout(HttpServletRequest request, HttpServletResponse response, RedirectAttributes redirectAttributes) {
 
         // logout
-        SsoLoginHelper.logout(request, response);
+        SsoWebLoginHelper.logout(request, response);
 
         redirectAttributes.addAttribute(Conf.REDIRECT_URL, request.getParameter(Conf.REDIRECT_URL));
         return "redirect:/login";

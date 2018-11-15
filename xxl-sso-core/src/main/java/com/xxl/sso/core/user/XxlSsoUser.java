@@ -11,16 +11,20 @@ import java.util.Map;
 public class XxlSsoUser implements Serializable {
     private static final long serialVersionUID = 42L;
 
-    private int userid;
+    // field
+    private String userid;
     private String username;
+    private String version;
 
     private Map<String, String> plugininfo;
 
-    public int getUserid() {
+
+    // set get
+    public String getUserid() {
         return userid;
     }
 
-    public void setUserid(int userid) {
+    public void setUserid(String userid) {
         this.userid = userid;
     }
 
@@ -30,6 +34,14 @@ public class XxlSsoUser implements Serializable {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
     }
 
     public Map<String, String> getPlugininfo() {

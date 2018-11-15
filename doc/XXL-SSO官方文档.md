@@ -350,7 +350,8 @@ SSO User | 登录用户信息，与 SSO SessionId 相对应；
 - 4、认证中心用户登录校验改为Mock数据方式，取消对DB强依赖，降低部署难度；
 - 5、Redis密码配置增强；
 - 6、项目结构梳理，清理冗余依赖，升级多项依赖版本至较近版本；
-- 7、[ING]新增属性：includedUriList、excludedUriList；
+- 7、认证数据存储结构调整，避免登陆信息存储冗余；
+- 8、[ING]新增属性：includedUriList、excludedUriList；
 
 ### TODO LIST
 - 1、缓存失效优化：失效周期默认2H、记住密码时72H；失效前1H有请求则缓存时间顺延一个周期；
@@ -359,6 +360,8 @@ SSO User | 登录用户信息，与 SSO SessionId 相对应；
 - 4、Redis增加password验证；
 - 5、支持设置exclude路径；
 - 6、SSO SessionId 与IP绑定，增强用户增强安全性；
+- 7、支持认证分组，分组内共享登陆状态，分组之间登录态隔离；待考虑；
+- 8、登录态自动续期；
 
 
 ## 六、其他
