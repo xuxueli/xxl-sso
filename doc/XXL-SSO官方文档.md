@@ -22,6 +22,7 @@ XXL-SSO 是一个分布式单点登录框架。只需要登录一次就可以访
 - 8、跨域：支持跨域应用接入SSO认证中心；
 - 9、Cookie+Token均支持：支持基于Cookie和基于Token两种接入方式，并均提供Sample项目；
 - 10、Web+APP均支持：支持Web和APP接入；
+- 11、记住密码：未记住密码时，关闭浏览器则登录态失效；记住密码时，支持登录态自动延期，在自定义延期时间的基础上，原则上可以无限延期；
 
 
 ### 1.3 下载
@@ -77,8 +78,11 @@ XXL-SSO 是一个分布式单点登录框架。只需要登录一次就可以访
 ```
 ……
 
-### redis       // redis address, like "{ip}"、"{ip}:{port}"、"{redis/rediss}://xxl-sso:{password}@{ip}:{port:6379}/{db}"；Multiple "," separated
-xxl.sso.redis.address=redis://xxl-sso:password@127.0.0.1:6379/0
+// redis 地址： 如 "{ip}"、"{ip}:{port}"、"{redis/rediss}://xxl-sso:{password}@{ip}:{port:6379}/{db}"；多地址逗号分隔
+xxl.sso.redis.address=redis://127.0.0.1:6379
+
+// 登录态有效期窗口，默认24H，当登录态有效期窗口过半时，自动顺延一个周期；
+xxl.sso.redis.expire.minite=1440
 
 ```
 
@@ -105,16 +109,16 @@ xxl.sso.redis.address=redis://xxl-sso:password@127.0.0.1:6379/0
 @Bean
 public FilterRegistrationBean xxlSsoFilterRegistration() {
 
-    // redis init
+    // xxl-sso, redis init
     JedisUtil.init(xxlSsoRedisAddress);
 
-    // filter
+    // xxl-sso, filter init
     FilterRegistrationBean registration = new FilterRegistrationBean();
 
-    registration.setName("XxlSsoFilter");
+    registration.setName("XxlSsoWebFilter");
     registration.setOrder(1);
     registration.addUrlPatterns("/*");
-    registration.setFilter(new XxlSsoFilter());
+    registration.setFilter(new XxlSsoWebFilter());
     registration.addInitParameter(Conf.SSO_SERVER, xxlSsoServer);
     registration.addInitParameter(Conf.SSO_LOGOUT_PATH, xxlSsoLogoutPath);
 
@@ -331,6 +335,13 @@ SSO User | 登录用户信息，与 SSO SessionId 相对应；
         - msg：sso not login.
         
 
+### 4.9 登录态自动延期       
+支持自定义登录态有效期窗口，默认24H，当登录态有效期窗口过半时，自动顺延一个周期；
+
+### 4.10 记住密码         
+未记住密码时，关闭浏览器则登录态失效；记住密码时，登录态自动延期，在自定义延期时间的基础上，原则上可以无限延期；
+
+
 ## 五、版本更新日志
 
 ### 5.1 版本 v0.1.0，新特性[2018-04-04]
@@ -352,7 +363,7 @@ SSO User | 登录用户信息，与 SSO SessionId 相对应；
 - 6、项目结构梳理，清理冗余依赖，升级多项依赖版本至较近版本；
 - 7、认证数据存储结构调整，避免登陆信息存储冗余；
 - 8、sessionId数据结构优化，进一步提升暴露破解难度；
-- 9、登录态自动延期：支持自定义自动延期时间，从用户最后一次访问系统开始延期登录态；
+- 9、登录态自动延期：支持自定义登录态有效期窗口，默认24H，当登录态有效期窗口过半时，自动顺延一个周期；
 - 9、"记住密码" 功能优化：未记住密码时，关闭浏览器则登录态失效；记住密码时，登录态自动延期，在自定义延期时间的基础上，原则上可以无限延期；
 - 10、[ING]新增属性：includedUriList、excludedUriList；
 
