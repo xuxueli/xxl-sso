@@ -365,7 +365,7 @@ SSO User | 登录用户信息，与 SSO SessionId 相对应；
 - 8、Client端依赖Core包，slf4j依赖优化，移除log4j强依赖；
 - 9、Ajax请求未登录处理逻辑优化，返回JSON格式提示数据；
 - 10、项目结构梳理，清理冗余依赖，升级多项依赖版本至较近版本；
-- 11、[ING]新增属性：includedUriList、excludedUriList；
+- 11、新增属性 "excludedPaths" 支持自定义不需要登陆拦截的请求路径；
 
 ### TODO LIST
 - 1、认证中心与接入端交互数据加密，增强安全性；redirect_url必须和临时AccessToken配合才会生效，AccessToken有效期60s；

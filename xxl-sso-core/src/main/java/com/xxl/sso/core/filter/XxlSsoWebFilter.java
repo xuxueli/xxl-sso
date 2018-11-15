@@ -22,14 +22,14 @@ public class XxlSsoWebFilter extends HttpServlet implements Filter {
 
     private String ssoServer;
     private String logoutPath;
+    private String excludedPaths;
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
 
         ssoServer = filterConfig.getInitParameter(Conf.SSO_SERVER);
-        if (ssoServer!=null && ssoServer.trim().length()>0) {
-            logoutPath = filterConfig.getInitParameter(Conf.SSO_LOGOUT_PATH);
-        }
+        logoutPath = filterConfig.getInitParameter(Conf.SSO_LOGOUT_PATH);
+        excludedPaths = filterConfig.getInitParameter(Conf.SSO_EXCLUDED_PATHS);
 
         logger.info("XxlSsoWebFilter init.");
     }
@@ -39,8 +39,19 @@ public class XxlSsoWebFilter extends HttpServlet implements Filter {
         HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse res = (HttpServletResponse) response;
 
-        String servletPath = ((HttpServletRequest) request).getServletPath();
-        String link = req.getRequestURL().toString();
+        String servletPath = ((HttpServletRequest) request).getServletPath();   // from index to page
+        String link = req.getRequestURL().toString();       // total link
+
+        // excluded path check
+        if (excludedPaths!=null && excludedPaths.trim().length()>0) {
+            for (String excludedPath:excludedPaths.split(",")) {
+                if (servletPath.equals(excludedPath)) {
+                    // excluded path, allow
+                    chain.doFilter(request, response);
+                    return;
+                }
+            }
+        }
 
         // logout filter
         if (logoutPath!=null

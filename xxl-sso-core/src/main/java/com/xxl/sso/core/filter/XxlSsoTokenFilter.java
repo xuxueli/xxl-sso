@@ -23,14 +23,14 @@ public class XxlSsoTokenFilter extends HttpServlet implements Filter {
 
     private String ssoServer;
     private String logoutPath;
+    private String excludedPaths;
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
 
         ssoServer = filterConfig.getInitParameter(Conf.SSO_SERVER);
-        if (ssoServer!=null && ssoServer.trim().length()>0) {
-            logoutPath = filterConfig.getInitParameter(Conf.SSO_LOGOUT_PATH);
-        }
+        logoutPath = filterConfig.getInitParameter(Conf.SSO_LOGOUT_PATH);
+        excludedPaths = filterConfig.getInitParameter(Conf.SSO_EXCLUDED_PATHS);
 
         logger.info("XxlSsoTokenFilter init.");
     }
@@ -41,18 +41,25 @@ public class XxlSsoTokenFilter extends HttpServlet implements Filter {
         HttpServletResponse res = (HttpServletResponse) response;
 
         String servletPath = ((HttpServletRequest) request).getServletPath();
-        String link = req.getRequestURL().toString();
 
-        XxlSsoUser xxlUser = SsoTokenLoginHelper.loginCheck(req);
+        // excluded path check
+        if (excludedPaths!=null && excludedPaths.trim().length()>0) {
+            for (String excludedPath:excludedPaths.split(",")) {
+                if (servletPath.equals(excludedPath)) {
+                    // excluded path, allow
+                    chain.doFilter(request, response);
+                    return;
+                }
+            }
+        }
 
         // logout filter
         if (logoutPath!=null
                 && logoutPath.trim().length()>0
                 && logoutPath.equals(servletPath)) {
 
-            if (xxlUser != null) {
-                SsoTokenLoginHelper.logout(req);
-            }
+            // logout
+            SsoTokenLoginHelper.logout(req);
 
             // response
             res.setStatus(HttpServletResponse.SC_OK);
@@ -63,6 +70,7 @@ public class XxlSsoTokenFilter extends HttpServlet implements Filter {
         }
 
         // login filter
+        XxlSsoUser xxlUser = SsoTokenLoginHelper.loginCheck(req);
         if (xxlUser == null) {
 
             // response
