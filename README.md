@@ -43,12 +43,29 @@ XXL-SSO 是一个分布式单点登录框架。只需要登录一次就可以访
 - 3、单点登录：只需要登录一次就可以访问所有相互信任的应用系统。
 - 4、分布式：接入SSO认证中心的应用，支持分布式部署；
 - 5、HA：Server端与Client端，均支持集群部署，提高系统可用性；
-- 6、实时性：系统登陆、注销状态，全部Server与Client端实时共享；
-- 7、CS结构：基于CS结构，包括Server"认证中心"与Client"受保护应用"；
-- 8、跨域：支持跨域应用接入SSO认证中心；
-- 9、Cookie+Token均支持：支持基于Cookie和基于Token两种接入方式，并均提供Sample项目；
-- 10、Web+APP均支持：支持Web和APP接入；
+- 6、跨域：支持跨域应用接入SSO认证中心；
+- 7、Cookie+Token均支持：支持基于Cookie和基于Token两种接入方式，并均提供Sample项目；
+- 8、Web+APP均支持：支持Web和APP接入；
+- 9、实时性：系统登陆、注销状态，全部Server与Client端实时共享；
+- 10、CS结构：基于CS结构，包括Server"认证中心"与Client"受保护应用"；
 - 11、记住密码：未记住密码时，关闭浏览器则登录态失效；记住密码时，支持登录态自动延期，在自定义延期时间的基础上，原则上可以无限延期；
+- 12、路径排除：支持自定义多个排除路径，支持Ant表达式。用于排除SSO客户端不需要过滤的路径；
+
+
+## Development
+于2018年初，我在github上创建XXL-SSO项目仓库并提交第一个commit，随之进行系统结构设计，UI选型，交互设计……
+
+至今，XXL-SSO已接入多家公司的线上产品线，接入场景如电商业务，O2O业务和核心中间件配置动态化等，截止2018-03-15为止，XXL-SSO已接入的公司包括不限于：
+
+    - 1、湖南创发科技
+	- 2、深圳龙华科技有限公司
+	- 3、摩根国际
+	- 4、印记云
+	- ……
+
+> 更多接入的公司，欢迎在 [登记地址](https://github.com/xuxueli/xxl-sso/issues/1 ) 登记，登记仅仅为了产品推广。
+
+欢迎大家的关注和使用，XXL-SSO也将拥抱变化，持续发展。
 
 
 ## Communication
@@ -60,9 +77,6 @@ XXL-SSO 是一个分布式单点登录框架。只需要登录一次就可以访
 Contributions are welcome! Open a pull request to fix a bug, or open an [Issue](https://github.com/xuxueli/xxl-sso/issues/) to discuss a new feature or change.
 
 欢迎参与项目贡献！比如提交PR修复一个bug，或者新建 [Issue](https://github.com/xuxueli/xxl-sso/issues/) 讨论新特性或者变更。
-
-## 接入登记
-更多接入的公司，欢迎在 [登记地址](https://github.com/xuxueli/xxl-sso/issues/1 ) 登记，登记仅仅为了产品推广。
 
 
 ## Copyright and License
