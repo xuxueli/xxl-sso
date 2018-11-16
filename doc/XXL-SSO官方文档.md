@@ -360,7 +360,7 @@ SSO User | 登录用户信息，与 SSO SessionId 相对应；
 - 7、CS结构：基于CS结构，包括Server"认证中心"与Client"受保护应用"；
 - 8、跨域：支持跨域应用接入SSO认证中心；
 
-### 5.2 版本 v1.1.0 Release Notes [迭代中]
+### 5.2 版本 v1.1.0 Release Notes [2018-11-06]
 - 1、Redis配置方式增强，支持自定义DB、密码、IP、PORT等等；；
 - 2、Token接入方式；除了常规Cookie方式外，新增Token接入方式，并提供Sample项目；
 - 3、登录态自动延期：支持自定义登录态有效期窗口，默认24H，当登录态有效期窗口过半时，自动顺延一个周期；
