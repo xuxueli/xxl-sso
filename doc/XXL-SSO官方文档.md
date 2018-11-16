@@ -141,6 +141,9 @@ xxl.sso.server=http://xxlssoserver.com:8080/xxl-sso-server
 ##### 注销登陆path，值为Client端应用的相对路径
 xxl.sso.logout.path=/logout
 
+##### 路径排除Path，允许设置多个，且支持Ant表达式。用于排除SSO客户端不需要过滤的路径
+xxl-sso.excluded.paths=
+
 ### redis   // redis address, like "{ip}"、"{ip}:{port}"、"{redis/rediss}://xxl-sso:{password}@{ip}:{port:6379}/{db}"；Multiple "," separated
 xxl.sso.redis.address=redis://xxl-sso:password@127.0.0.1:6379/0
 ```
@@ -341,6 +344,9 @@ SSO User | 登录用户信息，与 SSO SessionId 相对应；
 ### 4.10 记住密码         
 未记住密码时，关闭浏览器则登录态失效；记住密码时，登录态自动延期，在自定义延期时间的基础上，原则上可以无限延期；
 
+### 4.11 路径排除   
+自定义路径排除Path，允许设置多个，且支持Ant表达式。用于排除SSO客户端不需要过滤的路径
+
 
 ## 五、版本更新日志
 
@@ -365,7 +371,7 @@ SSO User | 登录用户信息，与 SSO SessionId 相对应；
 - 8、Client端依赖Core包，slf4j依赖优化，移除log4j强依赖；
 - 9、Ajax请求未登录处理逻辑优化，返回JSON格式提示数据；
 - 10、项目结构梳理，清理冗余依赖，升级多项依赖版本至较近版本；
-- 11、新增属性 "excludedPaths" 支持自定义不需要登陆拦截的请求路径；
+- 11、路径排除：新增自定义属性 "excludedPaths"，允许设置多个，且支持Ant表达式。用于排除SSO客户端不需要过滤的路径
 
 ### TODO LIST
 - 1、认证中心与接入端交互数据加密，增强安全性；redirect_url必须和临时AccessToken配合才会生效，AccessToken有效期60s；
