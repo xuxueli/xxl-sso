@@ -373,6 +373,10 @@ SSO User | 登录用户信息，与 SSO SessionId 相对应；
 - 10、项目结构梳理，清理冗余依赖，升级多项依赖版本至较近版本；
 - 11、路径排除：新增自定义属性 "excludedPaths"，允许设置多个，且支持Ant表达式。用于排除SSO客户端不需要过滤的路径
 
+
+### 5.3 版本 v1.1.1 Release Notes [迭代中]
+
+
 ### TODO LIST
 - 1、认证中心与接入端交互数据加密，增强安全性；redirect_url必须和临时AccessToken配合才会生效，AccessToken有效期60s；
 - 2、SSO SessionId 与IP绑定，增强用户增强安全性；

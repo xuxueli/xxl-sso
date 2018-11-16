@@ -4,9 +4,9 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <artifactId>xxl-sso-samples</artifactId>
         <groupId>com.xuxueli</groupId>
-        <version>1.1.0</version>
+        <artifactId>xxl-sso-samples</artifactId>
+        <version>1.1.1-SNAPSHOT</version>
     </parent>
     <artifactId>xxl-sso-token-sample-springboot</artifactId>
     <packaging>jar</packaging>
