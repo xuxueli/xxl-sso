@@ -48,7 +48,7 @@ public class AppController {
         XxlSsoUser xxlUser = new XxlSsoUser();
         xxlUser.setUserid(String.valueOf(result.getData().getUserid()));
         xxlUser.setUsername(result.getData().getUsername());
-        xxlUser.setVersion(UUID.randomUUID().toString());
+        xxlUser.setVersion(UUID.randomUUID().toString().replaceAll("-", ""));
         xxlUser.setExpireMinite(SsoLoginStore.getRedisExpireMinite());
         xxlUser.setExpireFreshTime(System.currentTimeMillis());
 

@@ -1,8 +1,10 @@
 package com.xxl.sso.core.filter;
 
 import com.xxl.sso.core.conf.Conf;
-import com.xxl.sso.core.user.XxlSsoUser;
 import com.xxl.sso.core.login.SsoWebLoginHelper;
+import com.xxl.sso.core.path.UrlPathHelper;
+import com.xxl.sso.core.path.impl.AntPathMatcher;
+import com.xxl.sso.core.user.XxlSsoUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,6 +21,8 @@ import java.io.IOException;
  */
 public class XxlSsoWebFilter extends HttpServlet implements Filter {
     private static Logger logger = LoggerFactory.getLogger(XxlSsoWebFilter.class);
+
+    private static final AntPathMatcher antPathMatcher = new AntPathMatcher();
 
     private String ssoServer;
     private String logoutPath;
@@ -39,24 +43,32 @@ public class XxlSsoWebFilter extends HttpServlet implements Filter {
         HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse res = (HttpServletResponse) response;
 
-        String servletPath = ((HttpServletRequest) request).getServletPath();   // from index to page
-        String link = req.getRequestURL().toString();       // total link
+
+        // make url
+        String uri = UrlPathHelper.getRequestUri( ((HttpServletRequest) request));
+        String contextPath = ((HttpServletRequest) request).getContextPath();
+        String uriWithoutContext = uri.substring(contextPath.length());
+
 
         // excluded path check
         if (excludedPaths!=null && excludedPaths.trim().length()>0) {
             for (String excludedPath:excludedPaths.split(",")) {
-                if (servletPath.equals(excludedPath)) {
+                String uriPattern = excludedPath.trim();
+
+                // 支持ANT表达式
+                if (antPathMatcher.match(uriPattern, uriWithoutContext)) {
                     // excluded path, allow
                     chain.doFilter(request, response);
                     return;
                 }
+
             }
         }
 
-        // logout filter
+        // logout path check
         if (logoutPath!=null
                 && logoutPath.trim().length()>0
-                && logoutPath.equals(servletPath)) {
+                && logoutPath.equals(uriWithoutContext)) {
 
             // remove cookie
             SsoWebLoginHelper.removeSessionIdByCookie(req, res);
@@ -83,6 +95,9 @@ public class XxlSsoWebFilter extends HttpServlet implements Filter {
                 res.getWriter().println("{\"code\":"+Conf.SSO_LOGIN_FAIL_RESULT.getCode()+", \"msg\":\""+ Conf.SSO_LOGIN_FAIL_RESULT.getMsg() +"\"}");
                 return;
             } else {
+
+                // total link
+                String link = req.getRequestURL().toString();
 
                 // redirect logout
                 String loginPageUrl = ssoServer.concat(Conf.SSO_LOGIN)
