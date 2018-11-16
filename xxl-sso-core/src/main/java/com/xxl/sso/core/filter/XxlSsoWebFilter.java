@@ -2,7 +2,6 @@ package com.xxl.sso.core.filter;
 
 import com.xxl.sso.core.conf.Conf;
 import com.xxl.sso.core.login.SsoWebLoginHelper;
-import com.xxl.sso.core.path.UrlPathHelper;
 import com.xxl.sso.core.path.impl.AntPathMatcher;
 import com.xxl.sso.core.user.XxlSsoUser;
 import org.slf4j.Logger;
@@ -43,12 +42,8 @@ public class XxlSsoWebFilter extends HttpServlet implements Filter {
         HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse res = (HttpServletResponse) response;
 
-
         // make url
-        String uri = UrlPathHelper.getRequestUri( ((HttpServletRequest) request));
-        String contextPath = ((HttpServletRequest) request).getContextPath();
-        String uriWithoutContext = uri.substring(contextPath.length());
-
+        String servletPath = req.getServletPath();
 
         // excluded path check
         if (excludedPaths!=null && excludedPaths.trim().length()>0) {
@@ -56,7 +51,7 @@ public class XxlSsoWebFilter extends HttpServlet implements Filter {
                 String uriPattern = excludedPath.trim();
 
                 // 支持ANT表达式
-                if (antPathMatcher.match(uriPattern, uriWithoutContext)) {
+                if (antPathMatcher.match(uriPattern, servletPath)) {
                     // excluded path, allow
                     chain.doFilter(request, response);
                     return;
@@ -68,7 +63,7 @@ public class XxlSsoWebFilter extends HttpServlet implements Filter {
         // logout path check
         if (logoutPath!=null
                 && logoutPath.trim().length()>0
-                && logoutPath.equals(uriWithoutContext)) {
+                && logoutPath.equals(servletPath)) {
 
             // remove cookie
             SsoWebLoginHelper.removeSessionIdByCookie(req, res);

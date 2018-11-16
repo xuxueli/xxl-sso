@@ -4,7 +4,7 @@ import com.xxl.sso.core.conf.Conf;
 import com.xxl.sso.core.login.SsoWebLoginHelper;
 import com.xxl.sso.core.store.SsoLoginStore;
 import com.xxl.sso.core.user.XxlSsoUser;
-import com.xxl.sso.core.util.SsoSessionIdHelper;
+import com.xxl.sso.core.store.SsoSessionIdHelper;
 import com.xxl.sso.server.core.model.UserInfo;
 import com.xxl.sso.server.core.result.ReturnT;
 import com.xxl.sso.server.service.UserService;

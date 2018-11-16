@@ -3,7 +3,7 @@ package com.xxl.sso.core.login;
 import com.xxl.sso.core.conf.Conf;
 import com.xxl.sso.core.store.SsoLoginStore;
 import com.xxl.sso.core.user.XxlSsoUser;
-import com.xxl.sso.core.util.SsoSessionIdHelper;
+import com.xxl.sso.core.store.SsoSessionIdHelper;
 
 import javax.servlet.http.HttpServletRequest;
 

@@ -3,6 +3,7 @@ package com.xxl.sso.core.filter;
 import com.xxl.sso.core.conf.Conf;
 import com.xxl.sso.core.entity.ReturnT;
 import com.xxl.sso.core.login.SsoTokenLoginHelper;
+import com.xxl.sso.core.path.impl.AntPathMatcher;
 import com.xxl.sso.core.user.XxlSsoUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +21,8 @@ import java.io.IOException;
  */
 public class XxlSsoTokenFilter extends HttpServlet implements Filter {
     private static Logger logger = LoggerFactory.getLogger(XxlSsoTokenFilter.class);
+
+    private static final AntPathMatcher antPathMatcher = new AntPathMatcher();
 
     private String ssoServer;
     private String logoutPath;
@@ -40,16 +43,21 @@ public class XxlSsoTokenFilter extends HttpServlet implements Filter {
         HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse res = (HttpServletResponse) response;
 
-        String servletPath = ((HttpServletRequest) request).getServletPath();
+        // make url
+        String servletPath = req.getServletPath();
 
         // excluded path check
         if (excludedPaths!=null && excludedPaths.trim().length()>0) {
             for (String excludedPath:excludedPaths.split(",")) {
-                if (servletPath.equals(excludedPath)) {
+                String uriPattern = excludedPath.trim();
+
+                // 支持ANT表达式
+                if (antPathMatcher.match(uriPattern, servletPath)) {
                     // excluded path, allow
                     chain.doFilter(request, response);
                     return;
                 }
+
             }
         }
 

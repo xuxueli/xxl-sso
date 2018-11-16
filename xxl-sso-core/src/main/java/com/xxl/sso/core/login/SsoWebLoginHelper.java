@@ -4,7 +4,7 @@ import com.xxl.sso.core.conf.Conf;
 import com.xxl.sso.core.store.SsoLoginStore;
 import com.xxl.sso.core.user.XxlSsoUser;
 import com.xxl.sso.core.util.CookieUtil;
-import com.xxl.sso.core.util.SsoSessionIdHelper;
+import com.xxl.sso.core.store.SsoSessionIdHelper;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
