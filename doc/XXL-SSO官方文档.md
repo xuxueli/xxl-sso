@@ -45,7 +45,6 @@ XXL-SSO 是一个分布式单点登录框架。只需要登录一次就可以访
 ### 1.4 环境
 - JDK：1.7+
 - Redis：4.0+
-- Mysql：5.6+
 
 
 ## 二、快速入门（基于Cookie）
@@ -147,8 +146,6 @@ xxl.sso.redis.address=redis://xxl-sso:password@127.0.0.1:6379/0
 
 ### 2.4 验证
 
-- 环境准备：启动Redis、初始化Mysql表数据；
-
 - 修改Host文件：域名方式访问认证中心，模拟跨域与线上真实环境
 ```
 ### 在host文件中添加以下内容0
@@ -228,8 +225,6 @@ xxl.sso.redis.address=redis://xxl-sso:password@127.0.0.1:6379/0
 > 可参考 "章节 2.4" 部署 "单点登陆Client端接入示例项目"，唯一不同点是：将web应用的 "XxlSsoFilter" 更换为app应用 "XxlSsoTokenFilter"；
 
 ### 3.3 验证  (模拟请求 Token 方式接入SSO的接口)
-
-- 环境准备：启动Redis、初始化Mysql表数据；
 
 - 修改Host文件：域名方式访问认证中心，模拟跨域与线上真实环境
 ```
