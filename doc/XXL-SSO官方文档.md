@@ -53,10 +53,7 @@ XXL-SSO 是一个分布式单点登录框架。只需要登录一次就可以访
 > 基于Cookie，相关概念可参考 "章节 4.6"；
 
 
-### 2.1：系统数据库初始化
-
-
-### 2.2：源码编译
+### 2.1：源码编译
 
 ```
 - xxl-sso-server：中央认证服务，支持集群；
@@ -66,7 +63,7 @@ XXL-SSO 是一个分布式单点登录框架。只需要登录一次就可以访
     - xxl-sso-token-sample-springboot：基于Token接入方式，常用于无法使用Cookie的场景使用，如APP、Cookie被禁用等，springboot版本
 ```
 
-### 2.3 部署 "认证中心（SSO Server）"
+### 2.2 部署 "认证中心（SSO Server）"
 
 ```
 项目名：xxl-sso-server
@@ -86,7 +83,7 @@ xxl.sso.redis.expire.minite=1440
 
 ```
 
-### 2.4 部署 "单点登陆Client端接入示例项目"
+### 2.3 部署 "单点登陆Client端接入示例项目"
 
 ```
 项目名：xxl-sso-web-sample-springboot
@@ -148,7 +145,7 @@ xxl-sso.excluded.paths=
 xxl.sso.redis.address=redis://xxl-sso:password@127.0.0.1:6379/0
 ```
 
-### 2.5 验证
+### 2.4 验证
 
 - 环境准备：启动Redis、初始化Mysql表数据；
 
@@ -222,7 +219,7 @@ xxl.sso.redis.address=redis://xxl-sso:password@127.0.0.1:6379/0
             - userid：用户ID
             - username：用户名
 
-### 2.2 部署 "单点登陆Client端接入示例项目" (Token方式)
+### 3.2 部署 "单点登陆Client端接入示例项目" (Token方式)
 
 ```
 项目名：xxl-sso-token-sample-springboot
@@ -230,7 +227,7 @@ xxl.sso.redis.address=redis://xxl-sso:password@127.0.0.1:6379/0
 
 > 可参考 "章节 2.4" 部署 "单点登陆Client端接入示例项目"，唯一不同点是：将web应用的 "XxlSsoFilter" 更换为app应用 "XxlSsoTokenFilter"；
 
-### 2.3 验证  (模拟请求 Token 方式接入SSO的接口)
+### 3.3 验证  (模拟请求 Token 方式接入SSO的接口)
 
 - 环境准备：启动Redis、初始化Mysql表数据；
 
