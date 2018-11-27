@@ -295,7 +295,7 @@ SSO User | 登录用户信息，与 SSO SessionId 相对应；
 - 用户与Client端应用请求注销Path时，将会 redirect 到 SSO Server 自动销毁全局 SSO SessionId，实现全局销毁；
 - 然后，访问接入SSO保护的任意Client端应用时，SSO Filter 均会拦截请求并 redirect 到 SSO Server 的统一登录界面。
 
-### 4.6 基于Cookie，相关感念
+### 4.6 基于Cookie，相关概念
 
 - 登陆凭证存储：登陆成功后，用户登陆凭证被自动存储在浏览器Cookie中；
 - Client端校验登陆状态：通过校验请求Cookie中的是否包含用户登录凭证判断；
@@ -305,7 +305,7 @@ SSO User | 登录用户信息，与 SSO SessionId 相对应；
     - 用户：发起请求的用户，使用浏览器访问。
 
     
-### 4.7 基于Token，相关感念
+### 4.7 基于Token，相关概念
 
 - 登陆凭证存储：登陆成功后，获取到登录凭证（xxl_sso_sessionid=xxx），需要主动存储，如存储在 localStorage、Sqlite 中；
 - Client端校验登陆状态：通过校验请求 Header参数 中的是否包含用户登录凭证（xxl_sso_sessionid=xxx）判断；因此，发送请求时需要在 Header参数 中设置登陆凭证；
