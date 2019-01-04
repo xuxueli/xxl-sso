@@ -392,7 +392,7 @@ SSO User | 登录用户信息，与 SSO SessionId 相对应
 3. 支持认证分组，分组内共享登陆状态，分组之间登录态隔离，【待考虑】
 4. 客户端新增属性 "xxl.sso.server"，用于构建跳转连接，防止跳转第三方导致登陆漏洞
 5. token验证方式增加jwt方式支持
-6. Client端移除Redis依赖，改为LocalCache + RPC校验方式
+6. Client端移除Redis依赖，改为 LocalCache/30s + RPC + Server-Redis/Broadcast 校验方式；
 
 
 ## 六、其他
