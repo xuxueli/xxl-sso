@@ -46,7 +46,7 @@
         <dependency>
             <groupId>com.xuxueli</groupId>
             <artifactId>xxl-sso-core</artifactId>
-            <version>${parent.version}</version>
+            <version>${project.version}</version>
         </dependency>
 
         <!-- devtools -->
