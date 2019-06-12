@@ -72,7 +72,7 @@ public class SsoTokenLoginHelper {
             if (xxlUser.getVersion().equals(version)) {
 
                 // After the expiration time has passed half, Auto refresh
-                if ((System.currentTimeMillis() - xxlUser.getExpireFreshTime()) > xxlUser.getExpireMinite()/2) {
+                if ((System.currentTimeMillis() - xxlUser.getExpireFreshTime()) > xxlUser.getExpireMinute()/2) {
                     xxlUser.setExpireFreshTime(System.currentTimeMillis());
                     SsoLoginStore.put(storeKey, xxlUser);
                 }
