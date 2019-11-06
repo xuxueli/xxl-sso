@@ -284,7 +284,7 @@ xxl.sso.redis.address=redis://xxl-sso:password@127.0.0.1:6379/0
 
 ### 4.1 架构图
 
-![输入图片说明](https://raw.githubusercontent.com/xuxueli/xxl-sso/master/doc/images/img_01.png "在这里输入图片标题")
+![输入图片说明](https://www.xuxueli.com/doc/static/xxl-sso/images/img_01.png "在这里输入图片标题")
 
 ### 4.2 功能定位
 
