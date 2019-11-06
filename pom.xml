@@ -10,7 +10,7 @@
 
     <name>${project.artifactId}</name>
     <description>a distributed single-sign-on framework.</description>
-    <url>http://www.xuxueli.com/</url>
+    <url>https://www.xuxueli.com/</url>
 
     <modules>
         <module>xxl-sso-core</module>
