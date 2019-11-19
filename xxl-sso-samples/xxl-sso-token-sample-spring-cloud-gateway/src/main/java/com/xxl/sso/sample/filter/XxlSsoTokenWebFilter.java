@@ -7,13 +7,14 @@ import com.xxl.sso.core.path.impl.AntPathMatcher;
 import com.xxl.sso.core.user.XxlSsoUser;
 import com.xxl.sso.sample.helper.XxlGatewaySsoTokenLoginHelper;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cloud.gateway.filter.GatewayFilterChain;
-import org.springframework.cloud.gateway.filter.GlobalFilter;
-import org.springframework.core.Ordered;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.web.server.ServerWebExchange;
+import org.springframework.web.server.WebFilter;
+import org.springframework.web.server.WebFilterChain;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -24,10 +25,14 @@ import static com.xxl.sso.core.conf.Conf.SSO_USER;
 
 /**
  * 基于 GlobalFilter 的过滤器只能过滤 Spring-Cloud-Gateway 的路由配置
+ * 基于 WebFilter 能够覆盖 RequestMapping 和 Gateway
+ *
  * @author Wu Weijie
+ * @see XxlSsoTokenWebFilter
  */
-//@Component
-public class XxlSsoTokenGatewayFilter implements GlobalFilter, Ordered {
+@Configuration
+@Order(-1)
+public class XxlSsoTokenWebFilter implements WebFilter {
 
     public static final String NOT_LOGIN_MESSAGE = "{\"code\":" + Conf.SSO_LOGIN_FAIL_RESULT.getCode() + ", \"msg\":\"" + Conf.SSO_LOGIN_FAIL_RESULT.getMsg() + "\"}";
     public static final String ERROR_MESSAGE_TEMPLATE = "'{'\"code\":\"500\", \"msg\":\"{0}\"}";
@@ -44,7 +49,7 @@ public class XxlSsoTokenGatewayFilter implements GlobalFilter, Ordered {
     private String apiPrefix;
 
     @Override
-    public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
+    public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
         ServerHttpRequest request = exchange.getRequest();
         ServerHttpResponse response = exchange.getResponse();
 
@@ -108,10 +113,5 @@ public class XxlSsoTokenGatewayFilter implements GlobalFilter, Ordered {
             return response.writeWith(
                     Flux.just(response.bufferFactory().wrap(MessageFormat.format(ERROR_MESSAGE_TEMPLATE, e.getMessage()).getBytes(StandardCharsets.UTF_8))));
         }
-    }
-
-    @Override
-    public int getOrder() {
-        return 0;
     }
 }
