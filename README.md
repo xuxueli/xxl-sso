@@ -7,12 +7,15 @@
         <a href="https://www.xuxueli.com/xxl-sso/"><strong>-- Home Page --</strong></a>
         <br>
         <br>
+        <a href="https://github.com/xuxueli/xxl-sso/actions">
+            <img src="https://github.com/xuxueli/xxl-sso/workflows/Java%20CI/badge.svg" >
+        </a>
         <a href="https://maven-badges.herokuapp.com/maven-central/com.xuxueli/xxl-sso/">
             <img src="https://maven-badges.herokuapp.com/maven-central/com.xuxueli/xxl-sso/badge.svg" >
         </a>
-         <a href="https://github.com/xuxueli/xxl-sso/releases">
-             <img src="https://img.shields.io/github/release/xuxueli/xxl-sso.svg" >
-         </a>
+        <a href="https://github.com/xuxueli/xxl-sso/releases">
+            <img src="https://img.shields.io/github/release/xuxueli/xxl-sso.svg" >
+        </a>
         <a href="http://www.gnu.org/licenses/gpl-3.0.html">
             <img src="https://img.shields.io/badge/license-GPLv3-blue.svg" >
         </a>
