@@ -97,7 +97,7 @@ XXL-SSO 是一个分布式单点登录框架。只需要登录一次就可以访
 xxl.sso.redis.address=redis://127.0.0.1:6379
 
 // 登录态有效期窗口，默认24H，当登录态有效期窗口过半时，自动顺延一个周期
-xxl.sso.redis.expire.minite=1440
+xxl.sso.redis.expire.minute=1440
 
 ```
 

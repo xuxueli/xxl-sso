@@ -16,12 +16,12 @@ public class XxlSsoConfig implements InitializingBean, DisposableBean {
     @Value("${xxl.sso.redis.address}")
     private String redisAddress;
 
-    @Value("${xxl.sso.redis.expire.minite}")
-    private int redisExpireMinite;
+    @Value("${xxl.sso.redis.expire.minute}")
+    private int redisExpireMinute;
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        SsoLoginStore.setRedisExpireMinite(redisExpireMinite);
+        SsoLoginStore.setRedisExpireMinute(redisExpireMinute);
         JedisUtil.init(redisAddress);
     }
 
