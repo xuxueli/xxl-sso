@@ -403,6 +403,7 @@ SSO User | 登录用户信息，与 SSO SessionId 相对应
 - 5、token验证方式增加jwt方式支持
 - 6、Client端移除Redis依赖，改为 LocalCache/30s + RPC + Server-Redis/Broadcast 校验方式；
 - 7、安全性增强，登陆用户数据中，新增客户端信息如ip、ua等，方式session被窃取；
+- 8、集成网关支持；
 
 ## 六、其他
 
