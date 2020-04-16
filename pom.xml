@@ -29,10 +29,8 @@
         <slf4j-api.version>1.7.30</slf4j-api.version>
 
         <javax.servlet-api.version>4.0.1</javax.servlet-api.version>
-
         <jedis.version>3.2.0</jedis.version>
 
-        <spring.version>5.2.5.RELEASE</spring.version>
         <spring-boot.version>2.2.6.RELEASE</spring-boot.version>
 
         <maven-source-plugin.version>3.2.1</maven-source-plugin.version>
