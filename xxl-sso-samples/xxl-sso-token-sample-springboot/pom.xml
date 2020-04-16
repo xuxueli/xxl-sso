@@ -37,12 +37,6 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- freemarker -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-freemarker</artifactId>
-        </dependency>
-
         <!-- xxl-sso-core -->
         <dependency>
             <groupId>com.xuxueli</groupId>
@@ -50,19 +44,11 @@
             <version>${parent.version}</version>
         </dependency>
 
-        <!-- devtools -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-devtools</artifactId>
-            <scope>provided</scope>
-            <optional>true</optional>
-        </dependency>
-
         <!-- httpclient -->
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
-            <version>4.5.6</version>
+            <version>4.5.12</version>
             <scope>test</scope>
         </dependency>
 
@@ -81,9 +67,6 @@
                         </goals>
                     </execution>
                 </executions>
-                <configuration>
-                    <fork>true</fork>
-                </configuration>
             </plugin>
         </plugins>
     </build>
