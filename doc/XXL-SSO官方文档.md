@@ -391,9 +391,8 @@ SSO User | 登录用户信息，与 SSO SessionId 相对应
 
 ### 5.3 版本 v1.1.1 Release Notes [迭代中]
 - 1、升级jedis、springboot等版本依赖版本；
-- 2、[迭代中]spring mvc 版本示例；
-- 3、[迭代中]Client跳转新增一次性Token验证；
-- 4、拼写问题修复；
+- 2、[迭代中]Client跳转新增一次性Token验证；
+- 3、拼写问题修复；
 
 ### TODO LIST
 - 1、认证中心与接入端交互数据加密，增强安全性；redirect_url必须和临时AccessToken配合才会生效，AccessToken有效期60s，阅后即焚模式；
@@ -404,6 +403,8 @@ SSO User | 登录用户信息，与 SSO SessionId 相对应
 - 6、Client端移除Redis依赖，改为 LocalCache/30s + RPC + Server-Redis/Broadcast 校验方式；
 - 7、安全性增强，登陆用户数据中，新增客户端信息如ip、ua等，方式session被窃取；
 - 8、集成网关支持；
+- 9、[迭代中]spring mvc 版本示例；
+
 
 ## 六、其他
 
