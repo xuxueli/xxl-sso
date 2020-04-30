@@ -1,9 +1,14 @@
 ## 《分布式单点登录框架XXL-SSO》
 
+[![Actions Status](https://github.com/xuxueli/xxl-sso/workflows/Java%20CI/badge.svg)](https://github.com/xuxueli/xxl-sso/actions)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.xuxueli/xxl-sso/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.xuxueli/xxl-sso/)
 [![GitHub release](https://img.shields.io/github/release/xuxueli/xxl-sso.svg)](https://github.com/xuxueli/xxl-sso/releases)
 [![License](https://img.shields.io/badge/license-GPLv3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0.html)
-[![donate](https://img.shields.io/badge/%24-donate-ff69b4.svg?style=flat-square)](http://www.xuxueli.com/page/donate.html)
+[![donate](https://img.shields.io/badge/%24-donate-ff69b4.svg?style=flat-square)](https://www.xuxueli.com/page/donate.html)
+
+[TOCM]
+
+[TOC]
 
 ## 一、简介
 
@@ -11,7 +16,10 @@
 XXL-SSO 是一个分布式单点登录框架。只需要登录一次就可以访问所有相互信任的应用系统。
 拥有"轻量级、分布式、跨域、Cookie+Token均支持、Web+APP均支持"等特性。现已开放源代码，开箱即用。
 
-### 1.2 特性
+### 1.2 社区交流   
+- [社区交流](https://www.xuxueli.com/page/community.html)
+
+### 1.3 特性
 - 1、简洁：API直观简洁，可快速上手
 - 2、轻量级：环境依赖小，部署与接入成本较低
 - 3、单点登录：只需要登录一次就可以访问所有相互信任的应用系统
@@ -25,11 +33,29 @@ XXL-SSO 是一个分布式单点登录框架。只需要登录一次就可以访
 - 11、记住密码：未记住密码时，关闭浏览器则登录态失效；记住密码时，支持登录态自动延期，在自定义延期时间的基础上，原则上可以无限延期
 - 12、路径排除：支持自定义多个排除路径，支持Ant表达式,用于排除SSO客户端不需要过滤的路径
 
-### 1.3 下载
+### 1.4 发展  
+于2018年初，我在github上创建XXL-SSO项目仓库并提交第一个commit，随之进行系统结构设计，UI选型，交互设计……
+
+于2018-12-05，XXL-SSO参与"[2018年度最受欢迎中国开源软件](https://www.oschina.net/project/top_cn_2018?sort=1)"评比，在当时已录入的一万多个国产开源项目中角逐，最终排名第55名。
+
+于2019-01-23，XXL-SSO被评选上榜"[2018年度新增开源软件排行榜之国产 TOP 50](https://www.oschina.net/news/103857/2018-osc-new-opensource-software-cn-top50)"评比，排名第8名。
+
+至今，XXL-SSO已接入多家公司的线上产品线，接入场景如电商业务，O2O业务和核心中间件配置动态化等，截止2018-03-15为止，XXL-SSO已接入的公司包括不限于：
+
+    1. 湖南创发科技
+    2. 深圳龙华科技有限公司
+    3. 摩根国际
+    4. 印记云
+
+> 更多接入的公司，欢迎在 [登记地址](https://github.com/xuxueli/xxl-sso/issues/1 ) 登记，登记仅仅为了产品推广。
+
+欢迎大家的关注和使用，XXL-SSO也将拥抱变化，持续发展。
+
+### 1.5 下载
 
 #### 文档地址
 
-- [中文文档](http://www.xuxueli.com/xxl-sso/)
+- [中文文档](https://www.xuxueli.com/xxl-sso/)
 
 #### 源码仓库地址
 
@@ -39,10 +65,7 @@ XXL-SSO 是一个分布式单点登录框架。只需要登录一次就可以访
 [https://gitee.com/xuxueli0323/xxl-sso](https://gitee.com/xuxueli0323/xxl-sso) | [Download](https://gitee.com/xuxueli0323/xxl-sso/releases)  
 
 
-#### 技术交流
-- [社区交流](http://www.xuxueli.com/page/community.html)
-
-### 1.4 环境
+### 1.6 环境
 - JDK：1.7+
 - Redis：4.0+
 
@@ -78,7 +101,7 @@ XXL-SSO 是一个分布式单点登录框架。只需要登录一次就可以访
 xxl.sso.redis.address=redis://127.0.0.1:6379
 
 // 登录态有效期窗口，默认24H，当登录态有效期窗口过半时，自动顺延一个周期
-xxl.sso.redis.expire.minite=1440
+xxl.sso.redis.expire.minute=1440
 
 ```
 
@@ -266,7 +289,7 @@ xxl.sso.redis.address=redis://xxl-sso:password@127.0.0.1:6379/0
 
 ### 4.1 架构图
 
-![输入图片说明](https://raw.githubusercontent.com/xuxueli/xxl-sso/master/doc/images/img_01.png "在这里输入图片标题")
+![输入图片说明](https://www.xuxueli.com/doc/static/xxl-sso/images/img_01.png "在这里输入图片标题")
 
 ### 4.2 功能定位
 
@@ -343,39 +366,44 @@ SSO User | 登录用户信息，与 SSO SessionId 相对应
 ## 五、版本更新日志
 
 ### 5.1 版本 v0.1.0，新特性[2018-04-04]
-1. 简洁：API直观简洁，可快速上手
-2. 轻量级：环境依赖小，部署与接入成本较低
-3. 单点登录：只需要登录一次就可以访问所有相互信任的应用系统
-4. 分布式：接入SSO认证中心的应用，支持分布式部署
-5. HA：Server端与Client端，均支持集群部署，提高系统可用性
-6. 实时性：系统登陆、注销状态，全部Server与Client端实时共享
-7. CS结构：基于CS结构，包括Server"认证中心"与Client"受保护应用"
-8. 跨域：支持跨域应用接入SSO认证中心
+- 1、简洁：API直观简洁，可快速上手
+- 2、轻量级：环境依赖小，部署与接入成本较低
+- 3、单点登录：只需要登录一次就可以访问所有相互信任的应用系统
+- 4、分布式：接入SSO认证中心的应用，支持分布式部署
+- 5、HA：Server端与Client端，均支持集群部署，提高系统可用性
+- 6、实时性：系统登陆、注销状态，全部Server与Client端实时共享
+- 7、CS结构：基于CS结构，包括Server"认证中心"与Client"受保护应用"
+- 8、跨域：支持跨域应用接入SSO认证中心
 
 ### 5.2 版本 v1.1.0 Release Notes [2018-11-06]
-1. Redis配置方式增强，支持自定义DB、密码、IP、PORT等等
-2. Token接入方式；除了常规Cookie方式外，新增Token接入方式，并提供Sample项目
-3. 登录态自动延期：支持自定义登录态有效期窗口，默认24H，当登录态有效期窗口过半时，自动顺延一个周期
-4. "记住密码" 功能优化：未记住密码时，关闭浏览器则登录态失效；记住密码时，登录态自动延期，在自定义延期时间的基础上，原则上可以无限延期
-5. sessionId数据结构优化，进一步提升暴露破解难度
-6. 认证数据存储结构调整，避免登陆信息存储冗余
-7. 认证中心用户登录校验改为Mock数据方式，取消对DB强依赖，降低部署难度
-8. Client端依赖Core包，slf4j依赖优化，移除log4j强依赖
-9. Ajax请求未登录处理逻辑优化，返回JSON格式提示数据
-10. 项目结构梳理，清理冗余依赖，升级多项依赖版本至较近版本
-11. 路径排除：新增自定义属性 "excludedPaths"，允许设置多个，且支持Ant表达式。用于排除SSO客户端不需要过滤的路径
+- 1、 Redis配置方式增强，支持自定义DB、密码、IP、PORT等等
+- 2、 Token接入方式；除了常规Cookie方式外，新增Token接入方式，并提供Sample项目
+- 3、 登录态自动延期：支持自定义登录态有效期窗口，默认24H，当登录态有效期窗口过半时，自动顺延一个周期
+- 4、 "记住密码" 功能优化：未记住密码时，关闭浏览器则登录态失效；记住密码时，登录态自动延期，在自定义延期时间的基础上，原则上可以无限延期
+- 5、 sessionId数据结构优化，进一步提升暴露破解难度
+- 6、 认证数据存储结构调整，避免登陆信息存储冗余
+- 7、 认证中心用户登录校验改为Mock数据方式，取消对DB强依赖，降低部署难度
+- 8、 Client端依赖Core包，slf4j依赖优化，移除log4j强依赖
+- 9、 Ajax请求未登录处理逻辑优化，返回JSON格式提示数据
+- 10、项目结构梳理，清理冗余依赖，升级多项依赖版本至较近版本
+- 11、路径排除：新增自定义属性 "excludedPaths"，允许设置多个，且支持Ant表达式。用于排除SSO客户端不需要过滤的路径
 
 
 ### 5.3 版本 v1.1.1 Release Notes [迭代中]
-1. [迭代中]spring mvc 版本示例
+- 1、升级jedis、springboot等版本依赖版本；
+- 2、[迭代中]Client跳转新增一次性Token验证；
+- 3、拼写问题修复；
 
 ### TODO LIST
-1. 认证中心与接入端交互数据加密，增强安全性；redirect_url必须和临时AccessToken配合才会生效，AccessToken有效期60s
-2. SSO SessionId 与IP绑定，增强用户增强安全性
-3. 支持认证分组，分组内共享登陆状态，分组之间登录态隔离，【待考虑】
-4. 客户端新增属性 "xxl.sso.server"，用于构建跳转连接，防止跳转第三方导致登陆漏洞
-5. token验证方式增加jwt方式支持
-6. Client端移除Redis依赖，改为LocalCache + RPC校验方式
+- 1、认证中心与接入端交互数据加密，增强安全性；redirect_url必须和临时AccessToken配合才会生效，AccessToken有效期60s，阅后即焚模式；
+- 2、SSO SessionId 与IP绑定，增强用户增强安全性
+- 3、支持认证分组，分组内共享登陆状态，分组之间登录态隔离，【待考虑】
+- 4、客户端新增属性 "xxl.sso.server"，用于构建跳转连接，防止跳转第三方导致登陆漏洞
+- 5、token验证方式增加jwt方式支持
+- 6、Client端移除Redis依赖，改为 LocalCache/30s + RPC + Server-Redis/Broadcast 校验方式；
+- 7、安全性增强，登陆用户数据中，新增客户端信息如ip、ua等，方式session被窃取；
+- 8、集成网关支持；
+- 9、[迭代中]spring mvc 版本示例；
 
 
 ## 六、其他
@@ -394,4 +422,4 @@ SSO User | 登录用户信息，与 SSO SessionId 相对应
 
 ---
 ### 捐赠
-无论金额多少都足够表达您这份心意，非常感谢 ：）      [前往捐赠](http://www.xuxueli.com/page/donate.html )
+无论金额多少都足够表达您这份心意，非常感谢 ：）      [前往捐赠](https://www.xuxueli.com/page/donate.html )

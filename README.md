@@ -1,22 +1,25 @@
 <p align="center">
-    <img src="https://raw.githubusercontent.com/xuxueli/xxl-job/master/doc/images/xxl-logo.jpg" width="150">
+    <img src="https://www.xuxueli.com/doc/static/xxl-job/images/xxl-logo.jpg" width="150">
     <h3 align="center">XXL-SSO</h3>
     <p align="center">
         XXL-SSO, A Distributed Single-Sign-On Framework.
         <br>
-        <a href="http://www.xuxueli.com/xxl-sso/"><strong>-- Home Page --</strong></a>
+        <a href="https://www.xuxueli.com/xxl-sso/"><strong>-- Home Page --</strong></a>
         <br>
         <br>
+        <a href="https://github.com/xuxueli/xxl-sso/actions">
+            <img src="https://github.com/xuxueli/xxl-sso/workflows/Java%20CI/badge.svg" >
+        </a>
         <a href="https://maven-badges.herokuapp.com/maven-central/com.xuxueli/xxl-sso/">
             <img src="https://maven-badges.herokuapp.com/maven-central/com.xuxueli/xxl-sso/badge.svg" >
         </a>
-         <a href="https://github.com/xuxueli/xxl-sso/releases">
-             <img src="https://img.shields.io/github/release/xuxueli/xxl-sso.svg" >
-         </a>
+        <a href="https://github.com/xuxueli/xxl-sso/releases">
+            <img src="https://img.shields.io/github/release/xuxueli/xxl-sso.svg" >
+        </a>
         <a href="http://www.gnu.org/licenses/gpl-3.0.html">
             <img src="https://img.shields.io/badge/license-GPLv3-blue.svg" >
         </a>
-        <a href="http://www.xuxueli.com/page/donate.html">
+        <a href="https://www.xuxueli.com/page/donate.html">
             <img src="https://img.shields.io/badge/%24-donate-ff69b4.svg?style=flat-square" >
         </a>
     </p>    
@@ -34,8 +37,10 @@ XXL-SSO 是一个分布式单点登录框架。只需要登录一次就可以访
 
 
 ## Documentation
-- [中文文档](http://www.xuxueli.com/xxl-sso/)
+- [中文文档](https://www.xuxueli.com/xxl-sso/)
 
+## Communication    
+- [社区交流](https://www.xuxueli.com/page/community.html)
 
 ## Features
 1. 简洁：API直观简洁，可快速上手
@@ -55,6 +60,10 @@ XXL-SSO 是一个分布式单点登录框架。只需要登录一次就可以访
 ## Development
 于2018年初，我在github上创建XXL-SSO项目仓库并提交第一个commit，随之进行系统结构设计，UI选型，交互设计……
 
+于2018-12-05，XXL-SSO参与"[2018年度最受欢迎中国开源软件](https://www.oschina.net/project/top_cn_2018?sort=1)"评比，在当时已录入的一万多个国产开源项目中角逐，最终排名第55名。
+
+于2019-01-23，XXL-SSO被评选上榜"[2018年度新增开源软件排行榜之国产 TOP 50](https://www.oschina.net/news/103857/2018-osc-new-opensource-software-cn-top50)"评比，排名第8名。
+
 至今，XXL-SSO已接入多家公司的线上产品线，接入场景如电商业务，O2O业务和核心中间件配置动态化等，截止2018-03-15为止，XXL-SSO已接入的公司包括不限于：
 
     1. 湖南创发科技
@@ -65,11 +74,6 @@ XXL-SSO 是一个分布式单点登录框架。只需要登录一次就可以访
 > 更多接入的公司，欢迎在 [登记地址](https://github.com/xuxueli/xxl-sso/issues/1 ) 登记，登记仅仅为了产品推广。
 
 欢迎大家的关注和使用，XXL-SSO也将拥抱变化，持续发展。
-
-
-## Communication
-
-- [社区交流](http://www.xuxueli.com/page/community.html)
 
 
 ## Contributing
@@ -88,6 +92,6 @@ This product is open source and free, and will continue to provide free communit
 
 
 ## Donate
-No matter how much the amount is enough to express your thought, thank you very much ：）     [To donate](http://www.xuxueli.com/page/donate.html )
+No matter how much the amount is enough to express your thought, thank you very much ：）     [To donate](https://www.xuxueli.com/page/donate.html )
 
-无论金额多少都足够表达您这份心意，非常感谢 ：）      [前往捐赠](http://www.xuxueli.com/page/donate.html )
+无论金额多少都足够表达您这份心意，非常感谢 ：）      [前往捐赠](https://www.xuxueli.com/page/donate.html )

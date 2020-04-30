@@ -109,7 +109,7 @@ public class WebController {
         xxlUser.setUserid(String.valueOf(result.getData().getUserid()));
         xxlUser.setUsername(result.getData().getUsername());
         xxlUser.setVersion(UUID.randomUUID().toString().replaceAll("-", ""));
-        xxlUser.setExpireMinite(SsoLoginStore.getRedisExpireMinite());
+        xxlUser.setExpireMinute(SsoLoginStore.getRedisExpireMinute());
         xxlUser.setExpireFreshTime(System.currentTimeMillis());
 
 

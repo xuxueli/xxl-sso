@@ -42,19 +42,11 @@
             <artifactId>spring-boot-starter-freemarker</artifactId>
         </dependency>
 
-        <!-- sso core -->
+        <!-- xxl-sso-core -->
         <dependency>
             <groupId>com.xuxueli</groupId>
             <artifactId>xxl-sso-core</artifactId>
             <version>${parent.version}</version>
-        </dependency>
-
-        <!-- devtools -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-devtools</artifactId>
-            <scope>provided</scope>
-            <optional>true</optional>
         </dependency>
 
     </dependencies>
@@ -72,9 +64,6 @@
                         </goals>
                     </execution>
                 </executions>
-                <configuration>
-                    <fork>true</fork>
-                </configuration>
             </plugin>
         </plugins>
     </build>

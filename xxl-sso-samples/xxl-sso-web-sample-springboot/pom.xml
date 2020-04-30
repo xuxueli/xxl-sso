@@ -50,14 +50,6 @@
             <version>${parent.version}</version>
         </dependency>
 
-        <!-- devtools -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-devtools</artifactId>
-            <scope>provided</scope>
-            <optional>true</optional>
-        </dependency>
-
     </dependencies>
 
     <build>
@@ -73,9 +65,6 @@
                         </goals>
                     </execution>
                 </executions>
-                <configuration>
-                    <fork>true</fork>
-                </configuration>
             </plugin>
         </plugins>
     </build>

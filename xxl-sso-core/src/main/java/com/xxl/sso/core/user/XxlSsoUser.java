@@ -17,7 +17,7 @@ public class XxlSsoUser implements Serializable {
     private Map<String, String> plugininfo;
 
     private String version;
-    private int expireMinite;
+    private int expireMinute;
     private long expireFreshTime;
 
 
@@ -54,12 +54,12 @@ public class XxlSsoUser implements Serializable {
         this.version = version;
     }
 
-    public int getExpireMinite() {
-        return expireMinite;
+    public int getExpireMinute() {
+        return expireMinute;
     }
 
-    public void setExpireMinite(int expireMinite) {
-        this.expireMinite = expireMinite;
+    public void setExpireMinute(int expireMinute) {
+        this.expireMinute = expireMinute;
     }
 
     public long getExpireFreshTime() {
