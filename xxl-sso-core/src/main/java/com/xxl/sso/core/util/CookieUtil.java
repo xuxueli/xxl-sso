@@ -64,6 +64,20 @@ public class CookieUtil {
 	}
 
 	/**
+	 * 查询value 如果cookie中没有再从参数中获取一次
+	 * @param req
+	 * @param key
+	 * @return
+	 */
+	public static String getValueWithReq(HttpServletRequest req, String key) {
+		String tmp = getValue(req, key);
+		if (!StringUtils.hasText(tmp)){
+			tmp = req.getParameter(key);
+		}
+		return tmp;
+	}
+
+	/**
 	 * 查询Cookie
 	 *
 	 * @param request
