@@ -13,6 +13,14 @@ import org.slf4j.LoggerFactory;
 
 import java.security.Principal;
 
+/**
+ * Shiro Realm
+ * 取消了shiro的校验功能（由SSO实现）
+ * 仅负责加载权限信息
+ *
+ * @author KisChang
+ * @date 2019-05-20
+ */
 public class SsoRealm extends AuthorizingRealm {
 
     private static final Logger logger = LoggerFactory.getLogger(SsoRealm.class);
@@ -39,7 +47,6 @@ public class SsoRealm extends AuthorizingRealm {
         //执行身份校验
         SsoToken ssoToken = (SsoToken) token;
         XxlSsoUser xxlUser = SsoTokenLoginHelper.loginCheck(ssoToken.getSessionId());
-        System.out.println("ssoToken.getSessionId() >>" + ssoToken.getSessionId());
         if (xxlUser == null) {
             //跳转到登录
             throw new AccountException("请重新登录！");
@@ -59,6 +66,7 @@ public class SsoRealm extends AuthorizingRealm {
         }
         SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
         //获取权限信息
+        //do something...
         return authorizationInfo;
     }
 

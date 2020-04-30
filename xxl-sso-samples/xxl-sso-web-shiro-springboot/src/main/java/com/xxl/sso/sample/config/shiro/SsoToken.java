@@ -2,6 +2,12 @@ package com.xxl.sso.sample.config.shiro;
 
 import org.apache.shiro.authc.AuthenticationToken;
 
+/**
+ * Shiro的token
+ *
+ * @author KisChang
+ * @date 2020-04-30
+ */
 public class SsoToken implements AuthenticationToken {
 
     public SsoToken(String sessionId) {

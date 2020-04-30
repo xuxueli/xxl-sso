@@ -10,12 +10,16 @@ import org.apache.shiro.web.servlet.AdviceFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.servlet.*;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
  * shiro sso filter
+ *
+ * @author KisChang
+ * @date 2020-04-30
  */
 public class SsoLoginFilter extends AdviceFilter {
     private static Logger logger = LoggerFactory.getLogger(SsoLoginFilter.class);

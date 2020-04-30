@@ -2,10 +2,10 @@ package com.xxl.sso.sample.config;
 
 import com.xxl.sso.core.conf.Conf;
 import com.xxl.sso.core.util.JedisUtil;
-import com.xxl.sso.sample.config.shiro.SsoShiroLoginStateCheckFilter;
 import com.xxl.sso.sample.config.shiro.SsoLoginFilter;
 import com.xxl.sso.sample.config.shiro.SsoLogoutFilter;
 import com.xxl.sso.sample.config.shiro.SsoRealm;
+import com.xxl.sso.sample.config.shiro.SsoLoginStateCheckFilter;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.realm.Realm;
@@ -56,8 +56,8 @@ public class XxlSsoConfig implements DisposableBean, InitializingBean {
                 xxlSsoServer, xxlSsoLogoutPath, xxlSsoExcludedPaths, Conf.SSO_LOGOUT
         );
     }
-    public SsoShiroLoginStateCheckFilter loginSsoCheckFilter(){
-        return new SsoShiroLoginStateCheckFilter(xxlSsoServer);
+    public SsoLoginStateCheckFilter loginSsoCheckFilter(){
+        return new SsoLoginStateCheckFilter(xxlSsoServer);
     }
     public SsoLogoutFilter logoutFilter(){
         return new SsoLogoutFilter(xxlSsoServer);

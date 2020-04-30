@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Locale;
 
 /**
- * 登出功能
+ * SSO登出功能
  *
  * @author KisChang
  * @date 2019-05-20

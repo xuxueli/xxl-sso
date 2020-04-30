@@ -1,10 +1,7 @@
 package com.xxl.sso.sample.config.shiro;
 
-import com.xxl.sso.core.conf.Conf;
 import com.xxl.sso.core.login.SsoWebLoginHelper;
 import com.xxl.sso.core.user.XxlSsoUser;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.servlet.AdviceFilter;
 
 import javax.servlet.ServletRequest;
@@ -13,14 +10,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
+ * shiro中的第二个默认过滤器，用于检测是否已登出sso
+ *
  * @author KisChang
  * @date 2020-04-30
  */
-public class SsoShiroLoginStateCheckFilter extends AdviceFilter {
+public class SsoLoginStateCheckFilter extends AdviceFilter {
 
     private String ssoServer;
 
-    public SsoShiroLoginStateCheckFilter(String ssoServer) {
+    public SsoLoginStateCheckFilter(String ssoServer) {
         this.ssoServer = ssoServer;
     }
 
