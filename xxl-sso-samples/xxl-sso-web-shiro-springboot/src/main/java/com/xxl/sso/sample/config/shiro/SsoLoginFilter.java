@@ -30,7 +30,6 @@ public class SsoLoginFilter extends AdviceFilter {
         this.ssoServer = ssoServer;
         this.logoutPath = logoutPath;
         this.logoutUrl = logoutUrl;
-        logger.info("XxlSsoWebFilter init.");
     }
 
     @Override
@@ -39,29 +38,15 @@ public class SsoLoginFilter extends AdviceFilter {
         HttpServletResponse res = (HttpServletResponse) response;
 
         // make url
-        String servletPath = req.getServletPath();
+//        String servletPath = req.getServletPath();
+//        System.out.println("SsoLoginFilter >>>" + servletPath);
 
         // valid login user, cookie + redirect
         XxlSsoUser xxlUser = SsoWebLoginHelper.loginCheck(req, res);
 
         // valid login fail
         if (xxlUser == null) {
-            String header = req.getHeader("content-type");
-            boolean isJson = header != null && header.contains("json");
-            if (isJson) {
-                // json msg
-                res.setContentType("application/json;charset=utf-8");
-                res.getWriter().println("{\"code\":" + Conf.SSO_LOGIN_FAIL_RESULT.getCode() + ", \"msg\":\"" + Conf.SSO_LOGIN_FAIL_RESULT.getMsg() + "\"}");
-            } else {
-                // total link
-                String link = req.getRequestURL().toString();
-
-                // redirect logout
-                String loginPageUrl = ssoServer.concat(Conf.SSO_LOGIN)
-                        + "?" + Conf.REDIRECT_URL + "=" + link;
-
-                res.sendRedirect(loginPageUrl);
-            }
+            ShiroSsoUtils.issueFailLogin(ssoServer, req, res);
             return false;
         }else {
             // ser sso user

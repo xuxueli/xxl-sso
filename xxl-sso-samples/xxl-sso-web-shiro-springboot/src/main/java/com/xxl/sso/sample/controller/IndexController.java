@@ -19,7 +19,7 @@ public class IndexController {
     @RequestMapping("/")
     public String index(Model model, HttpServletRequest request) {
         XxlSsoUser xxlUser = (XxlSsoUser) request.getSession().getAttribute(Conf.SSO_USER);
-        System.out.println("xxlUser >>>" + xxlUser);
+        //System.out.println("xxlUser >>>" + xxlUser);
         model.addAttribute("xxlUser", xxlUser);
         return "index";
     }
