@@ -2,7 +2,6 @@ package com.xxl.sso.sample.config.shiro;
 
 import com.xxl.sso.core.conf.Conf;
 import com.xxl.sso.core.login.SsoWebLoginHelper;
-import com.xxl.sso.core.path.impl.AntPathMatcher;
 import com.xxl.sso.core.user.XxlSsoUser;
 import com.xxl.sso.core.util.CookieUtil;
 import org.apache.shiro.SecurityUtils;
@@ -24,16 +23,10 @@ import javax.servlet.http.HttpServletResponse;
 public class SsoLoginFilter extends AdviceFilter {
     private static Logger logger = LoggerFactory.getLogger(SsoLoginFilter.class);
 
-    private static final AntPathMatcher antPathMatcher = new AntPathMatcher();
-
     private String ssoServer;
-    private String logoutPath;
-    private String logoutUrl;
 
-    public SsoLoginFilter(String ssoServer, String logoutPath, String excludedPaths, String logoutUrl) {
+    public SsoLoginFilter(String ssoServer) {
         this.ssoServer = ssoServer;
-        this.logoutPath = logoutPath;
-        this.logoutUrl = logoutUrl;
     }
 
     @Override
@@ -59,7 +52,6 @@ public class SsoLoginFilter extends AdviceFilter {
             if (!SecurityUtils.getSubject().isAuthenticated()){
                 //没有登录
                 String cookieSessionId = CookieUtil.getValueWithReq(req, Conf.SSO_SESSIONID);
-//                String cookieSessionId = CookieUtil.getValue(req, Conf.SSO_SESSIONID);
                 if (cookieSessionId != null){
                     SsoWebLoginHelper.login(res, cookieSessionId, xxlUser, false);
                     try {

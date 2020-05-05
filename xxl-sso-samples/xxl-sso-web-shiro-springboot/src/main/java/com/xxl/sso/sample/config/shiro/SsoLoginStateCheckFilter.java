@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  * shiro中的第二个默认过滤器，用于检测是否已登出sso
+ * 建议配置： authc,this
  *
  * @author KisChang
  * @date 2020-04-30

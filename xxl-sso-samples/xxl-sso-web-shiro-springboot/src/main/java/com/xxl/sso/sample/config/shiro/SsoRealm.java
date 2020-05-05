@@ -74,6 +74,7 @@ public class SsoRealm extends AuthorizingRealm {
     //覆盖Shiro的token校验
     @Override
     protected void assertCredentialsMatch(AuthenticationToken token, AuthenticationInfo info) throws AuthenticationException{
+        //此处之前是用于检测token的密码是否正确的，覆盖后不再校验
     }
 
 }

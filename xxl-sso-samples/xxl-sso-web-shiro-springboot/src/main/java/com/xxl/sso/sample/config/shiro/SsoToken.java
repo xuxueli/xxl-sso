@@ -20,10 +20,6 @@ public class SsoToken implements AuthenticationToken {
         return sessionId;
     }
 
-    public void setSessionId(String sessionId) {
-        this.sessionId = sessionId;
-    }
-
     @Override
     public Object getPrincipal() {
         return sessionId;
@@ -33,4 +29,5 @@ public class SsoToken implements AuthenticationToken {
     public Object getCredentials() {
         return sessionId;
     }
+
 }

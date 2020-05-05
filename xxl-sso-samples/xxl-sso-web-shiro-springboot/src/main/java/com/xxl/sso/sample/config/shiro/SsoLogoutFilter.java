@@ -40,7 +40,6 @@ public class SsoLogoutFilter extends LogoutFilter {
         HttpServletResponse res = (HttpServletResponse) response;
         Subject subject = getSubject(request, response);
 
-        System.out.println("SsoLogoutFilter ");
         // Check if POST only logout is enabled
         if (isPostOnlyLogout()) {
 
