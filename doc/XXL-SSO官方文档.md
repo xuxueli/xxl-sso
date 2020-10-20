@@ -245,7 +245,7 @@ xxl.sso.redis.address=redis://xxl-sso:password@127.0.0.1:6379/0
 项目名：xxl-sso-token-sample-springboot
 ```
 
-> 可参考 "章节 2.4" 部署 "单点登陆Client端接入示例项目"，唯一不同点是：将web应用的 "XxlSsoFilter" 更换为app应用 "XxlSsoTokenFilter"
+> 可参考 "章节 2.4" 部署 "单点登录Client端接入示例项目"，唯一不同点是：将web应用的 "XxlSsoFilter" 更换为app应用 "XxlSsoTokenFilter"
 
 ### 3.3 验证  (模拟请求 Token 方式接入SSO的接口)
 
@@ -320,20 +320,20 @@ SSO User | 登录用户信息，与 SSO SessionId 相对应
 
 ### 4.6 基于Cookie，相关概念
 
-- 登陆凭证存储：登陆成功后，用户登陆凭证被自动存储在浏览器Cookie中
-- Client端校验登陆状态：通过校验请求Cookie中的是否包含用户登录凭证判断
+- 登录凭证存储：登录成功后，用户登录凭证被自动存储在浏览器Cookie中
+- Client端校验登录状态：通过校验请求Cookie中的是否包含用户登录凭证判断
 - 系统角色模型：
-    - SSO Server：认证中心，提供用户登陆、注销以及登陆状态校验等功能
+    - SSO Server：认证中心，提供用户登录、注销以及登录状态校验等功能
     - Client应用：受SSO保护的Client端Web应用，为用户浏览器访问提供服务
     - 用户：发起请求的用户，使用浏览器访问
 
     
 ### 4.7 基于Token，相关概念
 
-- 登陆凭证存储：登陆成功后，获取到登录凭证（xxl_sso_sessionid=xxx），需要主动存储，如存储在 localStorage、Sqlite 中
-- Client端校验登陆状态：通过校验请求 Header参数 中的是否包含用户登录凭证（xxl_sso_sessionid=xxx）判断；因此，发送请求时需要在 Header参数 中设置登陆凭证
+- 登录凭证存储：登录成功后，获取到登录凭证（xxl_sso_sessionid=xxx），需要主动存储，如存储在 localStorage、Sqlite 中
+- Client端校验登录状态：通过校验请求 Header参数 中的是否包含用户登录凭证（xxl_sso_sessionid=xxx）判断；因此，发送请求时需要在 Header参数 中设置登陆凭证
 - 系统角色模型：
-    - SSO Server：认证中心，提供用户登陆、注销以及登陆状态校验等功能
+    - SSO Server：认证中心，提供用户登录、注销以及登录状态校验等功能
     - Client应用：受SSO保护的Client端Web应用，为用户请求提供接口服务
     - 用户：发起请求的用户，如使用Android、IOS、桌面客户端等请求访问
         
