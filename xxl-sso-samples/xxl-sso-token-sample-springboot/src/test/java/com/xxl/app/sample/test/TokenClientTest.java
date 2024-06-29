@@ -3,8 +3,8 @@ package com.xxl.app.sample.test;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.xxl.app.sample.test.util.HttpClientUtil;
 import com.xxl.sso.core.conf.Conf;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,22 +28,22 @@ public class TokenClientTest {
 
 		// 登录：获取 sso sessionId
 		String sessionId = loginTest();
-		Assert.assertNotNull(sessionId);
+		Assertions.assertNotNull(sessionId);
 
 		// 登陆状态校验
 		String username = logincheckTest(sessionId);
-		Assert.assertNotNull(username);
+		Assertions.assertNotNull(username);
 
 		clientApiRequestTest(client01, sessionId);
 		clientApiRequestTest(client02, sessionId);
 
 		// 注销：销毁 sso sessionId
 		boolean loginoutResult = logoutTest(sessionId);
-		Assert.assertTrue(loginoutResult);
+		Assertions.assertTrue(loginoutResult);
 
 		// 登陆状态校验
 		username = logincheckTest(sessionId);
-		Assert.assertNull(username);
+		Assertions.assertNull(username);
 
 		clientApiRequestTest(client01, sessionId);
 		clientApiRequestTest(client02, sessionId);
