@@ -1,16 +1,13 @@
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
-import org.springframework.test.context.junit4.SpringRunner;
 
 /**
  * @author xuxueli 2017-08-01 21:32:05
  */
-@RunWith(SpringRunner.class)
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ApplicationTests {
 
 	@Autowired
@@ -18,8 +15,8 @@ public class ApplicationTests {
 
 	@Test
 	public void testContextLoads() throws Exception {
-		Assert.assertNotNull(this.ctx);
-		Assert.assertTrue(this.ctx.containsBean("application"));
+		Assertions.assertNotNull(this.ctx);
+		Assertions.assertTrue(this.ctx.containsBean("application"));
 	}
 
 }
