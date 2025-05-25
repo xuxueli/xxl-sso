@@ -389,10 +389,39 @@ SSO User | 登录用户信息，与 SSO SessionId 相对应
 - 11、路径排除：新增自定义属性 "excludedPaths"，允许设置多个，且支持Ant表达式。用于排除SSO客户端不需要过滤的路径
 
 
-### 5.3 版本 v1.1.1 Release Notes [迭代中]
+### 5.3 版本 v1.2.0 Release Notes [迭代中]
 - 1、升级jedis、springboot等版本依赖版本；
 - 2、[迭代中]Client跳转新增一次性Token验证；
 - 3、拼写问题修复；
+
+
+### 核心流程
+- 登录信息：LoginInfo
+    - 用户实体（LoginUser）：{UserId、UserName、RealName、Extra/Map}
+    - 权限实体（RolePermissions）：List<Role, List<Permission>>;
+    - 登录设置（Setting）：expireTime；autoRenew;
+- 认证方式：
+  - 1、Jwt：无状态：
+      - Login：Jwt 生成
+      - LoginCheck：Jwt 校验
+          - JwtHeaderFilter：valid jwt in header
+          - JwtCookieFilter：valid jwt in cookie
+      - Logout：无/黑名单机制；
+  - 2、Token：SDK + Store（抽象接口：Cache、 Redis、RPC服务）【TokenLoginHelper】
+      - Login：本地 token生成 , 写Store；
+      - LoginCheck：入参 token 解析，从 Store 查询 LoginInfo；
+          - 【TokenFilter】：解析 header 》 token 》用户信息 （Store）
+      - Logout：token 删除，delete Store
+  - 3、Cas：Cookie + CasServer + Store（Cache、 Redis、RPC服务）【CasLoginHelper】
+      - Login：跳转 CasServer 登录页，ticket生成 + write Store + 写Cookie；跳回原系统，写Cookie；
+      - LoginCheck：cookie 中取 ticket，直接从 Store 查询获取 LoginInfo；
+          - 【CasFilter】解析 ticket 》 token 》用户信息 （Store）
+      - Logout：cookie 中取 ticket，直接从 Store 删除； + 跳转 CasServer 登录页/再删除跳登录页；
+- 核心组件：
+  - 1、JWT（无状态）：JwtTool + JwtFilter ( header/cookie > token) 
+  - 2、Token（无中心，统一SDK）：Store + TokenLoginHelper(login/logout/check，操作Store) + TokenVerifyFilter(header > token)
+  - 3、Cas（中心式，全局管控）：Store + CasServer(OpenAPI) + CasLoginHelper(login/logout/check，页面跳转 + 直连Store/该RPC) + CasVerifyFilter(cookie > token)
+
 
 ### TODO LIST
 - 1、认证中心与接入端交互数据加密，增强安全性；redirect_url必须和临时AccessToken配合才会生效，AccessToken有效期60s，阅后即焚模式；

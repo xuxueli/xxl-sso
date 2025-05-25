@@ -27,18 +27,18 @@ public class TokenClientTest {
 	public void test() throws Exception {
 
 		// 登录：获取 sso sessionId
-		String sessionId = loginTest();
+		String sessionId = loginTest();					// Login 》Server OpenApi ：general “sessionId”， write redis
 		Assertions.assertNotNull(sessionId);
 
 		// 登陆状态校验
-		String username = logincheckTest(sessionId);
+		String username = logincheckTest(sessionId);	// Check 》 Server OpenApi：param “sessionId”
 		Assertions.assertNotNull(username);
 
-		clientApiRequestTest(client01, sessionId);
+		clientApiRequestTest(client01, sessionId);		// Check2 》Client Filter：header “sessionId”
 		clientApiRequestTest(client02, sessionId);
 
 		// 注销：销毁 sso sessionId
-		boolean loginoutResult = logoutTest(sessionId);
+		boolean loginoutResult = logoutTest(sessionId);	// Logout 》 Server OpenApi ：param “sessionId”
 		Assertions.assertTrue(loginoutResult);
 
 		// 登陆状态校验
