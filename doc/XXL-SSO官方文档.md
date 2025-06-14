@@ -422,9 +422,9 @@ SSO User | 登录用户信息，与 SSO SessionId 相对应
         - SDK: loginout、logincheck
         - // 安全：ip、黑名单；
     - store:
-        - server: redis（写token：loginInfo）
+        - server: redis（天然统一；写token：loginInfo）
         - filter: cookie（server读写）, header（k&v返回，前端处理） // redis（读token）
-        - client: cookie, other（localstorage/sqllite...）
+        - client: cookie（跨域共享问题）, other（天然共享；localstorage/sqllite...）
     - auth：
         - Web (cookie): browser + client + server, 页面跳转, 跨域cookie复制；
         - Native (header)：browser + client + server，openapi请求 + 客户端存token, 请求header携带；
@@ -441,9 +441,13 @@ SSO User | 登录用户信息，与 SSO SessionId 相对应
         - 扩展：uuid、用户hash；
       - filter：
         - Web: 
-          - WebFilter (cookie校验 + 直连Store: 未登录，跳转sso server，已登录，pass)
-          - WebServerFilter (cookie校验 + 直连Store: 未登录，跳转登录页；登录，跳转会客户端来源页面；)
-        - Native: NativeFilter （header校验；）
+            - 不同域名：// 解决跨域Cookie共享问题，
+              - WebSsoFilter ：  (cookie校验 + 直连Store: 1、未登录，跳转sso server；2、从SSO跳回，Cookie校验&写本域名；3、已登录，pass)
+              - WebSsoServerFilter：  (cookie校验token: 1、未登录，跳转登录页，写token + 写cookie；2、已登录，跳回来源页面；)
+            - 相同域名：// 简单方案，不需要解决Cookie共享；
+              - WebDefaultFilter： （cookie校验 + 直连Store： 1、未登录，跳转登录页，写token + 写cookie；2、已登录，pass；）
+        - Native: // 不依赖Cookie，不存在登录态跨域问题；
+            - NativeFilter： （header校验token + 直连Store；1、未登录，抛异常提示，客户端请求openapi获取token；2、已登录，pass）
       - helper:
         - Web: WebHelper (login、logout、check)
         - Native: NativeHelper (login、logout、check)
