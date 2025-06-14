@@ -396,31 +396,60 @@ SSO User | 登录用户信息，与 SSO SessionId 相对应
 
 
 ### 核心流程
-- 登录信息：LoginInfo
-    - 用户实体（LoginUser）：{UserId、UserName、RealName、Extra/Map}
-    - 权限实体（RolePermissions）：List<Role, List<Permission>>;
-    - 登录设置（Setting）：expireTime；autoRenew;
-- 认证方式：
-  - 1、Jwt：无状态：
-      - Login：Jwt 生成
-      - LoginCheck：Jwt 校验
-          - JwtHeaderFilter：valid jwt in header
-          - JwtCookieFilter：valid jwt in cookie
-      - Logout：无/黑名单机制；
-  - 2、Token：SDK + Store（抽象接口：Cache、 Redis、RPC服务）【TokenLoginHelper】
-      - Login：本地 token生成 , 写Store；
-      - LoginCheck：入参 token 解析，从 Store 查询 LoginInfo；
-          - 【TokenFilter】：解析 header 》 token 》用户信息 （Store）
-      - Logout：token 删除，delete Store
-  - 3、Cas：Cookie + CasServer + Store（Cache、 Redis、RPC服务）【CasLoginHelper】
-      - Login：跳转 CasServer 登录页，ticket生成 + write Store + 写Cookie；跳回原系统，写Cookie；
-      - LoginCheck：cookie 中取 ticket，直接从 Store 查询获取 LoginInfo；
-          - 【CasFilter】解析 ticket 》 token 》用户信息 （Store）
-      - Logout：cookie 中取 ticket，直接从 Store 删除； + 跳转 CasServer 登录页/再删除跳登录页；
-- 核心组件：
-  - 1、JWT（无状态）：JwtTool + JwtFilter ( header/cookie > token) 
-  - 2、Token（无中心，统一SDK）：Store + TokenLoginHelper(login/logout/check，操作Store) + TokenVerifyFilter(header > token)
-  - 3、Cas（中心式，全局管控）：Store + CasServer(OpenAPI) + CasLoginHelper(login/logout/check，页面跳转 + 直连Store/该RPC) + CasVerifyFilter(cookie > token)
+
+- Now：
+  - module
+    - server: openapi + login-page
+    - client  token + web 
+  - auth
+    - token (app)：
+      - client (login) -> sso server(openapi) : generate + server-store [token], client-store [token] (such as: localstorage、sqllite...)
+      - client (logincheck) -> sso client (filter [header]): valid token, success
+      - client (loginout) -> sso server(openapi) : delete token
+    - web: 
+      - client (login1) -> sso client (filter [cookie]): redirect 2 sso-sercer
+      - sso-sercer (login page): generate + server-store [token], cookie store [token], redirect back 2 sso-client
+      - client (logincheck) -> sso client (filter [cookie]): valid token, success
+      - client (loginout) -> sso client(filter) : delete token, redirect 2 sso-server
+
+- Next：
+    - module
+      - server：SsoServer
+        - Openapi: // login（写loginInfo）、logout、loginCheck、checkPermission、checkRole
+        - Login page: 
+      - client：
+        - Filter: login check, redirect 2 sso-server(web)
+        - SDK: loginout、logincheck
+        - // 安全：ip、黑名单；
+    - store:
+        - server: redis（写token：loginInfo）
+        - filter: cookie（server读写）, header（k&v返回，前端处理） // redis（读token）
+        - client: cookie, other（localstorage/sqllite...）
+    - auth：
+        - Web (cookie): browser + client + server, 页面跳转, 跨域cookie复制；
+        - Native (header)：browser + client + server，openapi请求 + 客户端存token, 请求header携带；
+    - pachage
+      - model：LoginInfo/登录态数据
+        - 用户实体（LoginUser）：{UserId、UserName、RealName、Extra/Map}
+        - 权限实体（RolePermissions）：List<Role, List<Permission>>;
+        - 登录设置（Setting）：expireTime；autoRenew; 租户；
+      - store：LoginStore/登录数据持久化
+        - 抽象扩展：写入（TTL）、删除、查询
+        - 默认实现：localCache、redis、db、
+      - token：
+        - API：生成，检验
+        - 扩展：uuid、用户hash；
+      - filter：
+        - Web: 
+          - WebFilter (cookie校验 + 直连Store: 未登录，跳转sso server，已登录，pass)
+          - WebServerFilter (cookie校验 + 直连Store: 未登录，跳转登录页；登录，跳转会客户端来源页面；)
+        - Native: NativeFilter （header校验；）
+      - helper:
+        - Web: WebHelper (login、logout、check)
+        - Native: NativeHelper (login、logout、check)
+- 4、sample：
+    - Web：认证中心（登录页） + Client应用（与SSOServer联动）
+    - Native：认证中心（openapi） + Client应用（token校验）
 
 
 ### TODO LIST
