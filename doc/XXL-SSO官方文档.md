@@ -439,18 +439,20 @@ SSO User | 登录用户信息，与 SSO SessionId 相对应
       - token：
         - API：生成，检验
         - 扩展：uuid、用户hash；
-      - filter：
-        - Web: 
-            - 不同域名：// 解决跨域Cookie共享问题，
-              - WebSsoFilter ：  (cookie校验 + 直连Store: 1、未登录，跳转sso server；2、从SSO跳回，Cookie校验&写本域名；3、已登录，pass)
-              - WebSsoServerFilter：  (cookie校验token: 1、未登录，跳转登录页，写token + 写cookie；2、已登录，跳回来源页面；)
-            - 相同域名：// 简单方案，不需要解决Cookie共享；
-              - WebDefaultFilter： （cookie校验 + 直连Store： 1、未登录，跳转登录页，写token + 写cookie；2、已登录，pass；）
-        - Native: // 不依赖Cookie，不存在登录态跨域问题；
-            - NativeFilter： （header校验token + 直连Store；1、未登录，抛异常提示，客户端请求openapi获取token；2、已登录，pass）
-      - helper:
-        - Web: WebHelper (login、logout、check)
-        - Native: NativeHelper (login、logout、check)
+      - filter + helper：
+        - Web：
+              - 相同域名；cookie存储登录token；
+              - WebFilter：1、存储：前端cookie存储token，服务端：直连Store&验证token；2、逻辑：未登录，跳转登录页，写token + 写cookie；已登录，store查询验证cookie；
+              - WebHelper：login/logout（request，cookie+store）、check（cookie + store）
+        - Cas：
+              - 不同域名；cookie存储登录token；解决跨域问题（多域名下cookie共享）问题；
+              - CasFilter：1、存储：前端cookie存储token，服务端：直连Store&验证token；2、逻辑：未登录1，跳转SSO登录页；未登录2，判定从SSO跳回，验证cookie + 写cookie；已登录，store查询验证cookie；
+              - CasServerFilter：3、逻辑：未登录，跳登录页，写token + 写cookie，携带cookie跳回Client原始链接；已登录，携带cookie跳回Client原始链接；
+              - CasHelper：login/logout（request，cookie+store）、check（cookie + store）
+        - Native：
+              - 终端自定义存储token，不依赖cookie及域名；header认证；
+              - NativeFilter：1、存储：前端，自定义存cookie，header传输token；服务端，直连Store&验证token；2、逻辑：未登录，提示登录失败，客户端请求登录openapi，写token + 存cookie；已登录，store查询验证cookie；
+              - NativeHelper：login/logout（入参logininfo + 更新store）、check（入参cookie + 验证store）
 - 4、sample：
     - Web：认证中心（登录页） + Client应用（与SSOServer联动）
     - Native：认证中心（openapi） + Client应用（token校验）

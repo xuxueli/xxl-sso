@@ -40,11 +40,12 @@
             <version>${javax.servlet-api.version}</version>
         </dependency>
 
-        <!-- jedis -->
+        <!-- jedis (support redis store) -->
         <dependency>
             <groupId>redis.clients</groupId>
             <artifactId>jedis</artifactId>
             <version>${jedis.version}</version>
+            <scope>provided</scope>
         </dependency>
 
         <!-- xxl-tool -->
