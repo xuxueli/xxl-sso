@@ -1,5 +1,6 @@
 package com.xxl.sso.core.test.token;
 
+import com.xxl.sso.core.constant.Const;
 import com.xxl.sso.core.model.LoginInfo;
 import com.xxl.sso.core.token.TokenHelper;
 import org.junit.jupiter.api.Test;
@@ -11,7 +12,7 @@ public class TokenHelperTest {
 
     @Test
     public void test(){
-        LoginInfo loginInfo = new LoginInfo("1", "admin", "v1", -1);
+        LoginInfo loginInfo = new LoginInfo("1", "admin", "v1", System.currentTimeMillis() + Const.EXPIRE_TIME_FOR_7_DAY);
         String token = TokenHelper.generateToken(loginInfo);
         logger.info("token:" + token);
 

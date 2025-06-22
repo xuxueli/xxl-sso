@@ -1,5 +1,6 @@
 package com.xxl.sso.core.test.store;
 
+import com.xxl.sso.core.constant.Const;
 import com.xxl.sso.core.model.LoginInfo;
 import com.xxl.sso.core.store.LoginStore;
 import com.xxl.sso.core.store.impl.LocalLoginStore;
@@ -17,11 +18,11 @@ public class LoginStoreTest {
     public void test() {
         LoginStore loginStore = new LocalLoginStore();
 
-        LoginInfo loginInfo = new LoginInfo("666", "zhagnsan", "v1");
+        LoginInfo loginInfo = new LoginInfo("666", "zhagnsan", "v1", System.currentTimeMillis() + Const.EXPIRE_TIME_FOR_7_DAY);
         String token = TokenHelper.generateToken(loginInfo);
         logger.info("token:{}", token);
 
-        loginStore.set(token, loginInfo);
+        loginStore.set(token, loginInfo, Const.EXPIRE_TIME_FOR_7_DAY);
         logger.info("store loginInfo:{}", loginStore.get(token));
 
         loginStore.remove( token);
@@ -39,11 +40,11 @@ public class LoginStoreTest {
         loginStore.start();
 
 
-        LoginInfo loginInfo = new LoginInfo("666", "zhagnsan", "v1");
+        LoginInfo loginInfo = new LoginInfo("666", "zhagnsan", "v1", System.currentTimeMillis() + Const.EXPIRE_TIME_FOR_7_DAY);
         String token = TokenHelper.generateToken(loginInfo);
         logger.info("token:{}", token);
 
-        loginStore.set(token, loginInfo);
+        loginStore.set(token, loginInfo, Const.EXPIRE_TIME_FOR_7_DAY);
         logger.info("store loginInfo:{}", loginStore.get(token));
 
         loginStore.remove( token);

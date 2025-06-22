@@ -6,6 +6,7 @@ import com.xxl.sso.core.store.LoginStore;
 import com.xxl.sso.core.token.TokenHelper;
 import com.xxl.sso.core.util.JedisTool;
 import com.xxl.tool.core.StringTool;
+import com.xxl.tool.response.Response;
 
 /**
  * @author xuxueli 2018-04-02 20:03:11
@@ -57,25 +58,34 @@ public class RedisLoginStore implements LoginStore {
     }
 
     @Override
-    public boolean set(String token, LoginInfo loginInfo) {
+    public Response<String> set(String token, LoginInfo loginInfo, long tokenTimeout) {
 
         // parse storeKey
         String storeKey = parseStoreKey(token);
         if (StringTool.isBlank(storeKey)) {
-            return false;
+            return Response.ofFail("token invalid.");
         }
 
         // valid loginInfo
         if (loginInfo == null
                 || StringTool.isBlank(loginInfo.getUserId())
-                || loginInfo.getExpireTime() < System.currentTimeMillis()) {
-            return false;
+                || StringTool.isBlank(loginInfo.getUserName())) {
+            return Response.ofFail("loginInfo invalid.");
         }
+
+        // process expire time
+        long expireTime = System.currentTimeMillis() + tokenTimeout;
+        if (expireTime < System.currentTimeMillis()) {
+            return Response.ofFail("expireTime invalid.");
+        }
+        loginInfo.setExpireTime(expireTime);
+
+        // redis timeout (seconds)
         long seconds = (loginInfo.getExpireTime() - System.currentTimeMillis()) / 1000;
 
         // write
         jedisTool.set(storeKey, loginInfo, seconds);
-        return true;
+        return Response.ofSuccess();
     }
 
     @Override
@@ -98,16 +108,16 @@ public class RedisLoginStore implements LoginStore {
     }
 
     @Override
-    public boolean remove(String token) {
+    public Response<String> remove(String token) {
         // parse storeKey
         String storeKey = parseStoreKey(token);
         if (StringTool.isBlank(storeKey)) {
-            return false;
+            return Response.ofFail("token is invalid");
         }
 
         // remove
         jedisTool.del(storeKey);
-        return true;
+        return Response.ofSuccess();
     }
 
 }

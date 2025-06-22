@@ -1,5 +1,6 @@
 package com.xxl.sso.core.util;
 
+import com.xxl.tool.core.StringTool;
 import com.xxl.tool.serializer.impl.JavaSerializer;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 import org.slf4j.Logger;
@@ -39,8 +40,12 @@ public class JedisTool {
 
     public JedisTool(String nodes, String user, String password) {
         this.nodes = nodes;
-        this.user = user;
-        this.password = password;
+        if (StringTool.isNotBlank(user)) {
+            this.user = user;
+        }
+        if (StringTool.isNotBlank(password)) {
+            this.password = password;
+        }
     }
 
     // ---------------------- start / stop ----------------------

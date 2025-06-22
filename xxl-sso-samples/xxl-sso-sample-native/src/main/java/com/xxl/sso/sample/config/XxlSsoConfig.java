@@ -1,8 +1,7 @@
 package com.xxl.sso.sample.config;
 
+import com.xxl.sso.core.bootstrap.XxlSsoBootstrap;
 import com.xxl.sso.core.filter.XxlSsoNativeFilter;
-import com.xxl.sso.core.helper.XxlSsoHelper;
-import com.xxl.sso.core.store.LoginStore;
 import com.xxl.sso.core.store.impl.RedisLoginStore;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
@@ -28,43 +27,48 @@ public class XxlSsoConfig {
     @Value("${xxl-sso.client.excluded.paths}")
     private String excludedPaths;
 
-    @Value("${xxl-sso.client.store.type}")
-    private String storeType;
-
     @Value("${xxl-sso.client.store.redis.nodes}")
-    private String storeNodes;
+    private String redisNodes;
 
     @Value("${xxl-sso.client.store.redis.user}")
-    private String storeUser;
+    private String redisUser;
 
     @Value("${xxl-sso.client.store.redis.password}")
-    private String storePassword;
+    private String redisPassword;
 
     @Value("${xxl-sso.client.store.redis.keyprefix}")
-    private String storeKeyprefix;
+    private String redisKeyprefix;
 
 
     /**
      * 1、配置 LoginStore
      */
-    private LoginStore loginStore;
-
     @Bean(initMethod = "start", destroyMethod = "stop")
-    public LoginStore loginStore(){
-        return new RedisLoginStore(storeNodes, storeUser, storePassword, storeKeyprefix);
+    public XxlSsoBootstrap xxlSsoBootstrap() {
+        XxlSsoBootstrap bootstrap = new XxlSsoBootstrap();
+        bootstrap.setLoginStore(new RedisLoginStore(
+                redisNodes,
+                redisUser,
+                redisPassword,
+                redisKeyprefix));
+        bootstrap.setTokenKey(tokenKey);
+        bootstrap.setTokenTimeout(tokenTimeout);
+
+        return bootstrap;
     }
+
 
     /**
      * 2、配置 XxlSsoNativeFilter
      *
-     * @param loginStore
+     * @param bootstrap
      * @return
      */
     @Bean
-    public FilterRegistrationBean xxlSsoFilterRegistration(LoginStore loginStore) {
+    public FilterRegistrationBean xxlSsoFilterRegistration(XxlSsoBootstrap bootstrap) {
 
         // filter init
-        XxlSsoNativeFilter xxlSsoNativeFilter = new XxlSsoNativeFilter(excludedPaths, loginStore, tokenKey, tokenTimeout);
+        XxlSsoNativeFilter xxlSsoNativeFilter = new XxlSsoNativeFilter(excludedPaths);
 
         // filter registry
         FilterRegistrationBean registration = new FilterRegistrationBean();

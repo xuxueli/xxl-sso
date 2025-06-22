@@ -1,6 +1,7 @@
 package com.xxl.sso.core.store;
 
 import com.xxl.sso.core.model.LoginInfo;
+import com.xxl.tool.response.Response;
 
 /**
  * login store
@@ -22,9 +23,11 @@ public interface LoginStore {
     /**
      * set login info
      *
-     * @param loginInfo     login info
+     * @param token
+     * @param loginInfo
+     * @param tokenTimeout
      */
-    public boolean set(String token, LoginInfo loginInfo);
+    public Response<String> set(String token, LoginInfo loginInfo, long tokenTimeout);
 
     /**
      * get login info
@@ -40,6 +43,6 @@ public interface LoginStore {
      * @param token
      * @return
      */
-    public boolean remove(String token);
+    public Response<String> remove(String token);
 
 }

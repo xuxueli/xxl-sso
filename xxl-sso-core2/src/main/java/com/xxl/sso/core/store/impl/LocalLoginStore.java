@@ -4,6 +4,7 @@ import com.xxl.sso.core.model.LoginInfo;
 import com.xxl.sso.core.store.LoginStore;
 import com.xxl.sso.core.token.TokenHelper;
 import com.xxl.tool.core.StringTool;
+import com.xxl.tool.response.Response;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -44,24 +45,31 @@ public class LocalLoginStore implements LoginStore {
     }
 
     @Override
-    public boolean set(String token, LoginInfo loginInfo) {
+    public Response<String> set(String token, LoginInfo loginInfo, long tokenTimeout) {
 
         // parse storeKey
         String storeKey = parseStoreKey(token);
         if (StringTool.isBlank(storeKey)) {
-            return false;
+            return Response.ofFail("token invalid.");
         }
 
         // valid loginInfo
         if (loginInfo == null
                 || StringTool.isBlank(loginInfo.getUserId())
-                || loginInfo.getExpireTime() < System.currentTimeMillis()) {
-            return false;
+                || StringTool.isBlank(loginInfo.getUserName())) {
+            return Response.ofFail("loginInfo invalid.");
         }
+
+        // process expire time
+        long expireTime = System.currentTimeMillis() + tokenTimeout;
+        if (expireTime < System.currentTimeMillis()) {
+            return Response.ofFail("expireTime invalid.");
+        }
+        loginInfo.setExpireTime(expireTime);
 
         // write
         loginStore.put(storeKey, loginInfo);
-        return true;
+        return Response.ofSuccess();
     }
 
     @Override
@@ -84,16 +92,16 @@ public class LocalLoginStore implements LoginStore {
     }
 
     @Override
-    public boolean remove(String token) {
+    public Response<String> remove(String token) {
         // parse storeKey
         String storeKey = parseStoreKey(token);
         if (StringTool.isBlank(storeKey)) {
-            return false;
+            return Response.ofFail("token is invalid");
         }
 
         // remove
         loginStore.remove(storeKey);
-        return true;
+        return Response.ofSuccess();
     }
 
 }

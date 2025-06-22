@@ -28,22 +28,23 @@ public class NativeClientTest {
 	@Test
 	public void test() throws Exception {
 
-		// 登录：获取 token
+		// 1、登录：获取 token
 		String token = loginTest();					// Login 》Server OpenApi ：general “token”， write redis
 		Assertions.assertNotNull(token);
 
-		// 登陆状态校验
+		// 2、登陆状态校验
 		String username = logincheckTest(token);	// Check 》 Server OpenApi：param “token”
 		Assertions.assertNotNull(username);
 
+		// 3、模拟请求APP应用接口：
 		clientApiRequestTest(client01, token);		// Check2 》Client Filter：header “token”
 		clientApiRequestTest(client02, token);
 
-		// 注销：注销 token
+		// 3、注销：注销 token
 		boolean loginoutResult = logoutTest(token);	// Logout 》 Server OpenApi ：param “token”
 		Assertions.assertTrue(loginoutResult);
 
-		// 登陆状态校验
+		// 4、登陆状态校验
 		username = logincheckTest(token);
 		Assertions.assertNull(username);
 
@@ -52,26 +53,22 @@ public class NativeClientTest {
 	}
 
 	/**
-	 * Client API Request, SSO APP Filter
+	 * Client API Request, with XxlSsoNativeFilter
 	 */
 	private void clientApiRequestTest(String url, String token) throws IOException {
-
+		// param
 		Map<String, String> headerParam = new HashMap<>();
 		headerParam.put(Const.XXL_SSO_TOKEN, token);
 
+		// invoke
 		String resultJson = HttpTool.postBody(url, null, headerParam, 3*1000);
-		Response<String> loginResult = GsonTool.fromJson(resultJson, Response.class, String.class);
+		Response<LoginInfo> loginResult = GsonTool.fromJson(resultJson, Response.class, LoginInfo.class);
 
+		// result
 		if (loginResult.isSuccess()) {
-
-			String username = loginResult.getData();
-
-			logger.info("模拟请求APP应用接口，请求成功，登陆用户 = " + username);
+			logger.info("模拟请求APP应用接口：请求成功，登陆用户 = " + loginResult.getData());
 		} else {
-
-			String failMsg = loginResult.getMsg();
-
-			logger.info("模拟请求APP应用接口，请求失败：" + failMsg);
+			logger.info("模拟请求APP应用接口：请求失败：" + loginResult.getMsg());
 		}
 	}
 
@@ -80,7 +77,7 @@ public class NativeClientTest {
 	 */
 	private String loginTest() throws IOException {
 		// url
-		String loginUrl = ssoServer + "/app/login";
+		String loginUrl = ssoServer + "/native/login";
 
 		// param
 		Map<String, String> params = new HashMap<>();
@@ -88,21 +85,18 @@ public class NativeClientTest {
 		params.put("password", "123456");
 		String requestBody = GsonTool.toJson(params);
 
-		// request
+		// invoke
 		String loginResultJson = HttpTool.postBody(loginUrl, requestBody);
 		Response<String> loginResult = GsonTool.fromJson(loginResultJson, Response.class, String.class);
 
+		// result
 		if (loginResult.isSuccess()) {
 
 			String token = loginResult.getData();
-			logger.info("登录成功，token = " + token);
-
+			logger.info("登录成功：token = " + token);
 			return token;
 		} else {
-
-			String failMsg = loginResult.getMsg();
-			logger.info("登录失败：" + failMsg);
-
+			logger.info("登录失败：" + loginResult.getMsg());
 			return null;
 		}
 
@@ -113,25 +107,23 @@ public class NativeClientTest {
 	 */
 	private boolean logoutTest(String token) throws IOException {
 		// url
-		String logoutUrl = ssoServer + "/app/logout";
+		String logoutUrl = ssoServer + "/native/logout";
 
 		// param
 		Map<String, String> params = new HashMap<>();
 		params.put("token", token);
 		String requestBody = GsonTool.toJson(params);
 
-		// request
+		// invoke
 		String logoutResultJson = HttpTool.postBody(logoutUrl, requestBody);
 		Response<String> loginResult = GsonTool.fromJson(logoutResultJson, Response.class, String.class);
 
+		// result
 		if (loginResult.isSuccess()) {
-
 			logger.info("注销成功");
 			return true;
 		} else {
-
-			String failMsg = loginResult.getMsg();
-			logger.info("注销失败：" + failMsg);
+			logger.info("注销失败：" + loginResult.getMsg());
 			return false;
 		}
 
@@ -142,26 +134,22 @@ public class NativeClientTest {
 	 */
 	private String logincheckTest(String token) throws IOException {
 		// url
-		String logincheckUrl = ssoServer + "/app/logincheck";
+		String logincheckUrl = ssoServer + "/native/logincheck";
 
 		// param
 		Map<String, String> params = new HashMap<>();
 		params.put("token", token);
 		String requestBody = GsonTool.toJson(params);
 
-		// request
+		// invoke
 		String logincheckResultJson = HttpTool.postBody(logincheckUrl, requestBody);
 		Response<LoginInfo> loginResult = GsonTool.fromJson(logincheckResultJson, Response.class, LoginInfo.class);
 
+		// result
 		if (loginResult.isSuccess()) {
-
-			LoginInfo loginInfo = loginResult.getData();
-
-			logger.info("当前为登录状态，登陆用户 = " + loginInfo.getUserName());
-
-			return loginInfo.getUserName();
+			logger.info("当前为登录状态：登陆用户 = " + loginResult.getData());
+			return loginResult.getData().getUserName();
 		} else {
-
 			logger.info("当前为注销状态");
 			return null;
 		}

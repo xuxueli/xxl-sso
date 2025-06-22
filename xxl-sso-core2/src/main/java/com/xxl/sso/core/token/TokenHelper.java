@@ -25,10 +25,10 @@ public class TokenHelper {
             if (loginInfo==null || StringTool.isBlank(loginInfo.getUserId()) || StringTool.isBlank(loginInfo.getUserName())) {
                 throw new XxlSsoException("generateToken fail, invalid loginInfo.");
             }
-            LoginInfo loginInfo2 = new LoginInfo(loginInfo.getUserId(), loginInfo.getUserName(), loginInfo.getVersion(), loginInfo.getExpireTime());
+            LoginInfo loginInfoForToken = new LoginInfo(loginInfo.getUserId(), loginInfo.getUserName(), loginInfo.getVersion(), loginInfo.getExpireTime());
 
             // generate token
-            String json = GsonTool.toJson(loginInfo2);
+            String json = GsonTool.toJson(loginInfoForToken);
             return Base64Tool.encodeUrlSafe(json);
         } catch (Exception e) {
             throw new XxlSsoException(e);

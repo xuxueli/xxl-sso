@@ -17,18 +17,6 @@ public class LoginInfo implements Serializable {
 
     public LoginInfo() {
     }
-    public LoginInfo(String userId, String userName) {
-        this.userId = userId;
-        this.userName = userName;
-        this.version = "default";
-        this.expireTime = System.currentTimeMillis() + Const.EXPIRE_TIME_FOR_7_DAY;
-    }
-    public LoginInfo(String userId, String userName, String version) {
-        this.userId = userId;
-        this.userName = userName;
-        this.version = version;
-        this.expireTime = System.currentTimeMillis() + Const.EXPIRE_TIME_FOR_7_DAY;
-    }
     public LoginInfo(String userId, String userName, String version, long expireTime) {
         this.userId = userId;
         this.userName = userName;

@@ -5,6 +5,7 @@ import com.xxl.sso.core.model.LoginInfo;
 import com.xxl.sso.core.store.LoginStore;
 import com.xxl.tool.core.StringTool;
 import com.xxl.tool.http.CookieTool;
+import com.xxl.tool.response.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,15 +51,14 @@ public class XxlSsoHelper {
     public XxlSsoHelper(LoginStore loginStore, String tokenKey, long tokenTimeout) {
         this.loginStore = loginStore;
         this.tokenKey = tokenKey;
-        // convert second to millisecond
-        this.tokenTimeout = tokenTimeout * 1000;
+        this.tokenTimeout = tokenTimeout;
 
         // valid
         if (StringTool.isBlank(this.tokenKey)) {
             this.tokenKey = Const.XXL_SSO_TOKEN;
         }
         if (this.tokenTimeout <= 0 ) {
-            tokenTimeout = Const.EXPIRE_TIME_FOR_10_YEAR;
+            this.tokenTimeout = Const.EXPIRE_TIME_FOR_10_YEAR;
         }
     }
 
@@ -73,6 +73,8 @@ public class XxlSsoHelper {
     public long getTokenTimeout() {
         return tokenTimeout;
     }
+
+
     // ---------------------- tool ----------------------
 
     /**
@@ -82,11 +84,8 @@ public class XxlSsoHelper {
      * @param loginInfo
      * @return
      */
-    public static boolean login(String token, LoginInfo loginInfo) {
-        if (loginInfo != null) {
-            loginInfo.setExpireTime(getInstance().getTokenTimeout());
-        }
-        return getInstance().getLoginStore().set(token, loginInfo);
+    public static Response login(String token, LoginInfo loginInfo) {
+        return getInstance().getLoginStore().set(token, loginInfo, getInstance().getTokenTimeout());
     }
 
     /**
