@@ -22,7 +22,7 @@ public interface LoginStore {
     /**
      * set login info
      *
-     * @param loginInfo
+     * @param loginInfo     login info
      */
     public boolean set(String token, LoginInfo loginInfo);
 

@@ -1,19 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.xuxueli</groupId>
-        <artifactId>xxl-sso</artifactId>
+        <artifactId>xxl-sso-samples</artifactId>
         <version>1.2.0-SNAPSHOT</version>
     </parent>
-    <artifactId>xxl-sso-server</artifactId>
+    <artifactId>xxl-sso-sample-native</artifactId>
     <packaging>jar</packaging>
-
-    <properties>
-        <maven.install.skip>true</maven.install.skip>
-        <maven.deploy.skip>true</maven.deploy.skip>
-    </properties>
 
     <dependencyManagement>
         <dependencies>
@@ -40,24 +36,16 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- freemarker -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-freemarker</artifactId>
-        </dependency>
-
         <!-- xxl-sso-core -->
         <dependency>
             <groupId>com.xuxueli</groupId>
             <artifactId>xxl-sso-core2</artifactId>
             <version>${parent.version}</version>
         </dependency>
-
-        <!-- xxl-sso-core -->
         <dependency>
-            <groupId>com.xuxueli</groupId>
-            <artifactId>xxl-sso-core</artifactId>
-            <version>${parent.version}</version>
+            <groupId>redis.clients</groupId>
+            <artifactId>jedis</artifactId>
+            <version>${jedis.version}</version>
         </dependency>
 
     </dependencies>
@@ -67,7 +55,7 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>${spring-boot.version}</version>
+                <!--<version>${spring-boot.version}</version>-->
                 <executions>
                     <execution>
                         <goals>

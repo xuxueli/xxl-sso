@@ -32,13 +32,12 @@ public class LoginStoreTest {
     public void test2() {
         // start redis
         String nodes = "127.0.0.1:6379";
-        JedisTool jedisTool = new JedisTool(nodes, null, null);
-        jedisTool.start();
-
         String prefix = "xxl-sso:";
 
         // store
-        LoginStore loginStore = new RedisLoginStore(jedisTool, prefix);
+        LoginStore loginStore = new RedisLoginStore(nodes, null, null, prefix);
+        loginStore.start();
+
 
         LoginInfo loginInfo = new LoginInfo("666", "zhagnsan", "v1");
         String token = TokenHelper.generateToken(loginInfo);
@@ -52,7 +51,7 @@ public class LoginStoreTest {
 
 
         // stop redis
-        jedisTool.stop();
+        loginStore.stop();
     }
 
 }

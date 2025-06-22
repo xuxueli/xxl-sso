@@ -4,6 +4,7 @@ import com.xxl.sso.core.constant.Const;
 import com.xxl.sso.core.helper.XxlSsoHelper;
 import com.xxl.sso.core.model.LoginInfo;
 import com.xxl.sso.core.path.impl.AntPathMatcher;
+import com.xxl.sso.core.store.LoginStore;
 import com.xxl.tool.core.StringTool;
 import com.xxl.tool.gson.GsonTool;
 import com.xxl.tool.response.Response;
@@ -44,18 +45,15 @@ public class XxlSsoNativeFilter implements Filter {
     private final AntPathMatcher antPathMatcher = new AntPathMatcher();
 
     /**
-     * login store
-     */
-    private final XxlSsoHelper xxlSsoHelper;
-
-    /**
      * excluded paths, like "/excluded/*,/excluded/pathx"
      */
     private final String excludedPaths;
 
-    public XxlSsoNativeFilter(XxlSsoHelper xxlSsoHelper, String excludedPaths) {
-        this.xxlSsoHelper = xxlSsoHelper;
+    public XxlSsoNativeFilter(String excludedPaths, LoginStore loginStore, String tokenKey, long tokenTimeout) {
         this.excludedPaths = excludedPaths;
+
+        // init xxl-sso helper
+        XxlSsoHelper.init(loginStore, tokenKey, tokenTimeout);
     }
 
     @Override

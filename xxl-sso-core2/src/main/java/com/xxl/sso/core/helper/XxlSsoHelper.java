@@ -24,8 +24,8 @@ public class XxlSsoHelper {
      * init
      * @param loginStore
      */
-    public static void init(LoginStore loginStore, String tokenKey){
-        instance = new XxlSsoHelper(loginStore, tokenKey);
+    public static void init(LoginStore loginStore, String tokenKey, long tokenTimeout){
+        instance = new XxlSsoHelper(loginStore, tokenKey, tokenTimeout);
     }
 
     /**
@@ -45,11 +45,20 @@ public class XxlSsoHelper {
      */
     private final LoginStore loginStore;
     private String tokenKey;
+    private long tokenTimeout;
 
-    public XxlSsoHelper(LoginStore loginStore, String tokenKey) {
+    public XxlSsoHelper(LoginStore loginStore, String tokenKey, long tokenTimeout) {
         this.loginStore = loginStore;
-        if (StringTool.isBlank(tokenKey)) {
+        this.tokenKey = tokenKey;
+        // convert second to millisecond
+        this.tokenTimeout = tokenTimeout * 1000;
+
+        // valid
+        if (StringTool.isBlank(this.tokenKey)) {
             this.tokenKey = Const.XXL_SSO_TOKEN;
+        }
+        if (this.tokenTimeout <= 0 ) {
+            tokenTimeout = Const.EXPIRE_TIME_FOR_10_YEAR;
         }
     }
 
@@ -61,6 +70,9 @@ public class XxlSsoHelper {
         return tokenKey;
     }
 
+    public long getTokenTimeout() {
+        return tokenTimeout;
+    }
     // ---------------------- tool ----------------------
 
     /**
@@ -71,6 +83,9 @@ public class XxlSsoHelper {
      * @return
      */
     public static boolean login(String token, LoginInfo loginInfo) {
+        if (loginInfo != null) {
+            loginInfo.setExpireTime(getInstance().getTokenTimeout());
+        }
         return getInstance().getLoginStore().set(token, loginInfo);
     }
 
