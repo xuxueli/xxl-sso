@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author xuxueli 2018-04-08 21:30:54
@@ -75,16 +76,16 @@ public class XxlSsoHelper {
     }
 
 
-    // ---------------------- tool ----------------------
+    // ---------------------- login tool ----------------------
 
     /**
-     * login with token
+     * login with token (only write LoginStore)
      *
      * @param token
      * @param loginInfo
      * @return
      */
-    public static Response login(String token, LoginInfo loginInfo) {
+    public static Response<String> login(String token, LoginInfo loginInfo) {
         return getInstance().getLoginStore().set(token, loginInfo, getInstance().getTokenTimeout());
     }
 
@@ -93,8 +94,8 @@ public class XxlSsoHelper {
      *
      * @param token
      */
-    public static void logout(String token) {
-        getInstance().getLoginStore().remove(token);
+    public static Response<String> logout(String token) {
+        return getInstance().getLoginStore().remove(token);
     }
 
     /**
@@ -128,6 +129,52 @@ public class XxlSsoHelper {
         return loginCheck(token);
     }
 
+
+    // ---------------------- login with cookie ----------------------
+
+    /**
+     * login with token (write LoginStore and response-cookie )
+     *
+     * @param token
+     * @param loginInfo
+     * @param response
+     * @return
+     */
+    public static Response<String> loginWithCookie(String token, LoginInfo loginInfo, HttpServletResponse response, boolean ifRemember) {
+
+        // do login
+        Response<String> loginResult = login(token, loginInfo);
+
+        // set cookie
+        if (loginResult.isSuccess()) {
+            CookieTool.set(response, getInstance().getTokenKey(), token, ifRemember);
+        }
+
+        return loginResult;
+    }
+
+    /**
+     * logout with cookie
+     *
+     * @param request
+     * @param response
+     */
+    public static Response<String> logoutWithCookie(HttpServletRequest request, HttpServletResponse response) {
+
+        // get cookie
+        String token = CookieTool.getValue(request, getInstance().getTokenKey());
+        if (StringTool.isBlank(token)) {
+            return Response.ofSuccess();    // not login; no need to logout.
+        }
+
+        // do logout
+        Response<String> logoutResult = logout(token);
+
+        // remove cookie
+        CookieTool.remove(request, response, getInstance().getTokenKey());
+        return logoutResult;
+    }
+
     /**
      * login check with request-cookie
      *
@@ -135,8 +182,52 @@ public class XxlSsoHelper {
      * @return
      */
     public static LoginInfo loginCheckWithCookie(HttpServletRequest request) {
+
+        // get cookie
         String token = CookieTool.getValue(request, getInstance().getTokenKey());
+
+        // do login check
         return loginCheck(token);
+    }
+
+    /**
+     * login check with request-cookie or request-parameter
+     *
+     * @param request
+     * @return
+     */
+    public static LoginInfo loginCheckWithCookieOrParam(HttpServletRequest request, HttpServletResponse response) {
+
+        // get cookie
+        String token = CookieTool.getValue(request, getInstance().getTokenKey());
+
+        // do login check
+        LoginInfo loginInfo = loginCheck(token);
+        if (loginInfo != null) {
+            return loginInfo;
+        }
+
+        // sync token(cookie) from cas-server
+        token = request.getParameter(Const.XXL_SSO_TOKEN);
+        loginInfo = loginCheck(token);
+        if (loginInfo != null) {
+
+            // set cookie
+            CookieTool.set(response, getInstance().getTokenKey(), token, true);     // todo, sync ifRemember-time
+            return loginInfo;
+        }
+        return null;
+    }
+
+    /**
+     * login check with request-param
+     *
+     * @param request
+     * @return
+     */
+    public static String getTokenWithCookie(HttpServletRequest request) {
+        // get cookie
+        return CookieTool.getValue(request, getInstance().getTokenKey());
     }
 
 }

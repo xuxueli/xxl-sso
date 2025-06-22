@@ -1,7 +1,7 @@
 package com.xxl.sso.sample.config;
 
 import com.xxl.sso.core.bootstrap.XxlSsoBootstrap;
-import com.xxl.sso.core.filter.XxlSsoNativeFilter;
+import com.xxl.sso.core.filter.XxlSsoCasFilter;
 import com.xxl.sso.core.store.impl.RedisLoginStore;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
@@ -17,6 +17,12 @@ public class XxlSsoConfig {
 
     @Value("${xxl.sso.server.address}")
     private String serverAddress;
+
+    @Value("${xxl.sso.server.login.path}")
+    private String loginPath;
+
+    @Value("${xxl.sso.server.logout.path}")
+    private String logoutPath;
 
     @Value("${xxl-sso.token.key}")
     private String tokenKey;
@@ -53,7 +59,7 @@ public class XxlSsoConfig {
                 redisKeyprefix));
         bootstrap.setTokenKey(tokenKey);
         bootstrap.setTokenTimeout(tokenTimeout);
-        bootstrap.setFilter(new XxlSsoNativeFilter(excludedPaths));
+        bootstrap.setFilter(new XxlSsoCasFilter(serverAddress, loginPath, excludedPaths));
 
         return bootstrap;
     }
@@ -70,7 +76,7 @@ public class XxlSsoConfig {
 
         // filter registry
         FilterRegistrationBean registration = new FilterRegistrationBean();
-        registration.setName("xxlSsoNativeFilter");
+        registration.setName("xxlSsoCasFilter");
         registration.setOrder(1);
         registration.addUrlPatterns("/*");
         registration.setFilter(bootstrap.getFilter());

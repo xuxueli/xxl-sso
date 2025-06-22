@@ -12,9 +12,9 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>xxl-sso-web-sample-springboot</module>
-        <module>xxl-sso-token-sample-springboot</module>
         <module>xxl-sso-sample-native</module>
+        <module>xxl-sso-sample-cas</module>
+
     </modules>
 
     <properties>

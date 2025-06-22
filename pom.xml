@@ -13,8 +13,6 @@
 
     <modules>
         <module>xxl-sso-core2</module>
-        <module>xxl-sso-core</module>
-        <module>xxl-sso-server</module>
         <module>xxl-sso-server2</module>
         <module>xxl-sso-samples</module>
     </modules>
@@ -86,7 +84,7 @@
                 <activeByDefault>true</activeByDefault>
             </activation>
             <modules>
-                <module>xxl-sso-core</module>
+                <module>xxl-sso-core2</module>
             </modules>
             <build>
                 <plugins>

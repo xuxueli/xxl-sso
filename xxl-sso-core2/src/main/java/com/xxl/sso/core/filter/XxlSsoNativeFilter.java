@@ -18,7 +18,8 @@ import java.io.IOException;
 /**
  * native filter
  *
- * 说明：
+ * 使用场景：适用于无Cookie场景，天然不受限域名，支持全局登录台共享。比如 APP/移动端、小程度端、客户端软件 …… 等；
+ * 解释说明：
  *      1、登录信息实体：
  *          - token：登录态标识信息，根据登录态信息（LoginInfo）结合算法生成；
  *          - LoginInfo：登录态数据，包括登录 用户信息、权限/角色信息、设置类信息 等；
@@ -27,7 +28,7 @@ import java.io.IOException;
  *          - 服务端（后端）：存储在 LoginStore 中，原生提供 LocalLoginStore（本地缓存） 、RedisLoginStore（Redis） 等多种实现可选用，也可以自定义定制实现；
  *      3、登录态识别：
  *          - header：客户端请求设置认证 “header”（key支持自定义，value为登录token），服务端解析 header 识别登录态；
- *      3、核心流程：
+ *      4、核心流程：
  *          - 登录流程：客户端请求 “登录openapi接口”进行登录。服务端构建 LoginInfo 并生成登录 token；服务端通过LoginStore存储LoginInfo；客户端获取 “登录token”并存储管理；
  *          - 注销流程：客户端请求 “注销openapi接口”进行注销。服务端解析认证header，从 LoginStore 中移除登录态信息；客户端移除维护的登录token；
  *          - 认证流程：客户端请求设置认证 “header”，服务端解析token，从 LoginStore 中获取登录态信息；

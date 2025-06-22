@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8" />
-    <title>统一认证中心</title>
+    <title>Cas认证中心</title>
 
     <#import "common/common.macro.ftl" as netCommon>
     <@netCommon.commonStyle />
@@ -23,8 +23,21 @@
 
         <!-- Main content -->
         <section class="content">
+
+            <div class="box box-default">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Welcome：${loginInfo.userName} </h3>
+                </div>
+                <div class="box-body">
+                    <a href="http://xxlssoclient1.com:8081/xxl-sso-sample-cas/" target="_blank" class="label-danger" >打开“Client应用01”</a>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <a href="http://xxlssoclient2.com:8081/xxl-sso-sample-cas/" target="_blank" class="label-danger" >打开“Client应用02”</a>
+                </div>
+                <!-- /.box-body -->
+            </div>
+
             <div class="callout callout-info">
-                <h4>分布式单点登录框架</h4>
+                <h4>单点登录框架</h4>
                 <br>
                 <p>
                     <a target="_blank" href="https://github.com/xuxueli/xxl-sso">Github</a>&nbsp;&nbsp;&nbsp;&nbsp;
