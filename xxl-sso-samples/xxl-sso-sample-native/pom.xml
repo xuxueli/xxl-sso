@@ -39,7 +39,7 @@
         <!-- xxl-sso-core -->
         <dependency>
             <groupId>com.xuxueli</groupId>
-            <artifactId>xxl-sso-core2</artifactId>
+            <artifactId>xxl-sso-core</artifactId>
             <version>${parent.version}</version>
         </dependency>
         <dependency>

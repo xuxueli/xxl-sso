@@ -8,7 +8,7 @@
         <artifactId>xxl-sso</artifactId>
         <version>1.2.0-SNAPSHOT</version>
     </parent>
-    <artifactId>xxl-sso-core2</artifactId>
+    <artifactId>xxl-sso-core</artifactId>
     <packaging>jar</packaging>
 
     <dependencies>

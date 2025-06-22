@@ -7,7 +7,7 @@
         <artifactId>xxl-sso</artifactId>
         <version>1.2.0-SNAPSHOT</version>
     </parent>
-    <artifactId>xxl-sso-server2</artifactId>
+    <artifactId>xxl-sso-server</artifactId>
     <packaging>jar</packaging>
 
     <properties>
@@ -49,7 +49,7 @@
         <!-- xxl-sso-core -->
         <dependency>
             <groupId>com.xuxueli</groupId>
-            <artifactId>xxl-sso-core2</artifactId>
+            <artifactId>xxl-sso-core</artifactId>
             <version>${parent.version}</version>
         </dependency>
         <dependency>
