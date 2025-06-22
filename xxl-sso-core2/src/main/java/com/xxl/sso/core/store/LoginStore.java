@@ -10,11 +10,21 @@ import com.xxl.sso.core.model.LoginInfo;
 public interface LoginStore {
 
     /**
+     * start
+     */
+    public void start();
+
+    /**
+     * stop
+     */
+    public void stop();
+
+    /**
      * set login info
      *
      * @param loginInfo
      */
-    public boolean set(LoginInfo loginInfo);
+    public boolean set(String token, LoginInfo loginInfo);
 
     /**
      * get login info

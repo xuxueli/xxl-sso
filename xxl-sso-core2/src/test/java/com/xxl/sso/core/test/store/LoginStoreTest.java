@@ -21,7 +21,7 @@ public class LoginStoreTest {
         String token = TokenHelper.generateToken(loginInfo);
         logger.info("token:{}", token);
 
-        loginStore.set(loginInfo);
+        loginStore.set(token, loginInfo);
         logger.info("store loginInfo:{}", loginStore.get(token));
 
         loginStore.remove( token);
@@ -44,7 +44,7 @@ public class LoginStoreTest {
         String token = TokenHelper.generateToken(loginInfo);
         logger.info("token:{}", token);
 
-        loginStore.set(loginInfo);
+        loginStore.set(token, loginInfo);
         logger.info("store loginInfo:{}", loginStore.get(token));
 
         loginStore.remove( token);

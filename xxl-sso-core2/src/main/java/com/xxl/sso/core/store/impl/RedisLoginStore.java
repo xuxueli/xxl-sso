@@ -27,17 +27,45 @@ public class RedisLoginStore implements LoginStore {
 
 
     /**
-     * generate store key
-     *
-     * @param loginInfo
+     * parse store key from token
+     * @param token
      * @return
      */
-    private String generateStoreKey(LoginInfo loginInfo) {
-        return storeKeyPrefix + loginInfo.getUserId();
+    private String parseStoreKey(String token){
+        // valid
+        if (token == null) {
+            return null;
+        }
+
+        // parse store key
+        LoginInfo tokeyLoginInfo = TokenHelper.parseToken(token);
+        if (tokeyLoginInfo == null) {
+            return null;
+        }
+
+        return storeKeyPrefix + tokeyLoginInfo.getUserId();
     }
 
     @Override
-    public boolean set(LoginInfo loginInfo) {
+    public void start() {
+        jedisTool.start();
+    }
+
+    @Override
+    public void stop() {
+        jedisTool.stop();
+    }
+
+    @Override
+    public boolean set(String token, LoginInfo loginInfo) {
+
+        // parse storeKey
+        String storeKey = parseStoreKey(token);
+        if (StringTool.isBlank(storeKey)) {
+            return false;
+        }
+
+        // valid loginInfo
         if (loginInfo == null
                 || StringTool.isBlank(loginInfo.getUserId())
                 || loginInfo.getExpireTime() < System.currentTimeMillis()) {
@@ -46,25 +74,19 @@ public class RedisLoginStore implements LoginStore {
         long seconds = (loginInfo.getExpireTime() - System.currentTimeMillis()) / 1000;
 
         // write
-        String storeKey = generateStoreKey(loginInfo);
         jedisTool.set(storeKey, loginInfo, seconds);
         return true;
     }
 
     @Override
     public LoginInfo get(String token) {
-        if (token==null) {
-            return null;
-        }
-
-        // parse store key
-        LoginInfo tokenLoginInfo = TokenHelper.parseToken(token);
-        if (tokenLoginInfo == null) {
+        // parse storeKey
+        String storeKey = parseStoreKey(token);
+        if (StringTool.isBlank(storeKey)) {
             return null;
         }
 
         // read
-        String storeKey = generateStoreKey(tokenLoginInfo);
         LoginInfo loginInfo = (LoginInfo) jedisTool.get(storeKey);
 
         // valid expire time
@@ -77,18 +99,13 @@ public class RedisLoginStore implements LoginStore {
 
     @Override
     public boolean remove(String token) {
-        if (token==null) {
-            return false;
-        }
-
-        // parse store key
-        LoginInfo tokenLoginInfo = TokenHelper.parseToken(token);
-        if (tokenLoginInfo == null) {
+        // parse storeKey
+        String storeKey = parseStoreKey(token);
+        if (StringTool.isBlank(storeKey)) {
             return false;
         }
 
         // remove
-        String storeKey = generateStoreKey(tokenLoginInfo);
         jedisTool.del(storeKey);
         return true;
     }

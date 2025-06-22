@@ -17,6 +17,12 @@ public class LoginInfo implements Serializable {
 
     public LoginInfo() {
     }
+    public LoginInfo(String userId, String userName) {
+        this.userId = userId;
+        this.userName = userName;
+        this.version = "default";
+        this.expireTime = System.currentTimeMillis() + Const.EXPIRE_TIME_FOR_7_DAY;
+    }
     public LoginInfo(String userId, String userName, String version) {
         this.userId = userId;
         this.userName = userName;
@@ -86,6 +92,11 @@ public class LoginInfo implements Serializable {
      */
     private String version;
 
+    /**
+     * auto renew
+     */
+    private boolean autoRenew;
+
 
     public String getUserId() {
         return userId;
@@ -151,6 +162,14 @@ public class LoginInfo implements Serializable {
         this.version = version;
     }
 
+    public boolean isAutoRenew() {
+        return autoRenew;
+    }
+
+    public void setAutoRenew(boolean autoRenew) {
+        this.autoRenew = autoRenew;
+    }
+
     @Override
     public String toString() {
         return "LoginInfo{" +
@@ -162,6 +181,7 @@ public class LoginInfo implements Serializable {
                 ", permissionList=" + permissionList +
                 ", expireTime='" + expireTime + '\'' +
                 ", version=" + version +
+                ", autoRenew=" + autoRenew +
                 '}';
     }
 

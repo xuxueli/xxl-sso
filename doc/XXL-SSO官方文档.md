@@ -442,13 +442,13 @@ SSO User | 登录用户信息，与 SSO SessionId 相对应
       - filter + helper：
         - Web：
               - 相同域名；cookie存储登录token；
-              - WebFilter：1、存储：前端cookie存储token，服务端：直连Store&验证token；2、逻辑：未登录，跳转登录页，写token + 写cookie；已登录，store查询验证cookie；
-              - WebHelper：login/logout（request，cookie+store）、check（cookie + store）
+              - XxlSsoWebFilter：1、存储：前端cookie存储token，服务端：直连Store&验证token；2、逻辑：未登录，跳转登录页，写token + 写cookie；已登录，store查询验证cookie；
+              - XxlSsoWebHelper：login（入参logininfo + request，更新cookie+store）、logout（入参request，更新cookie+store）、check（cookie + store）
         - Cas：
               - 不同域名；cookie存储登录token；解决跨域问题（多域名下cookie共享）问题；
               - CasFilter：1、存储：前端cookie存储token，服务端：直连Store&验证token；2、逻辑：未登录1，跳转SSO登录页；未登录2，判定从SSO跳回，验证cookie + 写cookie；已登录，store查询验证cookie；
               - CasServerFilter：3、逻辑：未登录，跳登录页，写token + 写cookie，携带cookie跳回Client原始链接；已登录，携带cookie跳回Client原始链接；
-              - CasHelper：login/logout（request，cookie+store）、check（cookie + store）
+              - CasHelper：login（入参logininfo + request，更新cookie+store）、logout（入参request，更新cookie+store）、check（cookie + store）
         - Native：
               - 终端自定义存储token，不依赖cookie及域名；header认证；
               - NativeFilter：1、存储：前端，自定义存cookie，header传输token；服务端，直连Store&验证token；2、逻辑：未登录，提示登录失败，客户端请求登录openapi，写token + 存cookie；已登录，store查询验证cookie；
