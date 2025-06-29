@@ -42,6 +42,16 @@
     <!-- FastClick -->
     <script src="${request.contextPath}/static/adminlte/bower_components/fastclick/fastclick.js"></script>
 
+    <#-- jquery.validate -->
+    <script src="${request.contextPath}/static/plugins/jquery/jquery.validate.min.js"></script>
+    <#-- layer -->
+    <script src="${request.contextPath}/static/plugins/layer/layer.js"></script>
+
+    <script>
+        // init page param
+        var base_url = '${request.contextPath}';
+    </script>
+
     <!-- AdminLTE App -->
     <script src="${request.contextPath}/static/adminlte/dist/js/adminlte.min.js"></script>
 

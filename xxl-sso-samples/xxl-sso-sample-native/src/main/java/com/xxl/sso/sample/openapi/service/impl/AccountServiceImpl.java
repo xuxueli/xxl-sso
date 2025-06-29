@@ -39,7 +39,7 @@ public class AccountServiceImpl implements AccountService {
 
         // find user with mock data
         AccountInfo accoutInfo = mockAccountStore.get(username);
-        if (accoutInfo==null && accoutInfo.getPassword().equals(password)) {
+        if (!(accoutInfo!=null && accoutInfo.getPassword().equals(password))) {
             return Response.ofFail("username or password is invalid.");
         }
 

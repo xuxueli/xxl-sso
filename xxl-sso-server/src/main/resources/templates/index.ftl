@@ -57,6 +57,6 @@
     <!-- footer -->
 <@netCommon.commonFooter />
 </div>
-<@netCommon.commonScript />
 </body>
+<@netCommon.commonScript />
 </html>

@@ -116,8 +116,6 @@ public class XxlSsoCasFilter implements Filter {
             }
         }
 
-        // todo，support loginout
-
         // 3、login check
         LoginInfo loginInfo = XxlSsoHelper.loginCheckWithCookieOrParam(request, response);      // todo, 跳转token单独隔离，保护
         if (loginInfo == null) {

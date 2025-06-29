@@ -181,13 +181,17 @@ public class XxlSsoHelper {
      * @param request
      * @return
      */
-    public static LoginInfo loginCheckWithCookie(HttpServletRequest request) {
+    public static LoginInfo loginCheckWithCookie(HttpServletRequest request, HttpServletResponse response) {
 
         // get cookie
         String token = CookieTool.getValue(request, getInstance().getTokenKey());
 
         // do login check
-        return loginCheck(token);
+        LoginInfo loginInfo = loginCheck(token);
+        if (loginInfo == null) {
+            CookieTool.remove(request, response, getInstance().getTokenKey());
+        }
+        return loginInfo;
     }
 
     /**

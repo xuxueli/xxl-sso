@@ -7,11 +7,13 @@ import com.xxl.sso.core.token.TokenHelper;
 import com.xxl.sso.server.model.AccountInfo;
 import com.xxl.sso.server.service.AccountService;
 import com.xxl.tool.core.StringTool;
+import com.xxl.tool.id.UUIDTool;
 import com.xxl.tool.response.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
@@ -32,7 +34,7 @@ public class CasLoginController {
     public String index(Model model, HttpServletRequest request, HttpServletResponse response) {
 
         // login check
-        LoginInfo loginInfo = XxlSsoHelper.loginCheckWithCookie(request);
+        LoginInfo loginInfo = XxlSsoHelper.loginCheckWithCookie(request, response);
 
         if (loginInfo == null) {
             return "redirect:/login";
@@ -50,47 +52,53 @@ public class CasLoginController {
      * @return
      */
     @RequestMapping(Const.LOGIN_URL)
-    public String login(Model model, HttpServletRequest request) {
+    public String login(Model model, HttpServletRequest request, HttpServletResponse response) {
 
-        // param
+        // 1、param
         String redirectUrl = request.getParameter(Const.CLIENT_REDIRECT_URL);
 
-        // login check
-        LoginInfo loginInfo = XxlSsoHelper.loginCheckWithCookie(request);
+        // 2、login check
+        LoginInfo loginInfo = XxlSsoHelper.loginCheckWithCookie(request, response);
         if (loginInfo != null) {
-
-            // redirect back
-            if (StringTool.isNotBlank(redirectUrl)) {
-
-                String token = XxlSsoHelper.getTokenWithCookie(request);
-                String redirectUrlFinal = redirectUrl.trim() + "?" + Const.XXL_SSO_TOKEN + "=" + token;;
-                return "redirect:" + redirectUrlFinal;
-            } else {
-                return "redirect:/";
+            // 2.1、login success, redirect back
+            String redirectUrlFinal = genereteRedirectUrl(request, redirectUrl);
+            if (StringTool.isBlank(redirectUrlFinal)) {
+                redirectUrlFinal = "/";
             }
+            return "redirect:" + redirectUrlFinal;
+        } else {
+            // 2.2、login fail, go to login-page
+            model.addAttribute(Const.CLIENT_REDIRECT_URL, redirectUrl);
+            return "login";
+        }
+    }
+
+    private String genereteRedirectUrl(HttpServletRequest request, String redirectUrl){
+        if (StringTool.isBlank(redirectUrl)) {
+            return "";
         }
 
-        model.addAttribute("errorMsg", request.getParameter("errorMsg"));
-        model.addAttribute(Const.CLIENT_REDIRECT_URL, redirectUrl);
-        return "login";
+        String token = XxlSsoHelper.getTokenWithCookie(request);
+        String redirectUrlFinal = redirectUrl.trim() + "?" + Const.XXL_SSO_TOKEN + "=" + token;;
+        return redirectUrlFinal;
     }
 
     /**
-     * Login
+     * Do login
      *
      * @param request
-     * @param redirectAttributes
      * @param username
      * @param password
      * @return
      */
     @RequestMapping("/doLogin")
-    public String doLogin(HttpServletRequest request,
-                        HttpServletResponse response,
-                        RedirectAttributes redirectAttributes,
-                        String username,
-                        String password,
-                        String ifRemember) {
+    @ResponseBody
+    public Response<String> doLogin(HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    String username,
+                                    String password,
+                                    String ifRemember,
+                                    String redirectUrl) {
 
         // process param
         boolean ifRem = "on".equals(ifRemember);
@@ -98,11 +106,7 @@ public class CasLoginController {
         // 1、find user
         Response<AccountInfo> accountResult = userService.findUser(username, password);
         if (!accountResult.isSuccess()) {
-
-            // login fail
-            redirectAttributes.addAttribute("errorMsg", accountResult.getMsg());
-            redirectAttributes.addAttribute(Const.CLIENT_REDIRECT_URL, request.getParameter(Const.CLIENT_REDIRECT_URL));
-            return "redirect:/login";
+            return Response.ofFail(accountResult.getMsg());
         }
         AccountInfo accoutInfo = accountResult.getData();
 
@@ -110,7 +114,7 @@ public class CasLoginController {
         LoginInfo loginInfo = new LoginInfo();
         loginInfo.setUserId(accoutInfo.getUserid());
         loginInfo.setUserName(accoutInfo.getUsername());
-        loginInfo.setVersion("v1");
+        loginInfo.setVersion(UUIDTool.getSimpleUUID());
 
         // 3、build token
         String token = TokenHelper.generateToken(loginInfo);
@@ -118,23 +122,15 @@ public class CasLoginController {
         // 4、login (write store + cookie)
         Response<String> loginResult = XxlSsoHelper.loginWithCookie(token, loginInfo, response, ifRem);
         if (!loginResult.isSuccess()) {
-
-            // login fail
-            redirectAttributes.addAttribute("errorMsg", loginResult.getMsg());
-            redirectAttributes.addAttribute(Const.CLIENT_REDIRECT_URL, request.getParameter(Const.CLIENT_REDIRECT_URL));
-            return "redirect:/login";
+            return Response.ofFail(accountResult.getMsg());
         }
-
 
         // 5、redirect back
-        String redirectUrl = request.getParameter(Const.CLIENT_REDIRECT_URL);
-        if (StringTool.isNotBlank(redirectUrl)) {
-            String redirectUrlFinal = redirectUrl.trim() + "?" + Const.XXL_SSO_TOKEN + "=" + token;
-            return "redirect:" + redirectUrlFinal;
-        } else {
-            return "redirect:/";
+        String redirectUrlFinal = genereteRedirectUrl(request, redirectUrl);
+        if (StringTool.isBlank(redirectUrlFinal)) {
+            redirectUrlFinal = request.getContextPath() + "/";
         }
-
+        return Response.ofSuccess(redirectUrlFinal);
     }
 
     /**
@@ -154,6 +150,5 @@ public class CasLoginController {
         redirectAttributes.addAttribute(Const.CLIENT_REDIRECT_URL, request.getParameter(Const.CLIENT_REDIRECT_URL));
         return "redirect:/login";
     }
-
 
 }

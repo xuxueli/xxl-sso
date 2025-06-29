@@ -4,10 +4,13 @@
     <meta charset="UTF-8" />
     <title>统一认证中心</title>
 
+    <#-- import macro -->
     <#import "common/common.macro.ftl" as netCommon>
-    <@netCommon.commonStyle />
-    <link rel="stylesheet" href="${request.contextPath}/static/adminlte/plugins/iCheck/square/blue.css">
 
+    <#-- commonStyle -->
+    <@netCommon.commonStyle />
+    <!-- iCheck -->
+    <link rel="stylesheet" href="${request.contextPath}/static/adminlte/plugins/iCheck/square/blue.css">
 </head>
 <body class="hold-transition login-page">
 
@@ -15,22 +18,17 @@
         <div class="login-logo">
             <a><b>XXL</b>SSO</a>
         </div>
-        <form action="${request.contextPath}/doLogin">
+        <form id="loginForm" method="post" >
             <div class="login-box-body">
                 <p class="login-box-msg">统一认证中心</p>
                 <div class="form-group has-feedback">
-                    <input type="text" name="username" class="form-control" placeholder="Please input username." value="user" maxlength="50" >
+                    <input type="text" name="username" class="form-control" placeholder="Please input username." value="user" maxlength="18" >
                     <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
                 </div>
                 <div class="form-group has-feedback">
-                    <input type="password" name="password" class="form-control" placeholder="Please input password." value="123456" maxlength="50" >
+                    <input type="password" name="password" class="form-control" placeholder="Please input password." value="123456" maxlength="18" >
                     <span class="glyphicon glyphicon-lock form-control-feedback"></span>
                 </div>
-
-                <#if errorMsg?exists>
-                    <p style="color: red;">${errorMsg}</p>
-                </#if>
-
                 <div class="row">
                     <div class="col-xs-8">
                         <div class="checkbox icheck">
@@ -40,7 +38,7 @@
                         </div>
                     </div><!-- /.col -->
                     <div class="col-xs-4">
-                        <input type="hidden" name="redirect_url" value="${redirect_url!''}" />
+                        <input type="hidden" name="redirectUrl" value="${redirect_url!""}">
                         <button type="submit" class="btn btn-primary btn-block btn-flat">Login</button>
                     </div>
                 </div>
@@ -48,8 +46,11 @@
         </form>
     </div>
 
+    <#-- commonScript -->
+    <@netCommon.commonScript />
+    <!-- icheck -->
+    <script src="${request.contextPath}/static/adminlte/plugins/iCheck/icheck.min.js"></script>
+    <!-- login file -->
+    <script src="${request.contextPath}/static/js/login.1.js"></script>
 </body>
-<@netCommon.commonScript />
-<script src="${request.contextPath}/static/adminlte/plugins/iCheck/icheck.min.js"></script>
-<script src="${request.contextPath}/static/js/login.1.js"></script>
 </html>

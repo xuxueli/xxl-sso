@@ -18,22 +18,15 @@ public class LocalLoginStore implements LoginStore {
 
     /**
      * parse store key from token
-     * @param token
+     *
+     * @param tokenLoginInfo
      * @return
      */
-    private String parseStoreKey(String token){
-        // valid
-        if (token == null) {
+    private String parseStoreKey(LoginInfo tokenLoginInfo){
+        if (tokenLoginInfo == null) {
             return null;
         }
-
-        // parse store key
-        LoginInfo tokeyLoginInfo = TokenHelper.parseToken(token);
-        if (tokeyLoginInfo == null) {
-            return null;
-        }
-
-        return tokeyLoginInfo.getUserId();
+        return tokenLoginInfo.getUserId();
     }
 
     @Override
@@ -48,7 +41,7 @@ public class LocalLoginStore implements LoginStore {
     public Response<String> set(String token, LoginInfo loginInfo, long tokenTimeout) {
 
         // parse storeKey
-        String storeKey = parseStoreKey(token);
+        String storeKey = parseStoreKey(TokenHelper.parseToken(token));
         if (StringTool.isBlank(storeKey)) {
             return Response.ofFail("token invalid.");
         }
@@ -75,26 +68,36 @@ public class LocalLoginStore implements LoginStore {
     @Override
     public LoginInfo get(String token) {
         // parse storeKey
-        String storeKey = parseStoreKey(token);
+        LoginInfo tokenLoginInfo = TokenHelper.parseToken(token);
+        String storeKey = parseStoreKey(tokenLoginInfo);
         if (StringTool.isBlank(storeKey)) {
             return null;
         }
+        String version = tokenLoginInfo.getVersion();
 
         // read
         LoginInfo loginInfo = loginStore.get(storeKey);
 
-        // valid expire time
-        if (loginInfo!=null && loginInfo.getExpireTime() < System.currentTimeMillis()) {
-            loginStore.remove(storeKey);
-            return null;
+        // valid
+        if (loginInfo != null) {
+            // valid expire time
+            if (loginInfo.getExpireTime() < System.currentTimeMillis()) {
+                loginStore.remove(storeKey);
+                return null;
+            }
+            // valid version if inconsistent
+            if (loginInfo.getVersion()!=null && !loginInfo.getVersion().equals(version)){
+                return null;    // Non-empty and inconsistent, intercept, intercept it
+            }
         }
+
         return loginInfo;
     }
 
     @Override
     public Response<String> remove(String token) {
         // parse storeKey
-        String storeKey = parseStoreKey(token);
+        String storeKey = parseStoreKey(TokenHelper.parseToken(token));
         if (StringTool.isBlank(storeKey)) {
             return Response.ofFail("token is invalid");
         }
