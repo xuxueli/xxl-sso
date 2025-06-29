@@ -85,7 +85,7 @@ public class RedisLoginStore implements LoginStore {
 
         // write
         jedisTool.set(storeKey, loginInfo, seconds);
-        return Response.ofSuccess();
+        return Response.ofSuccess(token);
     }
 
     @Override

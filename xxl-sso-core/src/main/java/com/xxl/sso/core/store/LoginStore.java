@@ -26,6 +26,7 @@ public interface LoginStore {
      * @param token
      * @param loginInfo
      * @param tokenTimeout
+     * @return
      */
     public Response<String> set(String token, LoginInfo loginInfo, long tokenTimeout);
 

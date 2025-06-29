@@ -69,7 +69,7 @@ public class LocalLoginStore implements LoginStore {
 
         // write
         loginStore.put(storeKey, loginInfo);
-        return Response.ofSuccess();
+        return Response.ofSuccess(token);
     }
 
     @Override
