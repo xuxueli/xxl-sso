@@ -74,18 +74,20 @@ public class XxlSsoWebFilter implements Filter {
         logger.info("XxlSsoWebFilter init.");
     }
 
-    // ---------------------- auth filter ----------------------
 
+    // ---------------------- tool ----------------------
 
-    @Override
-    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain chain) throws IOException, ServletException {
-        HttpServletRequest request = (HttpServletRequest) servletRequest;
-        HttpServletResponse response = (HttpServletResponse) servletResponse;
-
-        // 1、get url
+    /**
+     * is match excluded path
+     *
+     * @param request
+     * @return
+     */
+    private boolean isMatchExcludedPaths(HttpServletRequest request) {
+        // get url
         String servletPath = request.getServletPath();
 
-        // 2、filter excluded path
+        // filter excluded path
         if (StringTool.isNotBlank(excludedPaths)) {
             for (String excludedPath : excludedPaths.split(",")) {
                 // path check
@@ -97,14 +99,32 @@ public class XxlSsoWebFilter implements Filter {
                 // path match
                 if (antPathMatcher.match(uriPattern, servletPath)) {
                     // excluded path, pass
-                    chain.doFilter(request, response);
-                    return;
+                    return true;
                 }
 
             }
         }
+        return false;
+    }
 
-        // 3、login check (ticket + cookie)
+
+    // ---------------------- auth filter ----------------------
+
+    @Override
+    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain chain) throws IOException, ServletException {
+        HttpServletRequest request = (HttpServletRequest) servletRequest;
+        HttpServletResponse response = (HttpServletResponse) servletResponse;
+
+        // 1、valid path, is excluded
+        if (isMatchExcludedPaths(request)) {
+            // excluded path, pass
+            chain.doFilter(request, response);
+            return;
+        }
+
+        // 2、vlid permission TODO
+
+        // 3、login check
         Response<LoginInfo> loginCheckResult = XxlSsoHelper.loginCheckWithCookie(request, response);
 
         // parse login info
@@ -131,17 +151,7 @@ public class XxlSsoWebFilter implements Filter {
                 return;
             } else {
 
-                /*// origin url
-                String originUrl = request.getRequestURL().toString();
-
-                // redirect login-path
-                String finalLoginPath = request.getContextPath()
-                        .concat(loginPath)
-                        .concat("?")
-                        .concat(Const.CLIENT_REDIRECT_URL)
-                        .concat("=")
-                        .concat(originUrl);*/
-
+                // redirect 2 login
                 String finalLoginPath = request.getContextPath().concat(loginPath);
                 response.sendRedirect(finalLoginPath);
                 return;

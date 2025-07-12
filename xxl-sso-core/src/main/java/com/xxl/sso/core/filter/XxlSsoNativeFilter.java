@@ -59,18 +59,20 @@ public class XxlSsoNativeFilter implements Filter {
         logger.info("XxlSsoNativeFilter init.");
     }
 
-    // ---------------------- auth filter ----------------------
 
+    // ---------------------- tool ----------------------
 
-    @Override
-    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain chain) throws IOException, ServletException {
-        HttpServletRequest request = (HttpServletRequest) servletRequest;
-        HttpServletResponse response = (HttpServletResponse) servletResponse;
-
-        // 1、get url
+    /**
+     * is match excluded path
+     *
+     * @param request
+     * @return
+     */
+    private boolean isMatchExcludedPaths(HttpServletRequest request) {
+        // get url
         String servletPath = request.getServletPath();
 
-        // 2、filter excluded path
+        // filter excluded path
         if (StringTool.isNotBlank(excludedPaths)) {
             for (String excludedPath : excludedPaths.split(",")) {
                 // path check
@@ -82,12 +84,29 @@ public class XxlSsoNativeFilter implements Filter {
                 // path match
                 if (antPathMatcher.match(uriPattern, servletPath)) {
                     // excluded path, pass
-                    chain.doFilter(request, response);
-                    return;
+                    return true;
                 }
 
             }
         }
+        return false;
+    }
+
+
+    // ---------------------- auth filter ----------------------
+
+    @Override
+    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain chain) throws IOException, ServletException {
+        HttpServletRequest request = (HttpServletRequest) servletRequest;
+        HttpServletResponse response = (HttpServletResponse) servletResponse;
+
+        // 1、valid path, is excluded
+        if (isMatchExcludedPaths(request)) {
+            // excluded path, pass
+            chain.doFilter(request, response);
+            return;
+        }
+
 
         // 3、login check
         Response<LoginInfo> loginCheckResult = XxlSsoHelper.loginCheckWithHeader(request);
