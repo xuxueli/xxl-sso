@@ -4,10 +4,12 @@ import com.xxl.sso.core.helper.XxlSsoHelper;
 import com.xxl.sso.core.model.LoginInfo;
 import com.xxl.tool.response.Response;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author xuxueli 2017-08-01 21:39:47
@@ -16,9 +18,17 @@ import javax.servlet.http.HttpServletRequest;
 public class IndexController {
 
     @RequestMapping("/")
-    @ResponseBody
-    public Response<LoginInfo> index(HttpServletRequest request) {
-        return XxlSsoHelper.loginCheckWithAttr(request);
+    public String index(Model model, HttpServletRequest request, HttpServletResponse response) {
+
+        // login check
+        Response<LoginInfo> loginCheckResult = XxlSsoHelper.loginCheckWithCookie(request, response);
+
+        if (loginCheckResult!=null && loginCheckResult.isSuccess()) {
+            model.addAttribute("loginInfo", loginCheckResult.getData());
+            return "index";
+        } else {
+            return "redirect:/login";
+        }
     }
 
 }

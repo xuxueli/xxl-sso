@@ -15,23 +15,11 @@ import org.springframework.context.annotation.Configuration;
 public class XxlSsoConfig {
 
 
-    @Value("${xxl.sso.server.address}")
-    private String serverAddress;
-
-    @Value("${xxl.sso.server.login.path}")
-    private String loginPath;
-
-    @Value("${xxl.sso.server.logout.path}")
-    private String logoutPath;
-
     @Value("${xxl-sso.token.key}")
     private String tokenKey;
 
     @Value("${xxl-sso.token.timeout}")
     private long tokenTimeout;
-
-    @Value("${xxl-sso.client.excluded.paths}")
-    private String excludedPaths;
 
     @Value("${xxl-sso.store.redis.nodes}")
     private String redisNodes;
@@ -44,6 +32,15 @@ public class XxlSsoConfig {
 
     @Value("${xxl-sso.store.redis.keyprefix}")
     private String redisKeyprefix;
+
+    @Value("${xxl.sso.server.address}")
+    private String serverAddress;
+
+    @Value("${xxl.sso.server.login.path}")
+    private String loginPath;
+
+    @Value("${xxl-sso.client.excluded.paths}")
+    private String excludedPaths;
 
 
     /**

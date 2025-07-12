@@ -15,9 +15,6 @@ import org.springframework.context.annotation.Configuration;
 public class XxlSsoConfig {
 
 
-    @Value("${xxl-sso.client.excluded.paths}")
-    private String excludedPaths;
-
     @Value("${xxl-sso.token.key}")
     private String tokenKey;
 
@@ -35,6 +32,9 @@ public class XxlSsoConfig {
 
     @Value("${xxl-sso.store.redis.keyprefix}")
     private String redisKeyprefix;
+
+    @Value("${xxl-sso.client.excluded.paths}")
+    private String excludedPaths;
 
 
     /**

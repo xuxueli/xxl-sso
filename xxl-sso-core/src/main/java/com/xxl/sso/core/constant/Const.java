@@ -8,7 +8,6 @@ package com.xxl.sso.core.constant;
 public class Const {
 
 
-
     /**
      * login url （relative address）
      */
