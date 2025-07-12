@@ -221,12 +221,12 @@ public class XxlSsoHelper {
     }
 
     /**
-     * valid ticket, from parameter
+     * valid ticket and write, from parameter
      *
      * @param request
      * @return
      */
-    public static Response<LoginInfo> validTicket(HttpServletRequest request) {
+    public static Response<LoginInfo> validTicket(HttpServletRequest request, HttpServletResponse response) {
 
         // parse ticket
         String ticket = request.getParameter(Const.XXL_SSO_TICKET);
@@ -240,6 +240,13 @@ public class XxlSsoHelper {
             return Response.ofFail(validTicketResult.getMsg());
         }
         String token = validTicketResult.getData();
+
+        // login check
+        Response<LoginInfo> result = loginCheck(token);
+        if (result.isSuccess()) {
+            // write token - cookie
+            CookieTool.set(response, getInstance().getTokenKey(), token, false);
+        }
 
         return loginCheck(token);
     }

@@ -117,9 +117,9 @@ public class XxlSsoCasFilter implements Filter {
         }
 
         // 3、login check (ticket + cookie)
-        Response<LoginInfo> loginCheckResult = XxlSsoHelper.validTicket(request);           // check ticket
+        Response<LoginInfo> loginCheckResult = XxlSsoHelper.loginCheckWithCookie(request, response);                // check cookie
         if (!(loginCheckResult!=null && loginCheckResult.isSuccess())) {
-            loginCheckResult = XxlSsoHelper.loginCheckWithCookie(request, response);        // check cookie
+            loginCheckResult = XxlSsoHelper.validTicket(request, response);         // check ticket
         }
 
         // parse login info

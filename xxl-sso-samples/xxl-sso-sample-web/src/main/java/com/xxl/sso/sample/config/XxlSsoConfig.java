@@ -1,7 +1,7 @@
 package com.xxl.sso.sample.config;
 
 import com.xxl.sso.core.bootstrap.XxlSsoBootstrap;
-import com.xxl.sso.core.filter.XxlSsoCasFilter;
+import com.xxl.sso.core.filter.XxlSsoNativeFilter;
 import com.xxl.sso.core.store.impl.RedisLoginStore;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
@@ -18,12 +18,6 @@ public class XxlSsoConfig {
     @Value("${xxl.sso.server.address}")
     private String serverAddress;
 
-    @Value("${xxl.sso.server.login.path}")
-    private String loginPath;
-
-    @Value("${xxl.sso.server.logout.path}")
-    private String logoutPath;
-
     @Value("${xxl-sso.token.key}")
     private String tokenKey;
 
@@ -33,16 +27,16 @@ public class XxlSsoConfig {
     @Value("${xxl-sso.client.excluded.paths}")
     private String excludedPaths;
 
-    @Value("${xxl-sso.store.redis.nodes}")
+    @Value("${xxl-sso.client.store.redis.nodes}")
     private String redisNodes;
 
-    @Value("${xxl-sso.store.redis.user}")
+    @Value("${xxl-sso.client.store.redis.user}")
     private String redisUser;
 
-    @Value("${xxl-sso.store.redis.password}")
+    @Value("${xxl-sso.client.store.redis.password}")
     private String redisPassword;
 
-    @Value("${xxl-sso.store.redis.keyprefix}")
+    @Value("${xxl-sso.client.store.redis.keyprefix}")
     private String redisKeyprefix;
 
 
@@ -59,7 +53,7 @@ public class XxlSsoConfig {
                 redisKeyprefix));
         bootstrap.setTokenKey(tokenKey);
         bootstrap.setTokenTimeout(tokenTimeout);
-        bootstrap.setFilter(new XxlSsoCasFilter(serverAddress, loginPath, excludedPaths));
+        bootstrap.setFilter(new XxlSsoNativeFilter(excludedPaths));
 
         return bootstrap;
     }
@@ -76,7 +70,7 @@ public class XxlSsoConfig {
 
         // filter registry
         FilterRegistrationBean registration = new FilterRegistrationBean();
-        registration.setName("xxlSsoCasFilter");
+        registration.setName("xxlSsoNativeFilter");
         registration.setOrder(1);
         registration.addUrlPatterns("/*");
         registration.setFilter(bootstrap.getFilter());
