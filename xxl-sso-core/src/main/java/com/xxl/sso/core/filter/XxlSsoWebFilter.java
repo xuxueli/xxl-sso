@@ -122,7 +122,8 @@ public class XxlSsoWebFilter implements Filter {
             return;
         }
 
-        // 2、vlid permission TODO
+        // 2、vlid permission, not support
+
 
         // 3、login check
         Response<LoginInfo> loginCheckResult = XxlSsoHelper.loginCheckWithCookie(request, response);
