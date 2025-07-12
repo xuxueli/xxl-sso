@@ -40,6 +40,7 @@
         <!-- jedis -->
         <jedis.version>6.0.0</jedis.version>
         <!-- spring-boot -->
+        <spring.version>5.3.39</spring.version>
         <spring-boot.version>2.7.18</spring-boot.version>
 
         <!-- xxl-tool( + support) -->

@@ -33,6 +33,19 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- xxl-tool -->
+        <dependency>
+            <groupId>com.xuxueli</groupId>
+            <artifactId>xxl-tool</artifactId>
+            <version>${xxl-tool.version}</version>
+        </dependency>
+        <!-- gson -->
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>${gson.version}</version>
+        </dependency>
+
         <!-- servlet -->
         <dependency>
             <groupId>javax.servlet</groupId>
@@ -48,17 +61,12 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- xxl-tool -->
+        <!-- springmvc (support annotation) -->
         <dependency>
-            <groupId>com.xuxueli</groupId>
-            <artifactId>xxl-tool</artifactId>
-            <version>${xxl-tool.version}</version>
-        </dependency>
-        <!-- gson -->
-        <dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
-            <version>${gson.version}</version>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
+            <version>${spring.version}</version>
+            <scope>provided</scope>
         </dependency>
 
     </dependencies>
