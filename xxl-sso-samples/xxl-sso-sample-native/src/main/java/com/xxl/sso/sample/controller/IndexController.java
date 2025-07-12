@@ -18,8 +18,7 @@ public class IndexController {
     @RequestMapping("/")
     @ResponseBody
     public Response<LoginInfo> index(HttpServletRequest request) {
-        LoginInfo loginInfo = XxlSsoHelper.loginCheckWithAttr(request);
-        return Response.ofSuccess(loginInfo);
+        return XxlSsoHelper.loginCheckWithAttr(request);
     }
 
 }

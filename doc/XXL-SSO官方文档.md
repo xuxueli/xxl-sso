@@ -391,7 +391,7 @@ SSO User | 登录用户信息，与 SSO SessionId 相对应
 
 ### 5.3 版本 v1.2.0 Release Notes [迭代中]
 - 1、升级jedis、springboot等版本依赖版本；
-- 2、[迭代中]Client跳转新增一次性Token验证；
+- 2、Client跳转新增一次性Token验证；
 - 3、拼写问题修复；
 
 

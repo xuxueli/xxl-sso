@@ -33,13 +33,13 @@ public class CasLoginController {
     public String index(Model model, HttpServletRequest request, HttpServletResponse response) {
 
         // login check
-        LoginInfo loginInfo = XxlSsoHelper.loginCheckWithCookie(request, response);
+        Response<LoginInfo> loginCheckResult = XxlSsoHelper.loginCheckWithCookie(request, response);
 
-        if (loginInfo == null) {
-            return "redirect:/login";
-        } else {
-            model.addAttribute("loginInfo", loginInfo);
+        if (loginCheckResult!=null && loginCheckResult.isSuccess()) {
+            model.addAttribute("loginInfo", loginCheckResult.getData());
             return "index";
+        } else {
+            return "redirect:/login";
         }
     }
 
@@ -57,29 +57,48 @@ public class CasLoginController {
         String redirectUrl = request.getParameter(Const.CLIENT_REDIRECT_URL);
 
         // 2、login check
-        LoginInfo loginInfo = XxlSsoHelper.loginCheckWithCookie(request, response);
-        if (loginInfo != null) {
+        Response<LoginInfo> loginCheckResult = XxlSsoHelper.loginCheckWithCookie(request, response);
+        if (loginCheckResult!=null && loginCheckResult.isSuccess()) {
+
             // 2.1、login success, redirect back
             String redirectUrlFinal = genereteRedirectUrl(request, redirectUrl);
             if (StringTool.isBlank(redirectUrlFinal)) {
                 redirectUrlFinal = "/";
             }
+
             return "redirect:" + redirectUrlFinal;
         } else {
+
             // 2.2、login fail, go to login-page
             model.addAttribute(Const.CLIENT_REDIRECT_URL, redirectUrl);
+
             return "login";
         }
     }
 
+    /**
+     * generate redirect url, back 2 client
+     *
+     * @param request
+     * @param redirectUrl
+     * @return
+     */
     private String genereteRedirectUrl(HttpServletRequest request, String redirectUrl){
+
+        // valid
         if (StringTool.isBlank(redirectUrl)) {
             return "";
         }
 
-        String token = XxlSsoHelper.getTokenWithCookie(request);
-        String redirectUrlFinal = redirectUrl.trim() + "?" + Const.XXL_SSO_TOKEN + "=" + token;;
-        return redirectUrlFinal;
+        // parse ticket
+        Response<String> createTicketResult = XxlSsoHelper.createTicket(request);
+        if (!createTicketResult.isSuccess()) {
+            return "";
+        }
+        String ticket = createTicketResult.getData();
+
+        // build redirect url
+        return redirectUrl.trim() + "?" + Const.XXL_SSO_TICKET + "=" + ticket;
     }
 
     /**

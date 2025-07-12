@@ -6,6 +6,7 @@ import com.xxl.sso.core.store.LoginStore;
 import com.xxl.sso.core.token.TokenHelper;
 import com.xxl.sso.core.util.JedisTool;
 import com.xxl.tool.core.StringTool;
+import com.xxl.tool.id.UUIDTool;
 import com.xxl.tool.response.Response;
 
 /**
@@ -18,7 +19,7 @@ public class RedisLoginStore implements LoginStore {
     public RedisLoginStore(String nodes, String user, String password, String storeKeyPrefix) {
         // valid
         if (StringTool.isBlank(storeKeyPrefix)) {
-            storeKeyPrefix = Const.XXL_SSO_USER_STORE_PREFIX;
+            storeKeyPrefix = Const.XXL_SSO_STORE_PREFIX;
         }
 
         // init
@@ -30,6 +31,11 @@ public class RedisLoginStore implements LoginStore {
     /**
      * parse store key from token
      *
+     * <pre>
+     *     key: "xxl_sso_user:" + {user001}
+     *     value: loginInfo
+     * </pre>>
+     *
      * @param tokenLoginInfo
      * @return
      */
@@ -39,6 +45,25 @@ public class RedisLoginStore implements LoginStore {
         }
 
         return storeKeyPrefix + tokenLoginInfo.getUserId();
+    }
+
+    /**
+     * parse store key from ticket
+     *
+     * <pre>
+     *     key: "xxl_sso_user:" + "ticket:" + {ticket}
+     *     value: token
+     * </pre>>
+     *
+     * @param ticket
+     * @return
+     */
+    private String parseTicketStoreKey(String ticket){
+        if (ticket == null) {
+            return null;
+        }
+
+        return storeKeyPrefix + "ticket:" + ticket;
     }
 
     @Override
@@ -86,33 +111,34 @@ public class RedisLoginStore implements LoginStore {
     }
 
     @Override
-    public LoginInfo get(String token) {
+    public Response<LoginInfo> get(String token) {
 
         // parse storeKey
         LoginInfo tokenLoginInfo = TokenHelper.parseToken(token);
         String storeKey = parseStoreKey(tokenLoginInfo);
         if (StringTool.isBlank(storeKey)) {
-            return null;
+            return Response.ofFail("token is invalid");
         }
         String version = tokenLoginInfo.getVersion();
 
         // read
         LoginInfo loginInfo = (LoginInfo) jedisTool.get(storeKey);
-
-        // valid
-        if (loginInfo != null) {
-            // valid expire time
-            if (loginInfo.getExpireTime() < System.currentTimeMillis()) {
-                jedisTool.del(storeKey);
-                return null;
-            }
-            // valid version if inconsistent
-            if (loginInfo.getVersion()!=null && !loginInfo.getVersion().equals(version)){
-                return null;    // Non-empty and inconsistent, intercept, intercept it
-            }
+        if (loginInfo == null) {
+            return Response.ofFail("token is invalid2");
         }
 
-        return loginInfo;
+        // valid expire time
+        if (loginInfo.getExpireTime() < System.currentTimeMillis()) {
+            jedisTool.del(storeKey);
+            return Response.ofFail("token is timeout");
+        }
+        // valid version if inconsistent
+        if (loginInfo.getVersion()!=null && !loginInfo.getVersion().equals(version)){
+            // Non-empty and inconsistent
+            return Response.ofFail("token version is invalid");
+        }
+
+        return Response.ofSuccess(loginInfo);
     }
 
     @Override
@@ -126,6 +152,41 @@ public class RedisLoginStore implements LoginStore {
         // remove
         jedisTool.del(storeKey);
         return Response.ofSuccess();
+    }
+
+    @Override
+    public Response<String> createTicket(String token, long ticketTimeout) {
+
+        // valid param
+        LoginInfo tokenLoginInfo = TokenHelper.parseToken(token);
+        if (tokenLoginInfo == null) {
+            return Response.ofFail("token is invalid");
+        }
+        if (!(ticketTimeout>=1000 && ticketTimeout<=1000 * 60 * 3)) {
+            return Response.ofFail("ticketTimeout is invalid");
+        }
+
+        // build ticket
+        String ticket = tokenLoginInfo.getUserId() + UUIDTool.getSimpleUUID();
+        String storeKey = parseTicketStoreKey(ticket);
+
+        // set
+        jedisTool.set(storeKey, token, ticketTimeout);
+        return Response.ofSuccess(ticket);
+    }
+
+    @Override
+    public Response<String> validTicket(String ticket) {
+        // parse storeKey
+        String storeKey = parseTicketStoreKey(ticket);
+
+        // get
+        String token = (String) jedisTool.get(storeKey);
+        if (token == null) {
+            return Response.ofFail("ticket not found.");
+        }
+
+        return Response.ofSuccess(token);
     }
 
 }

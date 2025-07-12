@@ -33,8 +33,8 @@ public class IndexController {
     @RequestMapping("/")
     public String index(Model model, HttpServletRequest request) {
 
-        LoginInfo loginInfo = XxlSsoHelper.loginCheckWithAttr(request);
-        model.addAttribute("loginInfo", loginInfo);
+        Response<LoginInfo> result = XxlSsoHelper.loginCheckWithAttr(request);
+        model.addAttribute("loginInfo", result!=null?result.getData():null);
         model.addAttribute("logoutPath", getLogoutPath());
         return "index";
     }
@@ -42,8 +42,7 @@ public class IndexController {
     @RequestMapping("/json")
     @ResponseBody
     public Response<LoginInfo> json(HttpServletRequest request) {
-        LoginInfo loginInfo = XxlSsoHelper.loginCheckWithAttr(request);
-        return Response.ofSuccess(loginInfo);
+        return XxlSsoHelper.loginCheckWithAttr(request);
     }
 
 }

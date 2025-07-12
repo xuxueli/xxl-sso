@@ -32,17 +32,22 @@ public class Const {
 
 
     /**
-     * xxl-sso token  (cookie key、header key)
+     * xxl-sso token, for cookie-key、header-key
      */
     public static final String XXL_SSO_TOKEN = "xxl_sso_token";
     /**
-     * xxl-sso user  (request attr key)
+     * xxl-sso user, for request.attribute - key
      */
     public static final String XXL_SSO_USER = "xxl_sso_user";
     /**
-     * xxl-sso store key prefix (redis key prefix)
+     * xxl-sso login-user store key prefix, like redis-key-prefix
      */
-    public static final String XXL_SSO_USER_STORE_PREFIX = "xxl_sso_user:";
+    public static final String XXL_SSO_STORE_PREFIX = "xxl_sso:";
+
+    /**
+     * xxl-sso ticket, for cas redirect ticket
+     */
+    public static final String XXL_SSO_TICKET = "xxl_sso_ticket";
 
 
 

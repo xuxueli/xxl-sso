@@ -1,5 +1,6 @@
 package com.xxl.sso.core.store.impl;
 
+import com.xxl.sso.core.exception.XxlSsoException;
 import com.xxl.sso.core.model.LoginInfo;
 import com.xxl.sso.core.store.LoginStore;
 import com.xxl.sso.core.token.TokenHelper;
@@ -69,33 +70,34 @@ public class LocalLoginStore implements LoginStore {
     }
 
     @Override
-    public LoginInfo get(String token) {
+    public Response<LoginInfo> get(String token) {
 
         // parse storeKey
         LoginInfo tokenLoginInfo = TokenHelper.parseToken(token);
         String storeKey = parseStoreKey(tokenLoginInfo);
         if (StringTool.isBlank(storeKey)) {
-            return null;
+            return Response.ofFail("token is invalid");
         }
         String version = tokenLoginInfo.getVersion();
 
         // read
         LoginInfo loginInfo = loginStore.get(storeKey);
-
-        // valid
-        if (loginInfo != null) {
-            // valid expire time
-            if (loginInfo.getExpireTime() < System.currentTimeMillis()) {
-                loginStore.remove(storeKey);
-                return null;
-            }
-            // valid version if inconsistent
-            if (loginInfo.getVersion()!=null && !loginInfo.getVersion().equals(version)){
-                return null;    // Non-empty and inconsistent, intercept, intercept it
-            }
+        if (loginInfo == null) {
+            return Response.ofFail("token is invalid2");
         }
 
-        return loginInfo;
+        // valid expire time
+        if (loginInfo.getExpireTime() < System.currentTimeMillis()) {
+            loginStore.remove(storeKey);
+            return Response.ofFail("token is timeout");
+        }
+        // valid version if inconsistent
+        if (loginInfo.getVersion()!=null && !loginInfo.getVersion().equals(version)){
+            // Non-empty and inconsistent
+            return Response.ofFail("token version is invalid");
+        }
+
+        return Response.ofSuccess(loginInfo);
     }
 
     @Override
@@ -109,6 +111,16 @@ public class LocalLoginStore implements LoginStore {
         // remove
         loginStore.remove(storeKey);
         return Response.ofSuccess();
+    }
+
+    @Override
+    public Response<String> createTicket(String token, long ticketTimeout) {
+        throw new XxlSsoException("LocalLoginStore not support createTicket");
+    }
+
+    @Override
+    public Response<String> validTicket(String ticket) {
+        throw new XxlSsoException("LocalLoginStore not support validTicket");
     }
 
 }

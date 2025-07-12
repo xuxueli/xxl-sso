@@ -76,67 +76,24 @@ public class XxlSsoHelper {
     }
 
 
-    // ---------------------- login tool ----------------------
+    // ---------------------- login ----------------------
 
     /**
      * login with token (only write LoginStore)
      *
      * @param loginInfo
-     * @return
+     * @return  Response#data is token
      */
     public static Response<String> login(LoginInfo loginInfo) {
         return getInstance().getLoginStore().set(loginInfo, getInstance().getTokenTimeout());
     }
 
     /**
-     * logout with token
-     *
-     * @param token
-     */
-    public static Response<String> logout(String token) {
-        return getInstance().getLoginStore().remove(token);
-    }
-
-    /**
-     * login check with token
-     *
-     * @param token
-     * @return
-     */
-    public static LoginInfo loginCheck(String token) {
-        return getInstance().getLoginStore().get(token);
-    }
-
-    /**
-     * login check with request-attribute
-     *
-     * @param request
-     * @return
-     */
-    public static LoginInfo loginCheckWithAttr(HttpServletRequest request) {
-        return (LoginInfo) request.getAttribute(Const.XXL_SSO_USER);
-    }
-
-    /**
-     * login check with request-header
-     *
-     * @param request
-     * @return
-     */
-    public static LoginInfo loginCheckWithHeader(HttpServletRequest request) {
-        String token = request.getHeader(getInstance().getTokenKey());
-        return loginCheck(token);
-    }
-
-
-    // ---------------------- login with cookie ----------------------
-
-    /**
      * login with token (write LoginStore and response-cookie )
      *
      * @param loginInfo
      * @param response
-     * @return
+     * @return  Response#data is token
      */
     public static Response<String> loginWithCookie(LoginInfo loginInfo, HttpServletResponse response, boolean ifRemember) {
 
@@ -150,6 +107,18 @@ public class XxlSsoHelper {
         }
 
         return loginResult;
+    }
+
+
+    // ---------------------- logout ----------------------
+
+    /**
+     * logout with token
+     *
+     * @param token
+     */
+    public static Response<String> logout(String token) {
+        return getInstance().getLoginStore().remove(token);
     }
 
     /**
@@ -174,63 +143,106 @@ public class XxlSsoHelper {
         return logoutResult;
     }
 
+
+    // ---------------------- loginCheck ----------------------
+
+    /**
+     * login check with token
+     *
+     * @param token
+     * @return
+     */
+    public static Response<LoginInfo> loginCheck(String token) {
+        return getInstance().getLoginStore().get(token);
+    }
+
+    /**
+     * login check with request-header
+     *
+     * @param request
+     * @return
+     */
+    public static Response<LoginInfo> loginCheckWithHeader(HttpServletRequest request) {
+        String token = request.getHeader(getInstance().getTokenKey());
+        return loginCheck(token);
+    }
+
     /**
      * login check with request-cookie
      *
      * @param request
      * @return
      */
-    public static LoginInfo loginCheckWithCookie(HttpServletRequest request, HttpServletResponse response) {
-
+    public static Response<LoginInfo> loginCheckWithCookie(HttpServletRequest request, HttpServletResponse response) {
         // get cookie
         String token = CookieTool.getValue(request, getInstance().getTokenKey());
 
         // do login check
-        LoginInfo loginInfo = loginCheck(token);
-        if (loginInfo == null) {
+        Response<LoginInfo> result = loginCheck(token);
+        if (!(result!=null && result.isSuccess())) {
             CookieTool.remove(request, response, getInstance().getTokenKey());
         }
-        return loginInfo;
+        return result;
     }
 
     /**
-     * login check with request-cookie or request-parameter
+     * login check with request-attribute
      *
      * @param request
      * @return
      */
-    public static LoginInfo loginCheckWithCookieOrParam(HttpServletRequest request, HttpServletResponse response) {
+    public static Response<LoginInfo> loginCheckWithAttr(HttpServletRequest request) {
+        LoginInfo loginInfo = (LoginInfo) request.getAttribute(Const.XXL_SSO_USER);
+        return loginInfo!=null
+                ?Response.ofSuccess(loginInfo)
+                :Response.ofFail("not login.");
+    }
+
+
+    // ---------------------- for cas ticket ----------------------
+
+    /**
+     * create ticket, from token in cookie
+     *
+     * @param request
+     * @return
+     */
+    public static Response<String> createTicket(HttpServletRequest request) {
 
         // get cookie
         String token = CookieTool.getValue(request, getInstance().getTokenKey());
-
-        // do login check
-        LoginInfo loginInfo = loginCheck(token);
-        if (loginInfo != null) {
-            return loginInfo;
+        if (StringTool.isBlank(token)) {
+            return Response.ofFail("not login.");
         }
 
-        // sync token(cookie) from cas-server
-        token = request.getParameter(Const.XXL_SSO_TOKEN);
-        loginInfo = loginCheck(token);
-        if (loginInfo != null) {
-
-            // set cookie
-            CookieTool.set(response, getInstance().getTokenKey(), token, true);     // todo, sync ifRemember-time
-            return loginInfo;
-        }
-        return null;
+        // valid ticket
+        long ticketTimeout = 60 * 1000;
+        return getInstance().getLoginStore().createTicket(token, ticketTimeout);
     }
 
     /**
-     * login check with request-param
+     * valid ticket, from parameter
      *
      * @param request
      * @return
      */
-    public static String getTokenWithCookie(HttpServletRequest request) {
-        // get cookie
-        return CookieTool.getValue(request, getInstance().getTokenKey());
+    public static Response<LoginInfo> validTicket(HttpServletRequest request) {
+
+        // parse ticket
+        String ticket = request.getParameter(Const.XXL_SSO_TICKET);
+        if (StringTool.isBlank(ticket)) {
+            return Response.ofFail("ticket is null.");
+        }
+
+        // valid ticket
+        Response<String> validTicketResult = getInstance().getLoginStore().validTicket( ticket);
+        if (!validTicketResult.isSuccess()) {
+            return Response.ofFail(validTicketResult.getMsg());
+        }
+        String token = validTicketResult.getData();
+
+        return loginCheck(token);
     }
+
 
 }

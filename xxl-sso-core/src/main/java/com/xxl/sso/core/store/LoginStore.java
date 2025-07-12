@@ -10,6 +10,9 @@ import com.xxl.tool.response.Response;
  */
 public interface LoginStore {
 
+
+    // ---------------------- for init ----------------------
+
     /**
      * start
      */
@@ -20,8 +23,11 @@ public interface LoginStore {
      */
     public void stop();
 
+
+    // ---------------------- for token ----------------------
+
     /**
-     * set login info
+     * set LoginInfo
      *
      * @param   loginInfo
      * @param   tokenTimeout
@@ -30,19 +36,39 @@ public interface LoginStore {
     public Response<String> set(LoginInfo loginInfo, long tokenTimeout);
 
     /**
-     * get login info
+     * get LoginInfo
      *
      * @param token
      * @return
      */
-    public LoginInfo get(String token);
+    public Response<LoginInfo> get(String token);
 
     /**
-     * remove login info
+     * remove LoginInfo
      *
      * @param token
      * @return
      */
     public Response<String> remove(String token);
+
+
+    // ---------------------- for cas ----------------------
+
+    /**
+     * create ticket of token
+     *
+     * @param   token           token
+     * @param   ticketTimeout   for millisecond, limit 1s - 3min
+     * @return  Response.data is ticket
+     */
+    public Response<String> createTicket(String token, long ticketTimeout);
+
+    /**
+     * valid ticket of token
+     *
+     * @param   ticket          cas ticket
+     * @return  Response.data is token
+     */
+    public Response<String> validTicket(String ticket);
 
 }

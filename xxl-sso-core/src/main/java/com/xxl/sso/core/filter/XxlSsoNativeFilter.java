@@ -90,7 +90,13 @@ public class XxlSsoNativeFilter implements Filter {
         }
 
         // 3、login check
-        LoginInfo loginInfo = XxlSsoHelper.loginCheckWithHeader(request);
+        Response<LoginInfo> loginCheckResult = XxlSsoHelper.loginCheckWithHeader(request);
+        // parse login info
+        LoginInfo loginInfo = null;
+        if (loginCheckResult!=null && loginCheckResult.isSuccess()) {
+            loginInfo = loginCheckResult.getData();
+        }
+        // process login
         if (loginInfo == null) {
 
             // 4、login fail message

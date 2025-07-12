@@ -98,11 +98,7 @@ public class NativeOpenAPIController {
         }
 
         // 1、logout
-        LoginInfo loginInfo = XxlSsoHelper.loginCheck(loginCheckRequest.getToken());
-        if (loginInfo == null) {
-            return Response.ofFail("sso not login.");
-        }
-        return Response.ofSuccess(loginInfo);
+        return XxlSsoHelper.loginCheck(loginCheckRequest.getToken());
     }
 
 }
