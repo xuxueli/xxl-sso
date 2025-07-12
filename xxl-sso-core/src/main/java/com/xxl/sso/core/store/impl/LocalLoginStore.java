@@ -38,13 +38,7 @@ public class LocalLoginStore implements LoginStore {
     }
 
     @Override
-    public Response<String> set(String token, LoginInfo loginInfo, long tokenTimeout) {
-
-        // parse storeKey
-        String storeKey = parseStoreKey(TokenHelper.parseToken(token));
-        if (StringTool.isBlank(storeKey)) {
-            return Response.ofFail("token invalid.");
-        }
+    public Response<String> set(LoginInfo loginInfo, long tokenTimeout) {
 
         // valid loginInfo
         if (loginInfo == null
@@ -60,6 +54,15 @@ public class LocalLoginStore implements LoginStore {
         }
         loginInfo.setExpireTime(expireTime);
 
+        // generate token
+        String token = TokenHelper.generateToken(loginInfo);
+
+        // parse storeKey
+        String storeKey = parseStoreKey(TokenHelper.parseToken(token));
+        if (StringTool.isBlank(storeKey)) {
+            return Response.ofFail("token invalid.");
+        }
+
         // write
         loginStore.put(storeKey, loginInfo);
         return Response.ofSuccess(token);
@@ -67,6 +70,7 @@ public class LocalLoginStore implements LoginStore {
 
     @Override
     public LoginInfo get(String token) {
+
         // parse storeKey
         LoginInfo tokenLoginInfo = TokenHelper.parseToken(token);
         String storeKey = parseStoreKey(tokenLoginInfo);

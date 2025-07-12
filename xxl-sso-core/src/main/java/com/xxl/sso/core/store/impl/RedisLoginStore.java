@@ -52,13 +52,7 @@ public class RedisLoginStore implements LoginStore {
     }
 
     @Override
-    public Response<String> set(String token, LoginInfo loginInfo, long tokenTimeout) {
-
-        // parse storeKey
-        String storeKey = parseStoreKey(TokenHelper.parseToken(token));
-        if (StringTool.isBlank(storeKey)) {
-            return Response.ofFail("token invalid.");
-        }
+    public Response<String> set(LoginInfo loginInfo, long tokenTimeout) {
 
         // valid loginInfo
         if (loginInfo == null
@@ -77,6 +71,15 @@ public class RedisLoginStore implements LoginStore {
         // redis timeout (seconds)
         long seconds = (loginInfo.getExpireTime() - System.currentTimeMillis()) / 1000;
 
+        // generate token
+        String token = TokenHelper.generateToken(loginInfo);
+
+        // parse storeKey
+        String storeKey = parseStoreKey(TokenHelper.parseToken(token));
+        if (StringTool.isBlank(storeKey)) {
+            return Response.ofFail("token invalid.");
+        }
+
         // write
         jedisTool.set(storeKey, loginInfo, seconds);
         return Response.ofSuccess(token);
@@ -84,6 +87,7 @@ public class RedisLoginStore implements LoginStore {
 
     @Override
     public LoginInfo get(String token) {
+
         // parse storeKey
         LoginInfo tokenLoginInfo = TokenHelper.parseToken(token);
         String storeKey = parseStoreKey(tokenLoginInfo);

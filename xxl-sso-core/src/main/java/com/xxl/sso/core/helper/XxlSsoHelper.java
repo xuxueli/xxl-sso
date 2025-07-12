@@ -81,12 +81,11 @@ public class XxlSsoHelper {
     /**
      * login with token (only write LoginStore)
      *
-     * @param token
      * @param loginInfo
      * @return
      */
-    public static Response<String> login(String token, LoginInfo loginInfo) {
-        return getInstance().getLoginStore().set(token, loginInfo, getInstance().getTokenTimeout());
+    public static Response<String> login(LoginInfo loginInfo) {
+        return getInstance().getLoginStore().set(loginInfo, getInstance().getTokenTimeout());
     }
 
     /**
@@ -135,18 +134,18 @@ public class XxlSsoHelper {
     /**
      * login with token (write LoginStore and response-cookie )
      *
-     * @param token
      * @param loginInfo
      * @param response
      * @return
      */
-    public static Response<String> loginWithCookie(String token, LoginInfo loginInfo, HttpServletResponse response, boolean ifRemember) {
+    public static Response<String> loginWithCookie(LoginInfo loginInfo, HttpServletResponse response, boolean ifRemember) {
 
         // do login
-        Response<String> loginResult = login(token, loginInfo);
+        Response<String> loginResult = login(loginInfo);
 
         // set cookie
         if (loginResult.isSuccess()) {
+            String token = loginResult.getData();
             CookieTool.set(response, getInstance().getTokenKey(), token, ifRemember);
         }
 

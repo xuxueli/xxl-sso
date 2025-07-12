@@ -5,8 +5,7 @@ import com.xxl.sso.core.model.LoginInfo;
 import com.xxl.sso.core.store.LoginStore;
 import com.xxl.sso.core.store.impl.LocalLoginStore;
 import com.xxl.sso.core.store.impl.RedisLoginStore;
-import com.xxl.sso.core.token.TokenHelper;
-import com.xxl.sso.core.util.JedisTool;
+import com.xxl.tool.response.Response;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,42 +15,45 @@ public class LoginStoreTest {
 
     @Test
     public void test() {
+        // store
         LoginStore loginStore = new LocalLoginStore();
 
+        // init login info
         LoginInfo loginInfo = new LoginInfo("666", "zhagnsan", "v1", System.currentTimeMillis() + Const.EXPIRE_TIME_FOR_7_DAY);
-        String token = TokenHelper.generateToken(loginInfo);
-        logger.info("token:{}", token);
 
-        loginStore.set(token, loginInfo, Const.EXPIRE_TIME_FOR_7_DAY);
+        // set
+        Response<String> ret = loginStore.set(loginInfo, Const.EXPIRE_TIME_FOR_7_DAY);
+        String token = ret.getData();
         logger.info("store loginInfo:{}", loginStore.get(token));
 
+        // remove
         loginStore.remove( token);
         logger.info("store loginInfo2:{}", loginStore.get(token));
     }
 
     @Test
     public void test2() {
-        // start redis
+        // store param
         String nodes = "127.0.0.1:6379";
         String prefix = "xxl-sso:";
 
-        // store
+        // store start
         LoginStore loginStore = new RedisLoginStore(nodes, null, null, prefix);
         loginStore.start();
 
-
+        // init login info
         LoginInfo loginInfo = new LoginInfo("666", "zhagnsan", "v1", System.currentTimeMillis() + Const.EXPIRE_TIME_FOR_7_DAY);
-        String token = TokenHelper.generateToken(loginInfo);
-        logger.info("token:{}", token);
 
-        loginStore.set(token, loginInfo, Const.EXPIRE_TIME_FOR_7_DAY);
+        // set
+        Response<String> ret = loginStore.set(loginInfo, Const.EXPIRE_TIME_FOR_7_DAY);
+        String token = ret.getData();
         logger.info("store loginInfo:{}", loginStore.get(token));
 
+        // remove
         loginStore.remove( token);
         logger.info("store loginInfo2:{}", loginStore.get(token));
 
-
-        // stop redis
+        // store stop
         loginStore.stop();
     }
 

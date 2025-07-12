@@ -23,12 +23,11 @@ public interface LoginStore {
     /**
      * set login info
      *
-     * @param token
-     * @param loginInfo
-     * @param tokenTimeout
-     * @return
+     * @param   loginInfo
+     * @param   tokenTimeout
+     * @return  Response#data is token
      */
-    public Response<String> set(String token, LoginInfo loginInfo, long tokenTimeout);
+    public Response<String> set(LoginInfo loginInfo, long tokenTimeout);
 
     /**
      * get login info

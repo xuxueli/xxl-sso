@@ -2,7 +2,6 @@ package com.xxl.sso.sample.openapi.controller;
 
 import com.xxl.sso.core.helper.XxlSsoHelper;
 import com.xxl.sso.core.model.LoginInfo;
-import com.xxl.sso.core.token.TokenHelper;
 import com.xxl.sso.sample.openapi.model.AccountInfo;
 import com.xxl.sso.sample.openapi.model.LoginCheckRequest;
 import com.xxl.sso.sample.openapi.model.LoginRequest;
@@ -55,14 +54,12 @@ public class NativeOpenAPIController {
         loginInfo.setUserName(accoutInfo.getUsername());
         loginInfo.setVersion("");
 
-        // 3、build token
-        String token = TokenHelper.generateToken(loginInfo);
-
         // 4、login (write store)
-        Response<String> loginResult = XxlSsoHelper.login(token, loginInfo);
+        Response<String> loginResult = XxlSsoHelper.login(loginInfo);
         if (!loginResult.isSuccess()) {
             return loginResult;
         }
+        String token = loginResult.getData();
         return Response.ofSuccess(token);
     }
 

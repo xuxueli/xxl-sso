@@ -3,7 +3,6 @@ package com.xxl.sso.server.controller;
 import com.xxl.sso.core.constant.Const;
 import com.xxl.sso.core.helper.XxlSsoHelper;
 import com.xxl.sso.core.model.LoginInfo;
-import com.xxl.sso.core.token.TokenHelper;
 import com.xxl.sso.server.model.AccountInfo;
 import com.xxl.sso.server.service.AccountService;
 import com.xxl.tool.core.StringTool;
@@ -116,11 +115,8 @@ public class CasLoginController {
         loginInfo.setUserName(accoutInfo.getUsername());
         loginInfo.setVersion(UUIDTool.getSimpleUUID());
 
-        // 3、build token
-        String token = TokenHelper.generateToken(loginInfo);
-
         // 4、login (write store + cookie)
-        Response<String> loginResult = XxlSsoHelper.loginWithCookie(token, loginInfo, response, ifRem);
+        Response<String> loginResult = XxlSsoHelper.loginWithCookie(loginInfo, response, ifRem);
         if (!loginResult.isSuccess()) {
             return Response.ofFail(accountResult.getMsg());
         }

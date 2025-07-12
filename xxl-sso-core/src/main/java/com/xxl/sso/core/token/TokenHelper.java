@@ -23,7 +23,7 @@ public class TokenHelper {
         try {
             // valid loginInfo
             if (loginInfo==null || StringTool.isBlank(loginInfo.getUserId()) || StringTool.isBlank(loginInfo.getUserName())) {
-                throw new XxlSsoException("generateToken fail, invalid loginInfo.");
+                throw new XxlSsoException("TokenHelper.generateToken fail, invalid loginInfo.");
             }
             LoginInfo loginInfoForToken = new LoginInfo(loginInfo.getUserId(), loginInfo.getUserName(), loginInfo.getVersion(), loginInfo.getExpireTime());
 
