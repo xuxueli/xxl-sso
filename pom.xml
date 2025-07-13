@@ -44,7 +44,7 @@
         <spring-boot.version>2.7.18</spring-boot.version>
 
         <!-- xxl-tool( + support) -->
-        <xxl-tool.version>1.5.0-SNAPSHOT</xxl-tool.version>
+        <xxl-tool.version>1.5.0</xxl-tool.version>
         <gson.version>2.13.1</gson.version>
     </properties>
 
