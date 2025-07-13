@@ -1,18 +1,20 @@
 package com.xxl.sso.sample.config;
 
+import com.xxl.sso.core.auth.interceptor.XxlSsoNativeInterceptor;
+import com.xxl.sso.core.auth.interceptor.XxlSsoWebInterceptor;
 import com.xxl.sso.core.bootstrap.XxlSsoBootstrap;
-import com.xxl.sso.core.filter.XxlSsoNativeFilter;
 import com.xxl.sso.core.store.impl.RedisLoginStore;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
  * @author xuxueli 2018-11-15
  */
 @Configuration
-public class XxlSsoConfig {
+public class XxlSsoConfig implements WebMvcConfigurer {
 
 
     @Value("${xxl-sso.token.key}")
@@ -38,10 +40,11 @@ public class XxlSsoConfig {
 
 
     /**
-     * 1、配置 LoginStore
+     * 1、配置 XxlSsoBootstrap
      */
     @Bean(initMethod = "start", destroyMethod = "stop")
     public XxlSsoBootstrap xxlSsoBootstrap() {
+
         XxlSsoBootstrap bootstrap = new XxlSsoBootstrap();
         bootstrap.setLoginStore(new RedisLoginStore(
                 redisNodes,
@@ -50,30 +53,24 @@ public class XxlSsoConfig {
                 redisKeyprefix));
         bootstrap.setTokenKey(tokenKey);
         bootstrap.setTokenTimeout(tokenTimeout);
-
         return bootstrap;
     }
 
 
     /**
-     * 2、配置 XxlSsoNativeFilter
+     * 2、配置 XxlSso 拦截器
      *
-     * @param bootstrap
-     * @return
+     * @param registry
      */
-    @Bean
-    public FilterRegistrationBean xxlSsoFilterRegistration(XxlSsoBootstrap bootstrap) {
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
 
-        // filter registry
-        FilterRegistrationBean registration = new FilterRegistrationBean();
-        registration.setName("xxlSsoNativeFilter");
-        registration.setOrder(1);
-        registration.addUrlPatterns("/*");
-        //registration.setFilter(bootstrap.getFilter());
+        // 2.1、build xxl-sso interceptor
+        XxlSsoNativeInterceptor webInterceptor = new XxlSsoNativeInterceptor(excludedPaths);
 
-        return registration;
+        // 2.2、add interceptor
+        registry.addInterceptor(webInterceptor).addPathPatterns("/**");
     }
-
 
 
 }

@@ -33,7 +33,7 @@ public class XxlSsoConfig {
 
 
     /**
-     * 1、配置 LoginStore
+     * 1、配置 XxlSsoBootstrap
      */
     @Bean(initMethod = "start", destroyMethod = "stop")
     public XxlSsoBootstrap xxlSsoBootstrap() {

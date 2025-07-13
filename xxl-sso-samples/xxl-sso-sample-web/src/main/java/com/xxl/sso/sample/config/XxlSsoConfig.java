@@ -2,7 +2,7 @@ package com.xxl.sso.sample.config;
 
 import com.xxl.sso.core.bootstrap.XxlSsoBootstrap;
 import com.xxl.sso.core.store.impl.RedisLoginStore;
-import com.xxl.sso.core.support.spring.XxlSsoWebInterceptor;
+import com.xxl.sso.core.auth.interceptor.XxlSsoWebInterceptor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -46,6 +46,7 @@ public class XxlSsoConfig implements WebMvcConfigurer {
      */
     @Bean(initMethod = "start", destroyMethod = "stop")
     public XxlSsoBootstrap xxlSsoBootstrap() {
+
         XxlSsoBootstrap bootstrap = new XxlSsoBootstrap();
         bootstrap.setLoginStore(new RedisLoginStore(
                 redisNodes,
@@ -54,7 +55,6 @@ public class XxlSsoConfig implements WebMvcConfigurer {
                 redisKeyprefix));
         bootstrap.setTokenKey(tokenKey);
         bootstrap.setTokenTimeout(tokenTimeout);
-
         return bootstrap;
     }
 
@@ -66,10 +66,10 @@ public class XxlSsoConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
 
-        // make xxl-sso interceptor
+        // 2.1、build xxl-sso interceptor
         XxlSsoWebInterceptor webInterceptor = new XxlSsoWebInterceptor(excludedPaths, loginPath);
 
-        // add interceptor
+        // 2.2、add interceptor
         registry.addInterceptor(webInterceptor).addPathPatterns("/**");
     }
 

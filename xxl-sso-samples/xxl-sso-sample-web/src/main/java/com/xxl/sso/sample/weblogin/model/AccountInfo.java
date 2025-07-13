@@ -1,5 +1,7 @@
 package com.xxl.sso.sample.weblogin.model;
 
+import java.util.List;
+
 /**
  * @author xuxueli 2018-03-22 23:51:51
  */
@@ -20,13 +22,25 @@ public class AccountInfo {
      */
     private String password;
 
+    /**
+     * role list
+     */
+    private List<String> roleList;
+
+    /**
+     * permission list
+     */
+    private List<String> permissionList;
+
 
     public AccountInfo() {
     }
-    public AccountInfo(String userid, String username, String password) {
+    public AccountInfo(String userid, String username, String password, List<String> roleList, List<String> permissionList) {
         this.userid = userid;
         this.username = username;
         this.password = password;
+        this.roleList = roleList;
+        this.permissionList = permissionList;
     }
 
 
@@ -54,4 +68,19 @@ public class AccountInfo {
         this.password = password;
     }
 
+    public List<String> getRoleList() {
+        return roleList;
+    }
+
+    public void setRoleList(List<String> roleList) {
+        this.roleList = roleList;
+    }
+
+    public List<String> getPermissionList() {
+        return permissionList;
+    }
+
+    public void setPermissionList(List<String> permissionList) {
+        this.permissionList = permissionList;
+    }
 }

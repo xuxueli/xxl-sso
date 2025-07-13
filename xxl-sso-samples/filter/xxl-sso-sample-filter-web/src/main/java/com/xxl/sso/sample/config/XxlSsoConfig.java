@@ -1,7 +1,7 @@
 package com.xxl.sso.sample.config;
 
 import com.xxl.sso.core.bootstrap.XxlSsoBootstrap;
-import com.xxl.sso.core.filter.XxlSsoWebFilter;
+import com.xxl.sso.core.auth.filter.XxlSsoWebFilter;
 import com.xxl.sso.core.store.impl.RedisLoginStore;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
@@ -41,7 +41,7 @@ public class XxlSsoConfig {
 
 
     /**
-     * 1、配置 LoginStore
+     * 1、配置 XxlSsoBootstrap
      */
     @Bean(initMethod = "start", destroyMethod = "stop")
     public XxlSsoBootstrap xxlSsoBootstrap() {
@@ -59,7 +59,7 @@ public class XxlSsoConfig {
 
 
     /**
-     * 2、配置 XxlSsoNativeFilter
+     * 2、配置 XxlSso Filter
      *
      * @param bootstrap
      * @return

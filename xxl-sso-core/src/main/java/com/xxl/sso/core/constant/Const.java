@@ -49,15 +49,25 @@ public class Const {
     public static final String XXL_SSO_TICKET = "xxl_sso_ticket";
 
 
-
     /**
-     * code for system error
+     * code for role fail
      */
     public static final int CODE_SYSTEM_ERROR = 500;
+
     /**
      * code for login fail
      */
     public static final int CODE_LOGIN_FAIL = 501;
+
+    /**
+     * code for permission fail
+     */
+    public static final int CODE_PERMISSION_FAIL = 502;
+
+    /**
+     * code for role fail
+     */
+    public static final int CODE_ROLE_FAIL = 503;
 
 
 

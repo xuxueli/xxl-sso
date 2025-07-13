@@ -1,4 +1,4 @@
-package com.xxl.sso.core.filter;
+package com.xxl.sso.core.auth.filter;
 
 import com.xxl.sso.core.constant.Const;
 import com.xxl.sso.core.helper.XxlSsoHelper;

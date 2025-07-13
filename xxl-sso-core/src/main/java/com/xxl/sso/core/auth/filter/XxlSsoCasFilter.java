@@ -1,4 +1,4 @@
-package com.xxl.sso.core.filter;
+package com.xxl.sso.core.auth.filter;
 
 import com.xxl.sso.core.constant.Const;
 import com.xxl.sso.core.exception.XxlSsoException;
@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * native filter
+ * cas filter
  *
  * 使用场景：适用于Web网页场景，解决跨域登录态共享、单点登录问题；
  * 解释说明：
