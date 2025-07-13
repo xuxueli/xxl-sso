@@ -408,6 +408,8 @@ http://xxlssoclient2.com:8083/xxl-sso-sample-web/test13
 ## native
 http://xxlssoclient1.com:8083/xxl-sso-sample-web/
 
+多端登录；
+自动续期；最后操作24H之后，过半续期；
 
 - Now：
   - module
