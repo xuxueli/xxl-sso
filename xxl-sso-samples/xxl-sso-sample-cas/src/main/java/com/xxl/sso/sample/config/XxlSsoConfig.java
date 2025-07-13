@@ -1,17 +1,20 @@
 package com.xxl.sso.sample.config;
 
+import com.xxl.sso.core.auth.interceptor.XxlSsoCasInterceptor;
+import com.xxl.sso.core.auth.interceptor.XxlSsoWebInterceptor;
 import com.xxl.sso.core.bootstrap.XxlSsoBootstrap;
 import com.xxl.sso.core.store.impl.RedisLoginStore;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
  * @author xuxueli 2018-11-15
  */
 @Configuration
-public class XxlSsoConfig {
+public class XxlSsoConfig implements WebMvcConfigurer {
 
 
     @Value("${xxl-sso.token.key}")
@@ -55,31 +58,24 @@ public class XxlSsoConfig {
                 redisKeyprefix));
         bootstrap.setTokenKey(tokenKey);
         bootstrap.setTokenTimeout(tokenTimeout);
-        //bootstrap.setFilter(new XxlSsoCasFilter(serverAddress, loginPath, excludedPaths));
 
         return bootstrap;
     }
 
 
     /**
-     * 2、配置 XxlSso Filter
+     * 2、配置 XxlSso 拦截器
      *
-     * @param bootstrap
-     * @return
+     * @param registry
      */
-    @Bean
-    public FilterRegistrationBean xxlSsoFilterRegistration(XxlSsoBootstrap bootstrap) {
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
 
-        // filter registry
-        FilterRegistrationBean registration = new FilterRegistrationBean();
-        registration.setName("xxlSsoCasFilter");
-        registration.setOrder(1);
-        registration.addUrlPatterns("/*");
-        //registration.setFilter(bootstrap.getFilter());
+        // 2.1、build xxl-sso interceptor
+        XxlSsoCasInterceptor casInterceptor = new XxlSsoCasInterceptor(serverAddress, loginPath, excludedPaths);
 
-        return registration;
+        // 2.2、add interceptor
+        registry.addInterceptor(casInterceptor).addPathPatterns("/**");
     }
-
-
 
 }
