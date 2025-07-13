@@ -50,7 +50,6 @@ public class XxlSsoConfig {
                 redisKeyprefix));
         bootstrap.setTokenKey(tokenKey);
         bootstrap.setTokenTimeout(tokenTimeout);
-        bootstrap.setFilter(new XxlSsoNativeFilter(excludedPaths));
 
         return bootstrap;
     }
@@ -70,7 +69,7 @@ public class XxlSsoConfig {
         registration.setName("xxlSsoNativeFilter");
         registration.setOrder(1);
         registration.addUrlPatterns("/*");
-        registration.setFilter(bootstrap.getFilter());
+        //registration.setFilter(bootstrap.getFilter());
 
         return registration;
     }

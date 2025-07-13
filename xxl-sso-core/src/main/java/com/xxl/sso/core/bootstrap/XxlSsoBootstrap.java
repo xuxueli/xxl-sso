@@ -5,8 +5,6 @@ import com.xxl.sso.core.store.LoginStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.servlet.Filter;
-
 
 /**
  * @author xuxueli 2018-04-09 11:38:15
@@ -20,7 +18,6 @@ public class XxlSsoBootstrap {
     private LoginStore loginStore;
     private String tokenKey;
     private long tokenTimeout;
-    private Filter filter;
 
     public void setLoginStore(LoginStore loginStore) {
         this.loginStore = loginStore;
@@ -34,16 +31,8 @@ public class XxlSsoBootstrap {
         this.tokenTimeout = tokenTimeout;
     }
 
-    public void setFilter(Filter filter) {
-        this.filter = filter;
-    }
-
     public LoginStore getLoginStore() {
         return loginStore;
-    }
-
-    public Filter getFilter() {
-        return filter;
     }
 
     // --------------------------------- start / stop ---------------------------------

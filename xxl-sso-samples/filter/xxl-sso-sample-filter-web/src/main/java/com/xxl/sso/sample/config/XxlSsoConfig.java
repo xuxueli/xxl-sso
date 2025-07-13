@@ -1,7 +1,6 @@
 package com.xxl.sso.sample.config;
 
 import com.xxl.sso.core.bootstrap.XxlSsoBootstrap;
-import com.xxl.sso.core.filter.XxlSsoNativeFilter;
 import com.xxl.sso.core.filter.XxlSsoWebFilter;
 import com.xxl.sso.core.store.impl.RedisLoginStore;
 import org.springframework.beans.factory.annotation.Value;
@@ -46,6 +45,7 @@ public class XxlSsoConfig {
      */
     @Bean(initMethod = "start", destroyMethod = "stop")
     public XxlSsoBootstrap xxlSsoBootstrap() {
+
         XxlSsoBootstrap bootstrap = new XxlSsoBootstrap();
         bootstrap.setLoginStore(new RedisLoginStore(
                 redisNodes,
@@ -54,8 +54,6 @@ public class XxlSsoConfig {
                 redisKeyprefix));
         bootstrap.setTokenKey(tokenKey);
         bootstrap.setTokenTimeout(tokenTimeout);
-        bootstrap.setFilter(new XxlSsoWebFilter(excludedPaths, loginPath));
-
         return bootstrap;
     }
 
@@ -67,18 +65,20 @@ public class XxlSsoConfig {
      * @return
      */
     @Bean
-    public FilterRegistrationBean xxlSsoFilterRegistration(XxlSsoBootstrap bootstrap) {
+    public FilterRegistrationBean<XxlSsoWebFilter> xxlSsoFilterRegistration(XxlSsoBootstrap bootstrap) {
 
-        // filter registry
-        FilterRegistrationBean registration = new FilterRegistrationBean();
+        // 2.1、build xxl-sso filter
+        XxlSsoWebFilter webFilter = new XxlSsoWebFilter(excludedPaths, loginPath);
+
+        // 2.2、registry filter
+        FilterRegistrationBean<XxlSsoWebFilter> registration = new FilterRegistrationBean<>();
         registration.setName("XxlSsoWebFilter");
         registration.setOrder(1);
         registration.addUrlPatterns("/*");
-        registration.setFilter(bootstrap.getFilter());
+        registration.setFilter(webFilter);
 
         return registration;
     }
-
 
 
 }

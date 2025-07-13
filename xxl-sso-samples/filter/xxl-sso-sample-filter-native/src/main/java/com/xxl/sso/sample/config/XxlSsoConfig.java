@@ -42,6 +42,7 @@ public class XxlSsoConfig {
      */
     @Bean(initMethod = "start", destroyMethod = "stop")
     public XxlSsoBootstrap xxlSsoBootstrap() {
+
         XxlSsoBootstrap bootstrap = new XxlSsoBootstrap();
         bootstrap.setLoginStore(new RedisLoginStore(
                 redisNodes,
@@ -50,8 +51,6 @@ public class XxlSsoConfig {
                 redisKeyprefix));
         bootstrap.setTokenKey(tokenKey);
         bootstrap.setTokenTimeout(tokenTimeout);
-        bootstrap.setFilter(new XxlSsoNativeFilter(excludedPaths));
-
         return bootstrap;
     }
 
@@ -63,14 +62,17 @@ public class XxlSsoConfig {
      * @return
      */
     @Bean
-    public FilterRegistrationBean xxlSsoFilterRegistration(XxlSsoBootstrap bootstrap) {
+    public FilterRegistrationBean<XxlSsoNativeFilter> xxlSsoFilterRegistration(XxlSsoBootstrap bootstrap) {
 
-        // filter registry
-        FilterRegistrationBean registration = new FilterRegistrationBean();
-        registration.setName("xxlSsoNativeFilter");
+        // 2.1、build xxl-sso filter
+        XxlSsoNativeFilter nativeFilter = new XxlSsoNativeFilter(excludedPaths);
+
+        // 2.2、registry filter
+        FilterRegistrationBean<XxlSsoNativeFilter> registration = new FilterRegistrationBean<>();
+        registration.setName("XxlSsoNativeFilter");
         registration.setOrder(1);
         registration.addUrlPatterns("/*");
-        registration.setFilter(bootstrap.getFilter());
+        registration.setFilter(nativeFilter);
 
         return registration;
     }

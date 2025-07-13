@@ -56,7 +56,7 @@ public class XxlSsoConfig {
                 redisKeyprefix));
         bootstrap.setTokenKey(tokenKey);
         bootstrap.setTokenTimeout(tokenTimeout);
-        bootstrap.setFilter(new XxlSsoCasFilter(serverAddress, loginPath, excludedPaths));
+        //bootstrap.setFilter(new XxlSsoCasFilter(serverAddress, loginPath, excludedPaths));
 
         return bootstrap;
     }
@@ -76,7 +76,7 @@ public class XxlSsoConfig {
         registration.setName("xxlSsoCasFilter");
         registration.setOrder(1);
         registration.addUrlPatterns("/*");
-        registration.setFilter(bootstrap.getFilter());
+        //registration.setFilter(bootstrap.getFilter());
 
         return registration;
     }
