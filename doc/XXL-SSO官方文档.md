@@ -397,6 +397,18 @@ SSO User | 登录用户信息，与 SSO SessionId 相对应
 
 ### 核心流程
 
+## sso
+http://xxlssoserver.com:8080/xxl-sso-server/
+## cas
+http://xxlssoclient1.com:8081/xxl-sso-sample-cas/
+http://xxlssoclient2.com:8081/xxl-sso-sample-cas/
+## web
+http://xxlssoclient1.com:8083/xxl-sso-sample-web/
+http://xxlssoclient2.com:8083/xxl-sso-sample-web/test13
+## native
+http://xxlssoclient1.com:8083/xxl-sso-sample-web/
+
+
 - Now：
   - module
     - server: openapi + login-page
