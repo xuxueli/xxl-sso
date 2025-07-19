@@ -1,8 +1,9 @@
 ## 《分布式单点登录框架XXL-SSO》
 
 [![Actions Status](https://github.com/xuxueli/xxl-sso/workflows/Java%20CI/badge.svg)](https://github.com/xuxueli/xxl-sso/actions)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.xuxueli/xxl-sso/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.xuxueli/xxl-sso/)
+[![Maven Central](https://img.shields.io/maven-central/v/com.xuxueli/xxl-sso-core)](https://central.sonatype.com/artifact/com.xuxueli/xxl-sso-core/)
 [![GitHub release](https://img.shields.io/github/release/xuxueli/xxl-sso.svg)](https://github.com/xuxueli/xxl-sso/releases)
+[![GitHub stars](https://img.shields.io/github/stars/xuxueli/xxl-sso)](https://github.com/xuxueli/xxl-sso/)
 [![License](https://img.shields.io/badge/license-GPLv3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0.html)
 [![donate](https://img.shields.io/badge/%24-donate-ff69b4.svg?style=flat-square)](https://www.xuxueli.com/page/donate.html)
 
