@@ -6,6 +6,7 @@ import com.xxl.tool.core.StringTool;
 import com.xxl.tool.response.Response;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,6 +23,8 @@ public class AccountServiceImpl implements AccountService {
             userInfo.setUserid(String.valueOf(1000+i));
             userInfo.setUsername("user" + (i>0?String.valueOf(i):""));
             userInfo.setPassword("123456");
+            userInfo.setRoleList(Arrays.asList("role01"));
+            userInfo.setPermissionList(Arrays.asList("user:query", "user:add"));
 
             mockAccountStore.put(userInfo.getUsername(), userInfo);
         }

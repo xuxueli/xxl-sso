@@ -7,6 +7,7 @@ import com.xxl.sso.sample.openapi.model.LoginCheckRequest;
 import com.xxl.sso.sample.openapi.model.LoginRequest;
 import com.xxl.sso.sample.openapi.model.LogoutRequest;
 import com.xxl.sso.sample.openapi.service.AccountService;
+import com.xxl.tool.id.UUIDTool;
 import com.xxl.tool.response.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -52,7 +53,9 @@ public class NativeOpenAPIController {
         LoginInfo loginInfo = new LoginInfo();
         loginInfo.setUserId(accoutInfo.getUserid());
         loginInfo.setUserName(accoutInfo.getUsername());
-        loginInfo.setVersion("");
+        loginInfo.setVersion(UUIDTool.getSimpleUUID());
+        loginInfo.setRoleList(accoutInfo.getRoleList());
+        loginInfo.setPermissionList(accoutInfo.getPermissionList());
 
         // 4、login (write store)
         Response<String> loginResult = XxlSsoHelper.login(loginInfo);

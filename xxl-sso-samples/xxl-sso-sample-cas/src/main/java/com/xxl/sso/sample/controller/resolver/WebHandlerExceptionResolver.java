@@ -27,7 +27,7 @@ public class WebHandlerExceptionResolver implements HandlerExceptionResolver {
                                          Object handler,
                                          Exception ex) {
 
-        logger.error("WebExceptionResolver:{}", ex);
+        //logger.error("WebExceptionResolver:{}", ex.getMessage(), ex);
 
         // if json
         boolean isJson = false;

@@ -26,7 +26,7 @@ import javax.servlet.http.HttpServletResponse;
 public class WebLoginController {
 
     @Autowired
-    private AccountService userService;
+    private AccountService accountService;
 
     /**
      * Login page
@@ -67,7 +67,7 @@ public class WebLoginController {
         boolean ifRem = "on".equals(ifRemember);
 
         // 1、find user
-        Response<AccountInfo> accountResult = userService.findUser(username, password);
+        Response<AccountInfo> accountResult = accountService.findUser(username, password);
         if (!accountResult.isSuccess()) {
             return Response.ofFail(accountResult.getMsg());
         }

@@ -27,7 +27,7 @@ import javax.servlet.http.HttpServletResponse;
 public class CasLoginController {
 
     @Autowired
-    private AccountService userService;
+    private AccountService accountService;
 
     @RequestMapping("/")
     public String index(Model model, HttpServletRequest request, HttpServletResponse response) {
@@ -122,7 +122,7 @@ public class CasLoginController {
         boolean ifRem = "on".equals(ifRemember);
 
         // 1、find user
-        Response<AccountInfo> accountResult = userService.findUser(username, password);
+        Response<AccountInfo> accountResult = accountService.findUser(username, password);
         if (!accountResult.isSuccess()) {
             return Response.ofFail(accountResult.getMsg());
         }
@@ -133,6 +133,8 @@ public class CasLoginController {
         loginInfo.setUserId(accoutInfo.getUserid());
         loginInfo.setUserName(accoutInfo.getUsername());
         loginInfo.setVersion(UUIDTool.getSimpleUUID());
+        loginInfo.setRoleList(accoutInfo.getRoleList());
+        loginInfo.setPermissionList(accoutInfo.getPermissionList());
 
         // 4、login (write store + cookie)
         Response<String> loginResult = XxlSsoHelper.loginWithCookie(loginInfo, response, ifRem);
