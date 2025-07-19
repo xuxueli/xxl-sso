@@ -6,7 +6,6 @@ import com.xxl.sso.core.exception.XxlSsoException;
 import com.xxl.sso.core.helper.XxlSsoHelper;
 import com.xxl.sso.core.model.LoginInfo;
 import com.xxl.sso.core.path.impl.AntPathMatcher;
-import com.xxl.tool.core.CollectionTool;
 import com.xxl.tool.core.StringTool;
 import com.xxl.tool.response.Response;
 import org.slf4j.Logger;
@@ -192,10 +191,10 @@ public class XxlSsoWebInterceptor implements HandlerInterceptor {
         /**
          * 4、valid permission
          */
-        if (StringTool.isNotBlank(permission) && !CollectionTool.contains(loginInfo.getPermissionList(), permission)){
+        if (!XxlSsoHelper.hasPermission(loginInfo, permission).isSuccess()){
             throw new XxlSsoException("permission limit, current login-user does not have permission:" + permission);
         }
-        if (StringTool.isNotBlank(role) && !CollectionTool.contains(loginInfo.getRoleList(), role)) {
+        if (!XxlSsoHelper.hasRole(loginInfo, role).isSuccess()) {
             throw new XxlSsoException("permission limit, current login-user does not have role:" + role);
         }
 

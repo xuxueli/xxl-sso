@@ -39,7 +39,7 @@ public class LocalLoginStore implements LoginStore {
     }
 
     @Override
-    public Response<String> set(LoginInfo loginInfo, long tokenTimeout) {
+    public Response<String> set(LoginInfo loginInfo) {
 
         // valid loginInfo
         if (loginInfo == null
@@ -48,12 +48,10 @@ public class LocalLoginStore implements LoginStore {
             return Response.ofFail("loginInfo invalid.");
         }
 
-        // process expire time
-        long expireTime = System.currentTimeMillis() + tokenTimeout;
-        if (expireTime < System.currentTimeMillis()) {
+        // valid expire-time
+        if (loginInfo.getExpireTime() < System.currentTimeMillis()) {
             return Response.ofFail("expireTime invalid.");
         }
-        loginInfo.setExpireTime(expireTime);
 
         // generate token
         String token = TokenHelper.generateToken(loginInfo);
@@ -67,6 +65,37 @@ public class LocalLoginStore implements LoginStore {
         // write
         loginStore.put(storeKey, loginInfo);
         return Response.ofSuccess(token);
+    }
+
+    @Override
+    public Response<String> update(LoginInfo loginInfo) {
+
+        // parse storeKey
+        String storeKey = parseStoreKey(loginInfo);
+        if (StringTool.isBlank(storeKey)) {
+            return Response.ofFail("loginInfo is invalid");
+        }
+
+        // valid expire-time
+        if (loginInfo.getExpireTime() < System.currentTimeMillis()) {
+            return Response.ofFail("expireTime invalid.");
+        }
+
+        // read
+        LoginInfo loginInfoStore = loginStore.get(storeKey);
+        if (loginInfoStore == null) {
+            return Response.ofFail("loginInfo not exists.");
+        }
+
+        // update LoginInfo
+        loginInfoStore.setExtraInfo(loginInfo.getExtraInfo());
+        loginInfoStore.setRoleList(loginInfo.getRoleList());
+        loginInfoStore.setPermissionList(loginInfo.getPermissionList());
+        loginInfoStore.setExpireTime(loginInfo.getExpireTime());
+
+        // write
+        loginStore.put(storeKey, loginInfoStore);
+        return Response.ofSuccess();
     }
 
     @Override

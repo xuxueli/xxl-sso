@@ -77,7 +77,7 @@ public class RedisLoginStore implements LoginStore {
     }
 
     @Override
-    public Response<String> set(LoginInfo loginInfo, long tokenTimeout) {
+    public Response<String> set(LoginInfo loginInfo) {
 
         // valid loginInfo
         if (loginInfo == null
@@ -86,18 +86,16 @@ public class RedisLoginStore implements LoginStore {
             return Response.ofFail("loginInfo invalid.");
         }
 
-        // process expire time
-        long expireTime = System.currentTimeMillis() + tokenTimeout;
-        if (expireTime < System.currentTimeMillis()) {
+        // valid expire-time
+        if (loginInfo.getExpireTime() < System.currentTimeMillis()) {
             return Response.ofFail("expireTime invalid.");
         }
-        loginInfo.setExpireTime(expireTime);
-
-        // redis timeout (seconds)
-        long seconds = (loginInfo.getExpireTime() - System.currentTimeMillis()) / 1000;
 
         // generate token
         String token = TokenHelper.generateToken(loginInfo);
+
+        // generate redis timeout (seconds)
+        long seconds = (loginInfo.getExpireTime() - System.currentTimeMillis()) / 1000;
 
         // parse storeKey
         String storeKey = parseStoreKey(TokenHelper.parseToken(token));
@@ -108,6 +106,41 @@ public class RedisLoginStore implements LoginStore {
         // write
         jedisTool.set(storeKey, loginInfo, seconds);
         return Response.ofSuccess(token);
+    }
+
+    @Override
+    public Response<String> update(LoginInfo loginInfo) {
+
+        // parse storeKey
+        String storeKey = parseStoreKey(loginInfo);
+        if (StringTool.isBlank(storeKey)) {
+            return Response.ofFail("loginInfo is invalid");
+        }
+
+        // valid expire-time
+        if (loginInfo.getExpireTime() < System.currentTimeMillis()) {
+            return Response.ofFail("expireTime invalid.");
+        }
+
+        // read
+        LoginInfo loginInfoStore = (LoginInfo) jedisTool.get(storeKey);
+        if (loginInfoStore == null) {
+            return Response.ofFail("loginInfo not exists.");
+        }
+
+        // update LoginInfo
+        loginInfoStore.setUserName(loginInfo.getUserName());
+        loginInfoStore.setRealName(loginInfo.getRealName());
+        loginInfoStore.setExtraInfo(loginInfo.getExtraInfo());
+        loginInfoStore.setRoleList(loginInfo.getRoleList());
+        loginInfoStore.setPermissionList(loginInfo.getPermissionList());
+
+        // generate redis timeout (seconds)
+        long seconds = (loginInfo.getExpireTime() - System.currentTimeMillis()) / 1000;
+
+        // write
+        jedisTool.set(storeKey, loginInfoStore, seconds);
+        return Response.ofSuccess();
     }
 
     @Override

@@ -17,6 +17,7 @@ public class LoginInfo implements Serializable {
 
     public LoginInfo() {
     }
+    // for token
     public LoginInfo(String userId, String userName, String version, long expireTime) {
         this.userId = userId;
         this.userName = userName;

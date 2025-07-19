@@ -3,6 +3,7 @@ package com.xxl.sso.core.helper;
 import com.xxl.sso.core.constant.Const;
 import com.xxl.sso.core.model.LoginInfo;
 import com.xxl.sso.core.store.LoginStore;
+import com.xxl.tool.core.CollectionTool;
 import com.xxl.tool.core.StringTool;
 import com.xxl.tool.http.CookieTool;
 import com.xxl.tool.response.Response;
@@ -85,7 +86,12 @@ public class XxlSsoHelper {
      * @return  Response#data is token
      */
     public static Response<String> login(LoginInfo loginInfo) {
-        return getInstance().getLoginStore().set(loginInfo, getInstance().getTokenTimeout());
+        // fill data
+        if (loginInfo != null) {
+            loginInfo.setExpireTime(System.currentTimeMillis() + getInstance().getTokenTimeout());
+        }
+        // do set
+        return getInstance().getLoginStore().set(loginInfo);
     }
 
     /**
@@ -205,7 +211,7 @@ public class XxlSsoHelper {
      * create ticket, from token in cookie
      *
      * @param request
-     * @return
+     * @return      Response.data is ticket
      */
     public static Response<String> createTicket(HttpServletRequest request) {
 
@@ -221,7 +227,7 @@ public class XxlSsoHelper {
     }
 
     /**
-     * valid ticket and write, from parameter
+     * valid ticket and write cookie, from parameter
      *
      * @param request
      * @return
@@ -249,6 +255,50 @@ public class XxlSsoHelper {
         }
 
         return loginCheck(token);
+    }
+
+    // ---------------------- permission ----------------------
+
+    /**
+     * has role valid
+     *
+     * @param loginInfo
+     * @param role
+     * @return
+     */
+    public static Response<String> hasRole(LoginInfo loginInfo, String role) {
+        if (StringTool.isBlank(role)) {
+            // not limit, default has role.
+            return Response.ofSuccess();
+        }
+        if (CollectionTool.isEmpty(loginInfo.getRoleList())) {
+            return Response.ofFail("roleList is null.");
+        }
+
+        return loginInfo.getRoleList().contains(role)
+                ?Response.ofSuccess()
+                :Response.ofFail("not has role.");
+    }
+
+    /**
+     * has permission valid
+     *
+     * @param loginInfo
+     * @param permission
+     * @return
+     */
+    public static Response<String> hasPermission(LoginInfo loginInfo, String permission) {
+        if (StringTool.isBlank(permission)) {
+            // not limit, default has permission
+            return Response.ofSuccess();
+        }
+        if (CollectionTool.isEmpty(loginInfo.getPermissionList())) {
+            return Response.ofFail("permissionList is null.");
+        }
+
+        return loginInfo.getPermissionList().contains(permission)
+                ?Response.ofSuccess()
+                :Response.ofFail("not has permission.");
     }
 
 

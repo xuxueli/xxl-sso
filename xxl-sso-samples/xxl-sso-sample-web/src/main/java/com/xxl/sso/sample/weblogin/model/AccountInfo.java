@@ -33,17 +33,6 @@ public class AccountInfo {
     private List<String> permissionList;
 
 
-    public AccountInfo() {
-    }
-    public AccountInfo(String userid, String username, String password, List<String> roleList, List<String> permissionList) {
-        this.userid = userid;
-        this.username = username;
-        this.password = password;
-        this.roleList = roleList;
-        this.permissionList = permissionList;
-    }
-
-
     public String getUserid() {
         return userid;
     }
@@ -83,4 +72,5 @@ public class AccountInfo {
     public void setPermissionList(List<String> permissionList) {
         this.permissionList = permissionList;
     }
+
 }

@@ -27,13 +27,20 @@ public interface LoginStore {
     // ---------------------- for token ----------------------
 
     /**
-     * set LoginInfo
+     * set LoginInfo, and generate token
      *
      * @param   loginInfo
-     * @param   tokenTimeout
      * @return  Response#data is token
      */
-    public Response<String> set(LoginInfo loginInfo, long tokenTimeout);
+    public Response<String> set(LoginInfo loginInfo);
+
+    /**
+     * update LoginInfo
+     *
+     * @param loginInfo
+     * @return
+     */
+    public Response<String> update(LoginInfo loginInfo);
 
     /**
      * get LoginInfo

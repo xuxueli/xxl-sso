@@ -37,12 +37,11 @@ public class IndexController {
      * 示例：不添加注解，限制登录
      *
      * @param request
-     * @param response
      * @return
      */
     @RequestMapping("/test11")
     @ResponseBody
-    public Response<String> test11(HttpServletRequest request, HttpServletResponse response) {
+    public Response<String> test11(HttpServletRequest request) {
         Response<LoginInfo> loginCheckResult = XxlSsoHelper.loginCheckWithAttr( request);
         return Response.ofSuccess("login success, LoginInfo:" + loginCheckResult.getData().getUserName());
     }
@@ -117,6 +116,31 @@ public class IndexController {
     @XxlSso(role = "role02")
     public Response<String> test32() {
         return Response.ofSuccess("has role[role02]");
+    }
+
+    /**
+     * 示例：API方式获取登录用户信息（LoginInfo）；API方式校验角色、权限；
+     *
+     * @return
+     */
+    @RequestMapping("/test41")
+    @ResponseBody
+    @XxlSso
+    public Response<String> test41(HttpServletRequest request) {
+
+        Response<LoginInfo> loginCheckResult = XxlSsoHelper.loginCheckWithAttr( request);
+        Response<String> hasRole01 = XxlSsoHelper.hasRole(loginCheckResult.getData(), "role01");
+        Response<String> hasRole02 = XxlSsoHelper.hasRole(loginCheckResult.getData(), "role02");
+        Response<String> hasPermission01 = XxlSsoHelper.hasPermission(loginCheckResult.getData(), "user:query");
+        Response<String> hasPermission02 = XxlSsoHelper.hasPermission(loginCheckResult.getData(), "user:delete");
+
+        String data = "LoginInfo:" + loginCheckResult.getData() +
+                ", hasRole01:" + hasRole01.isSuccess() +
+                ", hasRole02:" + hasRole02.isSuccess() +
+                ", hasPermission01:" + hasPermission01.isSuccess() +
+                ", hasPermission02:" + hasPermission02.isSuccess();
+
+        return Response.ofSuccess(data);
     }
 
 }

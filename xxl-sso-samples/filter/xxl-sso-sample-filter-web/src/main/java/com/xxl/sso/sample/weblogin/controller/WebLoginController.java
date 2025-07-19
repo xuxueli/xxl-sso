@@ -78,6 +78,8 @@ public class WebLoginController {
         loginInfo.setUserId(accoutInfo.getUserid());
         loginInfo.setUserName(accoutInfo.getUsername());
         loginInfo.setVersion(UUIDTool.getSimpleUUID());
+        loginInfo.setRoleList(accoutInfo.getRoleList());
+        loginInfo.setPermissionList(accoutInfo.getPermissionList());
 
         // 4、login (write store + cookie)
         Response<String> loginResult = XxlSsoHelper.loginWithCookie(loginInfo, response, ifRem);

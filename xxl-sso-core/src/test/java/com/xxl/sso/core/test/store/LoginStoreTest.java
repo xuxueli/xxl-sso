@@ -6,10 +6,13 @@ import com.xxl.sso.core.store.LoginStore;
 import com.xxl.sso.core.store.impl.LocalLoginStore;
 import com.xxl.sso.core.store.impl.RedisLoginStore;
 import com.xxl.sso.core.token.TokenHelper;
+import com.xxl.tool.core.MapTool;
 import com.xxl.tool.response.Response;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Arrays;
 
 public class LoginStoreTest {
     private static Logger logger = LoggerFactory.getLogger(LoginStoreTest.class);
@@ -23,13 +26,22 @@ public class LoginStoreTest {
         LoginInfo loginInfo = new LoginInfo("666", "zhagnsan", "v1", System.currentTimeMillis() + Const.EXPIRE_TIME_FOR_7_DAY);
 
         // set
-        Response<String> ret = loginStore.set(loginInfo, Const.EXPIRE_TIME_FOR_7_DAY);
+        Response<String> ret = loginStore.set(loginInfo);
         String token = ret.getData();
         logger.info("store loginInfo:{}", loginStore.get(token));
 
+        // update
+        loginInfo.setUserName("zhagnsan22");
+        loginInfo.setExtraInfo(MapTool.newHashMap("k1", "v1"));
+        loginInfo.setRoleList(Arrays.asList("role1", "role2"));
+        loginInfo.setPermissionList(Arrays.asList("permission1", "permission2"));
+        loginInfo.setExpireTime(System.currentTimeMillis() + Const.EXPIRE_TIME_FOR_7_DAY);
+        loginStore.update(loginInfo);
+        logger.info("store loginInfo (after update):{}", loginStore.get(token));
+
         // remove
         loginStore.remove( token);
-        logger.info("store loginInfo2:{}", loginStore.get(token));
+        logger.info("store loginInfo2 (after remove):{}", loginStore.get(token));
     }
 
     @Test
@@ -46,13 +58,22 @@ public class LoginStoreTest {
         LoginInfo loginInfo = new LoginInfo("666", "zhagnsan", "v1", System.currentTimeMillis() + Const.EXPIRE_TIME_FOR_7_DAY);
 
         // set
-        Response<String> ret = loginStore.set(loginInfo, Const.EXPIRE_TIME_FOR_7_DAY);
+        Response<String> ret = loginStore.set(loginInfo);
         String token = ret.getData();
         logger.info("store loginInfo:{}", loginStore.get(token));
 
+        // update
+        loginInfo.setUserName("zhagnsan22");
+        loginInfo.setExtraInfo(MapTool.newHashMap("k1", "v1"));
+        loginInfo.setRoleList(Arrays.asList("role1", "role2"));
+        loginInfo.setPermissionList(Arrays.asList("permission1", "permission2"));
+        loginInfo.setExpireTime(System.currentTimeMillis() + Const.EXPIRE_TIME_FOR_7_DAY);
+        loginStore.update(loginInfo);
+        logger.info("store loginInfo(after update):{}", loginStore.get(token));
+
         // remove
         loginStore.remove( token);
-        logger.info("store loginInfo2:{}", loginStore.get(token));
+        logger.info("store loginInfo2(after remove):{}", loginStore.get(token));
 
         // store stop
         loginStore.stop();
@@ -73,12 +94,12 @@ public class LoginStoreTest {
         LoginInfo loginInfo = new LoginInfo("666", "zhagnsan", "v1", System.currentTimeMillis() + Const.EXPIRE_TIME_FOR_7_DAY);
         String token = TokenHelper.generateToken(loginInfo);
 
-        // init login info
+        // createTicket
         Response<String> ret = loginStore.createTicket(token, 30*1000);
         String ticket = ret.getData();
         logger.info("store ticket:{}", ticket);
 
-        // remove
+        // validTicket
         Response<String> ret2 = loginStore.validTicket( ticket);
         String token2 = ret2.getData();
         logger.info("store token2:{}", token2);
