@@ -3,7 +3,6 @@ package com.xxl.sso.core.store.impl;
 import com.xxl.sso.core.exception.XxlSsoException;
 import com.xxl.sso.core.model.LoginInfo;
 import com.xxl.sso.core.store.LoginStore;
-import com.xxl.sso.core.token.TokenHelper;
 import com.xxl.tool.core.StringTool;
 import com.xxl.tool.response.Response;
 
@@ -20,14 +19,11 @@ public class LocalLoginStore implements LoginStore {
     /**
      * parse store key from token
      *
-     * @param tokenLoginInfo
+     * @param userId
      * @return
      */
-    private String parseStoreKey(LoginInfo tokenLoginInfo){
-        if (tokenLoginInfo == null) {
-            return null;
-        }
-        return tokenLoginInfo.getUserId();
+    private String parseStoreKey(String userId){
+        return userId;
     }
 
     @Override
@@ -44,7 +40,7 @@ public class LocalLoginStore implements LoginStore {
         // valid loginInfo
         if (loginInfo == null
                 || StringTool.isBlank(loginInfo.getUserId())
-                || StringTool.isBlank(loginInfo.getUserName())) {
+                || StringTool.isBlank(loginInfo.getVersion())) {
             return Response.ofFail("loginInfo invalid.");
         }
 
@@ -53,28 +49,24 @@ public class LocalLoginStore implements LoginStore {
             return Response.ofFail("expireTime invalid.");
         }
 
-        // generate token
-        String token = TokenHelper.generateToken(loginInfo);
-
-        // parse storeKey
-        String storeKey = parseStoreKey(TokenHelper.parseToken(token));
-        if (StringTool.isBlank(storeKey)) {
-            return Response.ofFail("token invalid.");
-        }
+        // generate storeKey
+        String storeKey = parseStoreKey(loginInfo.getUserId());
 
         // write
         loginStore.put(storeKey, loginInfo);
-        return Response.ofSuccess(token);
+        return Response.ofSuccess();
     }
 
     @Override
     public Response<String> update(LoginInfo loginInfo) {
 
-        // parse storeKey
-        String storeKey = parseStoreKey(loginInfo);
-        if (StringTool.isBlank(storeKey)) {
-            return Response.ofFail("loginInfo is invalid");
+        // valid loginInfo
+        if (loginInfo == null || StringTool.isBlank(loginInfo.getUserId())) {
+            return Response.ofFail("loginInfo invalid.");
         }
+
+        // generate storeKey
+        String storeKey = parseStoreKey(loginInfo.getUserId());
 
         // valid expire-time
         if (loginInfo.getExpireTime() < System.currentTimeMillis()) {
@@ -88,6 +80,8 @@ public class LocalLoginStore implements LoginStore {
         }
 
         // update LoginInfo
+        loginInfoStore.setUserName(loginInfo.getUserName());
+        loginInfoStore.setRealName(loginInfo.getRealName());
         loginInfoStore.setExtraInfo(loginInfo.getExtraInfo());
         loginInfoStore.setRoleList(loginInfo.getRoleList());
         loginInfoStore.setPermissionList(loginInfo.getPermissionList());
@@ -99,43 +93,41 @@ public class LocalLoginStore implements LoginStore {
     }
 
     @Override
-    public Response<LoginInfo> get(String token) {
+    public Response<LoginInfo> get(String userId) {
 
-        // parse storeKey
-        LoginInfo tokenLoginInfo = TokenHelper.parseToken(token);
-        String storeKey = parseStoreKey(tokenLoginInfo);
-        if (StringTool.isBlank(storeKey)) {
-            return Response.ofFail("token is invalid");
+        // valid userId
+        if (StringTool.isBlank(userId)) {
+            return Response.ofFail("userId invalid.");
         }
-        String version = tokenLoginInfo.getVersion();
+
+        // generate storeKey
+        String storeKey = parseStoreKey(userId);
 
         // read
         LoginInfo loginInfo = loginStore.get(storeKey);
         if (loginInfo == null) {
-            return Response.ofFail("token is invalid2");
+            return Response.ofFail("loginInfo not exists.");
         }
 
         // valid expire time
         if (loginInfo.getExpireTime() < System.currentTimeMillis()) {
             loginStore.remove(storeKey);
-            return Response.ofFail("token is timeout");
-        }
-        // valid version if inconsistent
-        if (loginInfo.getVersion()!=null && !loginInfo.getVersion().equals(version)){
-            // Non-empty and inconsistent
-            return Response.ofFail("token version is invalid");
+            return Response.ofFail("loginInfo is timeout");
         }
 
         return Response.ofSuccess(loginInfo);
     }
 
     @Override
-    public Response<String> remove(String token) {
-        // parse storeKey
-        String storeKey = parseStoreKey(TokenHelper.parseToken(token));
-        if (StringTool.isBlank(storeKey)) {
-            return Response.ofFail("token is invalid");
+    public Response<String> remove(String userId) {
+
+        // valid userId
+        if (StringTool.isBlank(userId)) {
+            return Response.ofFail("userId invalid.");
         }
+
+        // generate storeKey
+        String storeKey = parseStoreKey(userId);
 
         // remove
         loginStore.remove(storeKey);
@@ -143,7 +135,7 @@ public class LocalLoginStore implements LoginStore {
     }
 
     @Override
-    public Response<String> createTicket(String token, long ticketTimeout) {
+    public Response<String> createTicket(String userId, String token, long ticketTimeout) {
         throw new XxlSsoException("LocalLoginStore not support createTicket");
     }
 

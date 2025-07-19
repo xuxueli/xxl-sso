@@ -27,10 +27,10 @@ public interface LoginStore {
     // ---------------------- for token ----------------------
 
     /**
-     * set LoginInfo, and generate token
+     * set LoginInfo
      *
-     * @param   loginInfo
-     * @return  Response#data is token
+     * @param   loginInfo   will be stored with key-userId
+     * @return
      */
     public Response<String> set(LoginInfo loginInfo);
 
@@ -45,18 +45,18 @@ public interface LoginStore {
     /**
      * get LoginInfo
      *
-     * @param token
+     * @param userId     the userId of LoginInfo
      * @return
      */
-    public Response<LoginInfo> get(String token);
+    public Response<LoginInfo> get(String userId);
 
     /**
      * remove LoginInfo
      *
-     * @param token
+     * @param userId    the userId of LoginInfo
      * @return
      */
-    public Response<String> remove(String token);
+    public Response<String> remove(String userId);
 
 
     // ---------------------- for cas ----------------------
@@ -64,11 +64,12 @@ public interface LoginStore {
     /**
      * create ticket of token
      *
-     * @param   token           token
+     * @param   userId          the userId of ticket
+     * @param   token           the token of ticket
      * @param   ticketTimeout   for millisecond, limit 1s - 3min
      * @return  Response.data is ticket
      */
-    public Response<String> createTicket(String token, long ticketTimeout);
+    public Response<String> createTicket(String userId, String token, long ticketTimeout);
 
     /**
      * valid ticket of token

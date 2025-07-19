@@ -1,7 +1,6 @@
 package com.xxl.sso.sample.config;
 
 import com.xxl.sso.core.auth.interceptor.XxlSsoNativeInterceptor;
-import com.xxl.sso.core.auth.interceptor.XxlSsoWebInterceptor;
 import com.xxl.sso.core.bootstrap.XxlSsoBootstrap;
 import com.xxl.sso.core.store.impl.RedisLoginStore;
 import org.springframework.beans.factory.annotation.Value;

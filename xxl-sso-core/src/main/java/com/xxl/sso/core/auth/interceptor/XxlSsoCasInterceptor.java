@@ -176,7 +176,7 @@ public class XxlSsoCasInterceptor implements HandlerInterceptor {
             if (isJson) {
 
                 // not login
-                throw new XxlSsoException(Const.CODE_LOGIN_FAIL, "not login.");
+                throw new XxlSsoException(Const.CODE_LOGIN_FAIL, "not login for path:"+ request.getServletPath());
             }
 
             // is page, redirect 2 cas-login

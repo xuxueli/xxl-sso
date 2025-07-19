@@ -3,10 +3,8 @@ package com.xxl.sso.core.store.impl;
 import com.xxl.sso.core.constant.Const;
 import com.xxl.sso.core.model.LoginInfo;
 import com.xxl.sso.core.store.LoginStore;
-import com.xxl.sso.core.token.TokenHelper;
 import com.xxl.sso.core.util.JedisTool;
 import com.xxl.tool.core.StringTool;
-import com.xxl.tool.id.UUIDTool;
 import com.xxl.tool.response.Response;
 
 /**
@@ -29,22 +27,18 @@ public class RedisLoginStore implements LoginStore {
 
 
     /**
-     * parse store key from token
+     * parse store key from userId
      *
      * <pre>
      *     key: "xxl_sso_user:" + {user001}
      *     value: loginInfo
      * </pre>>
      *
-     * @param tokenLoginInfo
+     * @param userId
      * @return
      */
-    private String parseStoreKey(LoginInfo tokenLoginInfo){
-        if (tokenLoginInfo == null) {
-            return null;
-        }
-
-        return storeKeyPrefix + tokenLoginInfo.getUserId();
+    private String parseStoreKey(String userId){
+        return storeKeyPrefix + userId;
     }
 
     /**
@@ -82,7 +76,7 @@ public class RedisLoginStore implements LoginStore {
         // valid loginInfo
         if (loginInfo == null
                 || StringTool.isBlank(loginInfo.getUserId())
-                || StringTool.isBlank(loginInfo.getUserName())) {
+                || StringTool.isBlank(loginInfo.getVersion())) {
             return Response.ofFail("loginInfo invalid.");
         }
 
@@ -91,31 +85,27 @@ public class RedisLoginStore implements LoginStore {
             return Response.ofFail("expireTime invalid.");
         }
 
-        // generate token
-        String token = TokenHelper.generateToken(loginInfo);
-
         // generate redis timeout (seconds)
         long seconds = (loginInfo.getExpireTime() - System.currentTimeMillis()) / 1000;
 
-        // parse storeKey
-        String storeKey = parseStoreKey(TokenHelper.parseToken(token));
-        if (StringTool.isBlank(storeKey)) {
-            return Response.ofFail("token invalid.");
-        }
+        // generate storeKey
+        String storeKey = parseStoreKey(loginInfo.getUserId());
 
         // write
         jedisTool.set(storeKey, loginInfo, seconds);
-        return Response.ofSuccess(token);
+        return Response.ofSuccess();
     }
 
     @Override
     public Response<String> update(LoginInfo loginInfo) {
 
-        // parse storeKey
-        String storeKey = parseStoreKey(loginInfo);
-        if (StringTool.isBlank(storeKey)) {
-            return Response.ofFail("loginInfo is invalid");
+        // valid loginInfo
+        if (loginInfo == null || StringTool.isBlank(loginInfo.getUserId())) {
+            return Response.ofFail("loginInfo invalid.");
         }
+
+        // generate storeKey
+        String storeKey = parseStoreKey(loginInfo.getUserId());
 
         // valid expire-time
         if (loginInfo.getExpireTime() < System.currentTimeMillis()) {
@@ -134,6 +124,7 @@ public class RedisLoginStore implements LoginStore {
         loginInfoStore.setExtraInfo(loginInfo.getExtraInfo());
         loginInfoStore.setRoleList(loginInfo.getRoleList());
         loginInfoStore.setPermissionList(loginInfo.getPermissionList());
+        loginInfoStore.setExpireTime(loginInfo.getExpireTime());
 
         // generate redis timeout (seconds)
         long seconds = (loginInfo.getExpireTime() - System.currentTimeMillis()) / 1000;
@@ -144,43 +135,41 @@ public class RedisLoginStore implements LoginStore {
     }
 
     @Override
-    public Response<LoginInfo> get(String token) {
+    public Response<LoginInfo> get(String userId) {
 
-        // parse storeKey
-        LoginInfo tokenLoginInfo = TokenHelper.parseToken(token);
-        String storeKey = parseStoreKey(tokenLoginInfo);
-        if (StringTool.isBlank(storeKey)) {
-            return Response.ofFail("token is invalid");
+        // valid userId
+        if (StringTool.isBlank(userId)) {
+            return Response.ofFail("userId invalid.");
         }
-        String version = tokenLoginInfo.getVersion();
+
+        // generate storeKey
+        String storeKey = parseStoreKey(userId);
 
         // read
         LoginInfo loginInfo = (LoginInfo) jedisTool.get(storeKey);
         if (loginInfo == null) {
-            return Response.ofFail("token is invalid2");
+            return Response.ofFail("loginInfo not exists.");
         }
 
         // valid expire time
         if (loginInfo.getExpireTime() < System.currentTimeMillis()) {
             jedisTool.del(storeKey);
-            return Response.ofFail("token is timeout");
-        }
-        // valid version if inconsistent
-        if (loginInfo.getVersion()!=null && !loginInfo.getVersion().equals(version)){
-            // Non-empty and inconsistent
-            return Response.ofFail("token version is invalid");
+            return Response.ofFail("loginInfo is timeout");
         }
 
         return Response.ofSuccess(loginInfo);
     }
 
     @Override
-    public Response<String> remove(String token) {
-        // parse storeKey
-        String storeKey = parseStoreKey(TokenHelper.parseToken(token));
-        if (StringTool.isBlank(storeKey)) {
-            return Response.ofFail("token is invalid");
+    public Response<String> remove(String userId) {
+
+        // valid userId
+        if (StringTool.isBlank(userId)) {
+            return Response.ofFail("userId invalid.");
         }
+
+        // generate storeKey
+        String storeKey = parseStoreKey(userId);
 
         // remove
         jedisTool.del(storeKey);
@@ -188,19 +177,17 @@ public class RedisLoginStore implements LoginStore {
     }
 
     @Override
-    public Response<String> createTicket(String token, long ticketTimeout) {
+    public Response<String> createTicket(String ticket, String token, long ticketTimeout) {
 
         // valid param
-        LoginInfo tokenLoginInfo = TokenHelper.parseToken(token);
-        if (tokenLoginInfo == null) {
-            return Response.ofFail("token is invalid");
+        if (StringTool.isBlank(ticket)) {
+            return Response.ofFail("ticket is invalid");
         }
         if (!(ticketTimeout>=1000 && ticketTimeout<=1000 * 60 * 3)) {
             return Response.ofFail("ticketTimeout is invalid");
         }
 
         // build ticket
-        String ticket = tokenLoginInfo.getUserId() + UUIDTool.getSimpleUUID();
         String storeKey = parseTicketStoreKey(ticket);
 
         // set
@@ -215,7 +202,7 @@ public class RedisLoginStore implements LoginStore {
 
         // get
         String token = (String) jedisTool.get(storeKey);
-        if (token == null) {
+        if (StringTool.isBlank(token)) {
             return Response.ofFail("ticket not found.");
         }
 

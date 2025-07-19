@@ -167,7 +167,7 @@ public class XxlSsoWebInterceptor implements HandlerInterceptor {
             if (isJson) {
 
                 /*// login fail message
-                String loginFailMsg = GsonTool.toJson(Response.of(Const.CODE_LOGIN_FAIL, "not login."));
+                String loginFailMsg = GsonTool.toJson(Response.of(Const.CODE_LOGIN_FAIL, "not login for path:"+ request.getServletPath()));
 
                 // write response
                 response.setStatus(HttpServletResponse.SC_OK);
@@ -176,7 +176,7 @@ public class XxlSsoWebInterceptor implements HandlerInterceptor {
                 return false;*/
 
                 // not login
-                throw new XxlSsoException(Const.CODE_LOGIN_FAIL, "not login.");
+                throw new XxlSsoException(Const.CODE_LOGIN_FAIL, "not login for path:"+ request.getServletPath());
             }
 
             // is page, redirect 2 login

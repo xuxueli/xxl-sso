@@ -3,9 +3,11 @@ package com.xxl.sso.core.helper;
 import com.xxl.sso.core.constant.Const;
 import com.xxl.sso.core.model.LoginInfo;
 import com.xxl.sso.core.store.LoginStore;
+import com.xxl.sso.core.token.TokenHelper;
 import com.xxl.tool.core.CollectionTool;
 import com.xxl.tool.core.StringTool;
 import com.xxl.tool.http.CookieTool;
+import com.xxl.tool.id.UUIDTool;
 import com.xxl.tool.response.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -80,18 +82,30 @@ public class XxlSsoHelper {
     // ---------------------- login ----------------------
 
     /**
-     * login with token (only write LoginStore)
+     * login ( store LoginInfo and generate token )
      *
-     * @param loginInfo
-     * @return  Response#data is token
+     * @param loginInfo     login data
+     * @return              Response#data is token
      */
     public static Response<String> login(LoginInfo loginInfo) {
-        // fill data
-        if (loginInfo != null) {
-            loginInfo.setExpireTime(System.currentTimeMillis() + getInstance().getTokenTimeout());
+
+        // generate token
+        Response<String> tokenResponse = TokenHelper.generateToken(loginInfo);
+        if (!tokenResponse.isSuccess()) {
+            return tokenResponse;
         }
-        // do set
-        return getInstance().getLoginStore().set(loginInfo);
+
+        // update expire-time
+        loginInfo.setExpireTime(System.currentTimeMillis() + getInstance().getTokenTimeout());
+
+        // set store-LoginInfo
+        Response<String> setResponse = getInstance().getLoginStore().set(loginInfo);
+        if (!setResponse.isSuccess()) {
+            return setResponse;
+        }
+
+        // return
+        return Response.ofSuccess(tokenResponse.getData());
     }
 
     /**
@@ -116,6 +130,26 @@ public class XxlSsoHelper {
     }
 
 
+    // ---------------------- login-update ----------------------
+
+    /**
+     * login update ( update LoginInfo in LoginStore)
+     *
+     * @param loginInfo
+     * @return
+     */
+    public static Response<String> loginUpdate(LoginInfo loginInfo) {
+
+        // update expire-time
+        if (loginInfo != null) {
+            loginInfo.setExpireTime(System.currentTimeMillis() + getInstance().getTokenTimeout());
+        }
+
+        // update store-LoginInfo
+        return getInstance().getLoginStore().update(loginInfo);
+    }
+
+
     // ---------------------- logout ----------------------
 
     /**
@@ -124,7 +158,15 @@ public class XxlSsoHelper {
      * @param token
      */
     public static Response<String> logout(String token) {
-        return getInstance().getLoginStore().remove(token);
+
+        // parse token
+        LoginInfo loginInfoForToken = TokenHelper.parseToken(token);
+        if (loginInfoForToken == null) {
+            return Response.ofFail("token is invalid");
+        }
+
+        // remove store-LoginInfo
+        return getInstance().getLoginStore().remove(loginInfoForToken.getUserId());
     }
 
     /**
@@ -159,7 +201,27 @@ public class XxlSsoHelper {
      * @return
      */
     public static Response<LoginInfo> loginCheck(String token) {
-        return getInstance().getLoginStore().get(token);
+
+        // parse token
+        LoginInfo loginInfoForToken = TokenHelper.parseToken(token);
+        if (loginInfoForToken == null) {
+            return Response.ofFail("token is invalid");
+        }
+
+        // get store-LoginInfo
+        Response<LoginInfo> loginInfoResponse = getInstance().getLoginStore().get(loginInfoForToken.getUserId());
+        if (!loginInfoResponse.isSuccess()) {
+            return loginInfoResponse;
+        }
+        LoginInfo loginInfo = loginInfoResponse.getData();
+
+        // valid version
+        if (loginInfo.getVersion()!=null && !loginInfo.getVersion().equals(loginInfoForToken.getVersion())){
+            // Non-empty and inconsistent
+            return Response.ofFail("token version is invalid");
+        }
+
+        return Response.ofSuccess(loginInfo);
     }
 
     /**
@@ -217,13 +279,19 @@ public class XxlSsoHelper {
 
         // get cookie
         String token = CookieTool.getValue(request, getInstance().getTokenKey());
-        if (StringTool.isBlank(token)) {
+
+        // parse token
+        LoginInfo loginInfoForToken = TokenHelper.parseToken(token);
+        if (loginInfoForToken == null) {
             return Response.ofFail("not login.");
         }
 
+        // generate ticket
+        String ticket = loginInfoForToken.getUserId().concat("_").concat(UUIDTool.getSimpleUUID());
+
         // valid ticket
         long ticketTimeout = 60 * 1000;
-        return getInstance().getLoginStore().createTicket(token, ticketTimeout);
+        return getInstance().getLoginStore().createTicket(ticket, token, ticketTimeout);
     }
 
     /**
@@ -241,7 +309,7 @@ public class XxlSsoHelper {
         }
 
         // valid ticket
-        Response<String> validTicketResult = getInstance().getLoginStore().validTicket( ticket);
+        Response<String> validTicketResult = getInstance().getLoginStore().validTicket(ticket);
         if (!validTicketResult.isSuccess()) {
             return Response.ofFail(validTicketResult.getMsg());
         }
@@ -277,7 +345,7 @@ public class XxlSsoHelper {
 
         return loginInfo.getRoleList().contains(role)
                 ?Response.ofSuccess()
-                :Response.ofFail("not has role.");
+                :Response.ofFail("has no role.");
     }
 
     /**
@@ -298,7 +366,7 @@ public class XxlSsoHelper {
 
         return loginInfo.getPermissionList().contains(permission)
                 ?Response.ofSuccess()
-                :Response.ofFail("not has permission.");
+                :Response.ofFail("has no permission.");
     }
 
 

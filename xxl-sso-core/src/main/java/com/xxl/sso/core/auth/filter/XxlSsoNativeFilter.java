@@ -119,7 +119,7 @@ public class XxlSsoNativeFilter implements Filter {
         if (loginInfo == null) {
 
             // 4、login fail message
-            String loginFailMsg = GsonTool.toJson(Response.of(Const.CODE_LOGIN_FAIL, "not login."));
+            String loginFailMsg = GsonTool.toJson(Response.of(Const.CODE_LOGIN_FAIL, "not login for path:"+ request.getServletPath()));
 
             // write response
             response.setStatus(HttpServletResponse.SC_OK);

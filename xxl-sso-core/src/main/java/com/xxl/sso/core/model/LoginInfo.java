@@ -1,7 +1,5 @@
 package com.xxl.sso.core.model;
 
-import com.xxl.sso.core.constant.Const;
-
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
@@ -18,20 +16,20 @@ public class LoginInfo implements Serializable {
     public LoginInfo() {
     }
     // for token
-    public LoginInfo(String userId, String userName, String version, long expireTime) {
+    public LoginInfo(String userId, String version) {
         this.userId = userId;
-        this.userName = userName;
         this.version = version;
-        this.expireTime = expireTime;
     }
-    public LoginInfo(String userId, String userName, List<String> permissionList, String version, long expireTime) {
+    public LoginInfo(String userId, String userName, String realName, Map<String, String> extraInfo, List<String> roleList, List<String> permissionList, long expireTime, String version) {
         this.userId = userId;
         this.userName = userName;
+        this.realName = realName;
+        this.extraInfo = extraInfo;
+        this.roleList = roleList;
         this.permissionList = permissionList;
-        this.version = version;
         this.expireTime = expireTime;
+        this.version = version;
     }
-
 
     // ---------------------- user info ----------------------
 

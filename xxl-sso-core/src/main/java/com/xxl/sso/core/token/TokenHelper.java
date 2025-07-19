@@ -1,10 +1,10 @@
 package com.xxl.sso.core.token;
 
-import com.xxl.sso.core.exception.XxlSsoException;
 import com.xxl.sso.core.model.LoginInfo;
 import com.xxl.tool.core.StringTool;
 import com.xxl.tool.encrypt.Base64Tool;
 import com.xxl.tool.gson.GsonTool;
+import com.xxl.tool.response.Response;
 
 /**
  * token helper
@@ -19,20 +19,21 @@ public class TokenHelper {
      * @param loginInfo
      * @return
      */
-    public static String generateToken(LoginInfo loginInfo){
-        try {
-            // valid loginInfo
-            if (loginInfo==null || StringTool.isBlank(loginInfo.getUserId()) || StringTool.isBlank(loginInfo.getUserName())) {
-                throw new XxlSsoException("TokenHelper.generateToken fail, invalid loginInfo.");
-            }
-            LoginInfo loginInfoForToken = new LoginInfo(loginInfo.getUserId(), loginInfo.getUserName(), loginInfo.getVersion(), loginInfo.getExpireTime());
-
-            // generate token
-            String json = GsonTool.toJson(loginInfoForToken);
-            return Base64Tool.encodeUrlSafe(json);
-        } catch (Exception e) {
-            throw new XxlSsoException(e);
+    public static Response<String> generateToken(LoginInfo loginInfo){
+        // valid loginInfo
+        if (loginInfo==null || StringTool.isBlank(loginInfo.getUserId()) || StringTool.isBlank(loginInfo.getVersion())) {
+            return Response.ofFail("generateToken fail, invalid loginInfo.");
         }
+
+        // generate token-LoginInfo, only contains: userId + version
+        LoginInfo loginInfoForToken = new LoginInfo(loginInfo.getUserId(), loginInfo.getVersion());
+
+        // generate token
+        String json = GsonTool.toJson(loginInfoForToken);
+        String token = Base64Tool.encodeUrlSafe(json);
+
+        return Response.ofSuccess(token);
+
     }
 
     /**
