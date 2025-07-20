@@ -14,13 +14,10 @@
 ## 一、简介
 
 ### 1.1 概述
-XXL-SSO 是一个分布式单点登录框架。只需要登录一次就可以访问所有相互信任的应用系统。
-拥有"轻量级、分布式、跨域、Cookie+Token均支持、Web+APP均支持"等特性。现已开放源代码，开箱即用。
+XXL-SSO 是一个分布式单点登录框架。只需要登录一次就可以访问所有相互信任的应用系统。 拥有"轻量级、分布式、跨域、Cookie+Token均支持、Web+APP均支持"等特性。现已开放源代码，开箱即用。
 
-### 1.2 社区交流   
-- [社区交流](https://www.xuxueli.com/page/community.html)
+### 1.2 特性
 
-### 1.3 特性
 - 1、简洁：API直观简洁，可快速上手
 - 2、轻量级：环境依赖小，部署与接入成本较低
 - 3、单点登录：只需要登录一次就可以访问所有相互信任的应用系统
@@ -34,7 +31,7 @@ XXL-SSO 是一个分布式单点登录框架。只需要登录一次就可以访
 - 11、记住密码：未记住密码时，关闭浏览器则登录态失效；记住密码时，支持登录态自动延期，在自定义延期时间的基础上，原则上可以无限延期
 - 12、路径排除：支持自定义多个排除路径，支持Ant表达式,用于排除SSO客户端不需要过滤的路径
 
-### 1.4 发展  
+### 1.3 发展  
 于2018年初，我在github上创建XXL-SSO项目仓库并提交第一个commit，随之进行系统结构设计，UI选型，交互设计……
 
 于2018-12-05，XXL-SSO参与"[2018年度最受欢迎中国开源软件](https://www.oschina.net/project/top_cn_2018?sort=1)"评比，在当时已录入的一万多个国产开源项目中角逐，最终排名第55名。
@@ -52,10 +49,9 @@ XXL-SSO 是一个分布式单点登录框架。只需要登录一次就可以访
 
 欢迎大家的关注和使用，XXL-SSO也将拥抱变化，持续发展。
 
-### 1.5 下载
+### 1.4 下载
 
-#### 文档地址
-
+#### 文档地址   
 - [中文文档](https://www.xuxueli.com/xxl-sso/)
 
 #### 源码仓库地址
@@ -64,11 +60,27 @@ XXL-SSO 是一个分布式单点登录框架。只需要登录一次就可以访
 --- | ---
 [https://github.com/xuxueli/xxl-sso](https://github.com/xuxueli/xxl-sso) | [Download](https://github.com/xuxueli/xxl-sso/releases)
 [https://gitee.com/xuxueli0323/xxl-sso](https://gitee.com/xuxueli0323/xxl-sso) | [Download](https://gitee.com/xuxueli0323/xxl-sso/releases)  
+[https://gitcode.com/xuxueli/xxl-sso](https://gitcode.com/xuxueli/xxl-sso) | [Download](https://gitcode.com/xuxueli/xxl-sso/releases)
 
+#### 中央仓库地址
 
-### 1.6 环境
-- JDK：1.8+
-- Redis：4.0+
+```
+<!-- https://mvnrepository.com/artifact/com.xuxueli/xxl-sso-core -->
+<dependency>
+    <groupId>com.xuxueli</groupId>
+    <artifactId>xxl-sso-core</artifactId>
+    <version>{最新Release版本}</version>
+</dependency>
+```
+
+#### 技术交流
+- [社区交流](https://www.xuxueli.com/page/community.html)
+
+### 1.5 环境
+
+- Maven：3.9+
+- Jdk：8+
+- Redis：7.4+
 
 
 ## 二、快速入门（基于Cookie）
@@ -411,6 +423,20 @@ http://xxlssoclient1.com:8083/xxl-sso-sample-web/
 
 多端登录；
 自动续期；最后操作24H之后，过半续期；
+
+
+- 1、简洁：API直观简洁，可快速上手
+- 2、轻量级：环境依赖小，部署与接入成本较低
+- 3、单点登录：只需要登录一次就可以访问所有相互信任的应用系统
+- 4、分布式：接入SSO认证中心的应用，支持分布式部署
+- 5、HA：Server端与Client端，均支持集群部署，提高系统可用性
+- 6、跨域：支持跨域应用接入SSO认证中心
+- 7、Cookie+Token均支持：支持基于Cookie和基于Token两种接入方式，并均提供Sample项目
+- 8、Web+APP均支持：支持Web和APP接入
+- 9、实时性：系统登陆、注销状态，全部Server与Client端实时共享
+- 10、CS结构：基于CS结构，包括Server"认证中心"与Client"受保护应用"
+- 11、记住密码：未记住密码时，关闭浏览器则登录态失效；记住密码时，支持登录态自动延期，在自定义延期时间的基础上，原则上可以无限延期
+- 12、路径排除：支持自定义多个排除路径，支持Ant表达式,用于排除SSO客户端不需要过滤的路径
 
 - Now：
   - module
