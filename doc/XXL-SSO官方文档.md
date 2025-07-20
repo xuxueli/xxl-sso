@@ -141,6 +141,7 @@ XXL-SSO 作为单点登录框架，支持业务渐进式集成接入使用。结
 #### 第二步、添加 XXL-SSO 配置
 
 配置文件位置：xxl-sso-sample-web/src/main/resources/application.properties
+
 ```
 ### xxl-sso 登录凭证/token传输key, 用于cookie、header登录凭证传输；
 xxl-sso.token.key=xxl_sso_token
@@ -160,7 +161,8 @@ xxl.sso.client.login.path=/weblogin/login
 
 #### 第三步、添加 XXL-SSO 组件
 
-配置组件位置：xxl-sso-sample-web/src/main/java/com/xxl/sso/sample/config/XxlSsoConfig.java
+配置组件位置：xxl-sso-sample-web/src/main/java/com/xxl/sso/sample/config/XxlSsoConfig
+
 ```
 /**
  * 1、配置 XxlSsoBootstrap
@@ -200,6 +202,7 @@ public void addInterceptors(InterceptorRegistry registry) {
 
 接入 XXL-SSO 之后，业务可通过 注解 or API 进行 登录验证、权限验证。
 示例代码位置：com.xxl.sso.sample.controller.IndexController
+
 ```
 /**
  * 示例：不添加注解，限制登录
@@ -331,6 +334,7 @@ public Response<String> test41(HttpServletRequest request) {
 
 - 访问示例接口（需要登录，有权限）：http://xxlssoclient1.com:8083/xxl-sso-sample-web/test21
 - 访问示例接口（需要登录，无权限）：http://xxlssoclient1.com:8083/xxl-sso-sample-web/test22
+
 ```
 // 未登录，接口响应数据：
 {"code":203,"msg":"com.xxl.sso.core.exception.XxlSsoException: not login for path:/test21"}
@@ -352,6 +356,7 @@ public Response<String> test41(HttpServletRequest request) {
 #### 第二步、添加 XXL-SSO 配置
 
 配置文件位置：xxl-sso-sample-native/src/main/resources/application.properties
+
 ```
 ### xxl-sso 登录凭证/token传输key, 用于cookie、header登录凭证传输；
 xxl-sso.token.key=xxl_sso_token
@@ -369,7 +374,8 @@ xxl-sso.client.excluded.paths=/native/openapi/*
 
 #### 第三步、添加 XXL-SSO 组件
 
-配置组件位置：xxl-sso-sample-native/src/main/java/com/xxl/sso/sample/config/XxlSsoConfig.java
+配置组件位置：xxl-sso-sample-native/src/main/java/com/xxl/sso/sample/config/XxlSsoConfig
+
 ```
 /**
  * 1、配置 XxlSsoBootstrap
@@ -492,6 +498,7 @@ Native登录认证 OpenAPI 接口列表：
   - 3、此时，使用 登录凭证/token 访问受保护的 "Client01应用" 和 "Client02应用" 提供的接口，接口请求将会被拦截，提示未登录并返回状态码 501（参考代码：NativeClientTest.clientApiRequestTest）
 
 测试用例运行结果：
+
 ```
 15:39:42.831 logback [main] INFO  NativeClientTest - 登录成功：token = eyJ1c2VySWQiOiIxMDAwIiwiZXhwaXJlVGltZSI6MCwidmVyc2lvbiI6IjA2ZmRhOGFhZmU2MzRhMzBhYzYzZWQ4ZjM1YjBjNTExIiwiYXV0b1JlbmV3IjpmYWxzZX0
 15:39:42.838 logback [main] INFO  NativeClientTest - 当前为登录状态：登陆用户 = LoginInfo{userId='1000', userName='user', realName='null', extraInfo=null, roleList=[role01], permissionList=[user:query, user:add], expireTime='1753601982825', version=06fda8aafe634a30ac63ed8f35b0c511, autoRenew=false}
@@ -521,6 +528,7 @@ CAS单点登录 依赖 CAS认证中心，CAS认证中心提供单点登录基础
 #### 第二步、添加 XXL-SSO 配置
 
 配置文件位置：xxl-sso-sample-cas/src/main/resources/application.properties
+
 ```
 ### xxl-sso 登录凭证/token传输key, 用于cookie、header登录凭证传输；
 xxl-sso.token.key=xxl_sso_token
@@ -544,7 +552,8 @@ xxl-sso.client.excluded.paths=
 
 #### 第三步、添加 XXL-SSO 组件
 
-配置组件位置：xxl-sso-sample-cas/src/main/java/com/xxl/sso/sample/config/XxlSsoConfig.java
+配置组件位置：xxl-sso-sample-cas/src/main/java/com/xxl/sso/sample/config/XxlSsoConfig
+
 ```
 /**
  * 1、配置 XxlSsoBootstrap
@@ -726,7 +735,7 @@ SSO User | 登录用户信息，与 SSO SessionId 相对应
 - 1、增强用户增强安全性：登陆用户数据中，新增客户端信息如ip、ua等，防止session被窃取；
 - 2、认证中心与接入端交互数据加密，临时AccessToken阅后即焚，增强安全性；
 - 3、CAS认证中心，支持维护客户端应用；防止跳转非法第三方导致登陆信息泄露；
-- 4、集成网关支持；
+- 4、集成网关支持；集成WebFlux, Spring-Cloud-Gateway等；
 - 5、支持认证分组，分组内共享登陆状态，分组之间登录态隔离，
 
 
