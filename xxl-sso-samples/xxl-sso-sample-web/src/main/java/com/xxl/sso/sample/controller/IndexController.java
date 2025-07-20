@@ -54,8 +54,9 @@ public class IndexController {
     @RequestMapping("/test12")
     @ResponseBody
     @XxlSso
-    public Response<String> test12() {
-        return Response.ofSuccess("login success");
+    public Response<String> test12(HttpServletRequest request) {
+        Response<LoginInfo>  loginCheckResult = XxlSsoHelper.loginCheckWithAttr(request);
+        return Response.ofSuccess("login success, userName = " + loginCheckResult.getData().getUserName());
     }
 
     /**

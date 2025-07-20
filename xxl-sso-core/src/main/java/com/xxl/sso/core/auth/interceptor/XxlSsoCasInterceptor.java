@@ -34,7 +34,7 @@ import javax.servlet.http.HttpServletResponse;
  *          - cookie：客户端域名下存储认证“cookie”（key支持自定义，value为登录token），服务端解析并识别登录态；
  *      4、核心流程：
  *          - 登录流程：
- *              - a、访问 “Client应用（xxl-sso-sample-cas）”，未登录将通过Filter拦截，并主动跳转 “CasServer（xxl-sso-server）” 进入登录页面；
+ *              - a、访问 “Client应用（xxl-sso-sample-cas）”，未登录将通过 Interceptor 拦截，并主动跳转 “CasServer（xxl-sso-server）” 进入登录页面；
  *              - b、登录成功，服务端构建 LoginInfo 写入 LoginStore，生成登录 token 写入 CasServer 域名 Cookie中；然后，携带登录token 并跳转返回； “Client应用（xxl-sso-sample-cas）”；
  *              - c、跳转返回 “Client应用（xxl-sso-sample-cas）”，校验所携带登录token，写入 Client应用 域名 Cookie 中；
  *          - 注销流程：客户端访问 “CasServer（xxl-sso-server）” 注销登录页面；将跳转 “CasServer（xxl-sso-server）” 进入登录页面；*

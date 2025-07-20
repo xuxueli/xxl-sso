@@ -133,12 +133,14 @@ XXL-SSO 作为单点登录框架，支持业务渐进式集成接入使用。结
 ### 2.3、接入项目示例（Web登录）
 
 - Web登录：适用于常规Web系统，不限制接入系统数量；但是限制相关Web系统部署在相同域名下，登录凭证存储在公共域名下；
-- 项目名称：xxl-sso-sample-web
+- 接入示例项目：xxl-sso-sample-web
 
 #### 第一步、引入Maven依赖
 参考章节 “1.4 下载”，pom引入 “xxl-sso-core” 相关maven依赖；
 
-#### 第二步、修改配置文件
+#### 第二步、添加 XXL-SSO 配置
+
+配置文件位置：xxl-sso-sample-web/src/main/resources/application.properties
 ```
 ### xxl-sso 登录凭证/token传输key, 用于cookie、header登录凭证传输；
 xxl-sso.token.key=xxl_sso_token
@@ -156,8 +158,9 @@ xxl-sso.client.excluded.paths=/weblogin/*,/static/**
 xxl.sso.client.login.path=/weblogin/login
 ```
 
-#### 第三步、修改配置文件
+#### 第三步、添加 XXL-SSO 组件
 
+配置组件位置：xxl-sso-sample-web/src/main/java/com/xxl/sso/sample/config/XxlSsoConfig.java
 ```
 /**
  * 1、配置 XxlSsoBootstrap
@@ -184,199 +187,428 @@ public XxlSsoBootstrap xxlSsoBootstrap() {
 @Override
 public void addInterceptors(InterceptorRegistry registry) {
 
-    // 2.1、build xxl-sso interceptor
-    XxlSsoWebInterceptor webInterceptor = new XxlSsoWebInterceptor(excludedPaths, loginPath);
+    // 2.1、build xxl-sso interceptor 
+    XxlSsoWebInterceptor webInterceptor = new XxlSsoWebInterceptor(excludedPaths, loginPath);   // 【专门用于支持 “Web登录” 的 XXL-SSO 拦截器】
 
     // 2.2、add interceptor
     registry.addInterceptor(webInterceptor).addPathPatterns("/**");
 }
 ```
 
-#### 第四步、验证
 
-- 启动项目："xxl-sso-sample-web"
-- 访问地址：http://xxlssoclient1.com:8083/xxl-sso-sample-web/
+#### 第四步、代码中进行 XXL-SSO 登录验证、权限验证
 
+接入 XXL-SSO 之后，业务可通过 注解 or API 进行 登录验证、权限验证。
+示例代码位置：com.xxl.sso.sample.controller.IndexController
+```
+/**
+ * 示例：不添加注解，限制登录
+ *
+ * @param request
+ * @return
+ */
+@RequestMapping("/test11")
+@ResponseBody
+public Response<String> test11(HttpServletRequest request) {
+    Response<LoginInfo> loginCheckResult = XxlSsoHelper.loginCheckWithAttr(request);
+    return Response.ofSuccess("login success, LoginInfo:" + loginCheckResult.getData().getUserName());
+}
+
+/**
+ * 示例：默认注解（@XxlSso），限制登录
+ *
+ * @return
+ */
+@RequestMapping("/test12")
+@ResponseBody
+@XxlSso
+public Response<String> test12(HttpServletRequest request) {
+    Response<LoginInfo>  loginCheckResult = XxlSsoHelper.loginCheckWithAttr(request);
+    return Response.ofSuccess("login success, userName = " + loginCheckResult.getData().getUserName());
+}
+
+/**
+ * 示例：注解login属性定制“@XxlSso(login = false)”，不限制登录
+ *
+ * @return
+ */
+@RequestMapping("/test13")
+@ResponseBody
+@XxlSso(login = false)
+public Response<String> test13() {
+    return Response.ofSuccess("not check login.");
+}
+
+/**
+ * 示例：注解permission属性定制“@XxlSso(permission = "user:query")”，限制拥有指定权限
+ *
+ * @return
+ */
+@RequestMapping("/test21")
+@ResponseBody
+@XxlSso(permission = "user:query")
+public Response<String> test21() {
+    return Response.ofSuccess("has permission[user:query]");
+}
+
+/**
+ * 示例：注解permission属性定制“@XxlSso(permission = "user:delete")”，限制拥有指定权限
+ *
+ * @return
+ */
+@RequestMapping("/test22")
+@ResponseBody
+@XxlSso(permission = "user:delete")
+public Response<String> test22() {
+    return Response.ofSuccess("has permission[user:delete]");
+}
+
+/**
+ * 示例：注解role属性定制“@XxlSso(role = "role01")”，限制拥有指定角色
+ *
+ * @return
+ */
+@RequestMapping("/test31")
+@ResponseBody
+@XxlSso(role = "role01")
+public Response<String> test31() {
+    return Response.ofSuccess("has role[role01]");
+}
+
+/**
+ * 示例：注解role属性定制“@XxlSso(role = "role02")”，限制拥有指定角色
+ *
+ * @return
+ */
+@RequestMapping("/test32")
+@ResponseBody
+@XxlSso(role = "role02")
+public Response<String> test32() {
+    return Response.ofSuccess("has role[role02]");
+}
+
+/**
+ * 示例：API方式获取登录用户信息（LoginInfo）；API方式校验角色、权限；
+ *
+ * @return
+ */
+@RequestMapping("/test41")
+@ResponseBody
+@XxlSso
+public Response<String> test41(HttpServletRequest request) {
+
+    Response<LoginInfo> loginCheckResult = XxlSsoHelper.loginCheckWithAttr( request);
+    Response<String> hasRole01 = XxlSsoHelper.hasRole(loginCheckResult.getData(), "role01");
+    Response<String> hasRole02 = XxlSsoHelper.hasRole(loginCheckResult.getData(), "role02");
+    Response<String> hasPermission01 = XxlSsoHelper.hasPermission(loginCheckResult.getData(), "user:query");
+    Response<String> hasPermission02 = XxlSsoHelper.hasPermission(loginCheckResult.getData(), "user:delete");
+
+    String data = "LoginInfo:" + loginCheckResult.getData() +
+            ", hasRole01:" + hasRole01.isSuccess() +
+            ", hasRole02:" + hasRole02.isSuccess() +
+            ", hasPermission01:" + hasPermission01.isSuccess() +
+            ", hasPermission02:" + hasPermission02.isSuccess();
+
+    return Response.ofSuccess(data);
+}
+
+```
+
+#### 第五步、验证
+
+经过上述配置之后，启动示例项目，并访问如下域名地址访问系统：
+- **启动项目**：xxl-sso-sample-web
+- **访问地址**：http://xxlssoclient1.com:8083/xxl-sso-sample-web/
+
+由于未进行登录，XXL-SSO 将会自动跳转到配置的登录页面：
+![输入图片说明](https://www.xuxueli.com/doc/static/xxl-sso/images/img_02.png "在这里输入图片标题")
+
+页面登录之后，将会跳转到系统主页：
+![输入图片说明](https://www.xuxueli.com/doc/static/xxl-sso/images/img_03.png "在这里输入图片标题")
+
+
+访问如下接口地址，验证 登录验证、权限验证 逻辑：（参考 “第四步、代码中进行 XXL-SSO 登录验证、权限验证” 中代码）
+
+- 访问示例接口（需要登录，有权限）：http://xxlssoclient1.com:8083/xxl-sso-sample-web/test21
+- 访问示例接口（需要登录，无权限）：http://xxlssoclient1.com:8083/xxl-sso-sample-web/test22
+```
+// 未登录，接口响应数据：
+{"code":203,"msg":"com.xxl.sso.core.exception.XxlSsoException: not login for path:/test21"}
+
+// 已登录：“/test21” 接口有权限 
+{"code":200,"msg":"成功","data":"has permission[user:query]","success":true}
+// 已登录：“/test21” 接口无权限  
+{"code":203,"msg":"com.xxl.sso.core.exception.XxlSsoException: permission limit, current login-user does not have permission:user:delete"}
+```
 
 ### 2.4、接入项目示例（Native登录）
 
-### 2.5、接入项目示例（CAS单点登录）
+- Native登录：适用于 移动端、小程序、前后端分离系统 等系统，不限制接入系统数量，且无域名限制，支持多端登录；但是登录凭证需要客户端管理维护；
+- 接入示例项目：xxl-sso-sample-native
 
+#### 第一步、引入Maven依赖
+参考章节 “1.4 下载”，pom引入 “xxl-sso-core” 相关maven依赖；
 
+#### 第二步、添加 XXL-SSO 配置
 
-## 二、快速入门（基于Cookie）
-> 基于Cookie，相关概念可参考 "章节 4.6"
-### 2.2 部署 "认证中心（SSO Server）"
+配置文件位置：xxl-sso-sample-native/src/main/resources/application.properties
 ```
-项目名：xxl-sso-server
+### xxl-sso 登录凭证/token传输key, 用于cookie、header登录凭证传输；
+xxl-sso.token.key=xxl_sso_token
+### xxl-sso 登录凭证/token超时时间，单位毫秒；
+xxl-sso.token.timeout=604800000
+### xxl-sso 登录态持久化配置，如下为Redis组件相关配置；
+xxl-sso.store.redis.nodes=127.0.0.1:6379
+xxl-sso.store.redis.user=
+xxl-sso.store.redis.password=
+### xxl-sso 登录态存储，Redis key前缀
+xxl-sso.store.redis.keyprefix=xxl_sso_user:
+### xxl-sso 客户端过滤排除路径，如 "/excluded/xpath"?"/excluded/xpath,/excluded/*"
+xxl-sso.client.excluded.paths=/native/openapi/*
 ```
-#### 配置说明
-配置文件位置：application.properties
-```
-……
-// redis 地址： 如 "{ip}"、"{ip}:{port}"、"{redis/rediss}://xxl-sso:{password}@{ip}:{port:6379}/{db}"；多地址逗号分隔
-xxl.sso.redis.address=redis://127.0.0.1:6379
 
-// 登录态有效期窗口，默认24H，当登录态有效期窗口过半时，自动顺延一个周期
-xxl.sso.redis.expire.minute=1440
-```
-### 2.3 部署 "单点登陆Client端接入示例项目"
-```
-项目名：xxl-sso-web-sample-springboot
-```
-#### 配置 XxlSsoFilter
-参考代码：com.xxl.sso.sample.config.XxlSsoConfig
-```
-@Bean
-public FilterRegistrationBean xxlSsoFilterRegistration() {
+#### 第三步、添加 XXL-SSO 组件
 
-    // xxl-sso, redis init
-    JedisUtil.init(xxlSsoRedisAddress);
+配置组件位置：xxl-sso-sample-native/src/main/java/com/xxl/sso/sample/config/XxlSsoConfig.java
+```
+/**
+ * 1、配置 XxlSsoBootstrap
+ */
+@Bean(initMethod = "start", destroyMethod = "stop")
+public XxlSsoBootstrap xxlSsoBootstrap() {
 
-    // xxl-sso, filter init
-    FilterRegistrationBean registration = new FilterRegistrationBean();
+    XxlSsoBootstrap bootstrap = new XxlSsoBootstrap();
+    bootstrap.setLoginStore(new RedisLoginStore(
+            redisNodes,
+            redisUser,
+            redisPassword,
+            redisKeyprefix));
+    bootstrap.setTokenKey(tokenKey);
+    bootstrap.setTokenTimeout(tokenTimeout);
+    return bootstrap;
+}
 
-    registration.setName("XxlSsoWebFilter");
-    registration.setOrder(1);
-    registration.addUrlPatterns("/*");
-    registration.setFilter(new XxlSsoWebFilter());
-    registration.addInitParameter(Conf.SSO_SERVER, xxlSsoServer);
-    registration.addInitParameter(Conf.SSO_LOGOUT_PATH, xxlSsoLogoutPath);
 
-    return registration;
+/**
+ * 2、配置 XxlSso 拦截器
+ *
+ * @param registry
+ */
+@Override
+public void addInterceptors(InterceptorRegistry registry) {
+
+    // 2.1、build xxl-sso interceptor
+    XxlSsoNativeInterceptor webInterceptor = new XxlSsoNativeInterceptor(excludedPaths);    // 【专门用于支持 “Native登录” 的 XXL-SSO 拦截器】
+
+    // 2.2、add interceptor
+    registry.addInterceptor(webInterceptor).addPathPatterns("/**");
 }
 ```
-#### 配置说明
 
-配置文件位置：application.properties
-```
-……
+#### 第四步、代码中进行 XXL-SSO 登录验证、权限验证    
+忽略。
+该示例场景与章节 “2.3、接入项目示例（Web登录） 》 第四步、代码中进行 XXL-SSO 登录验证、权限验证” 使用方式一致，如有诉求可参考上文章节，此处不赘述。
 
-### xxl-sso     (CLient端SSO配置)
+#### 第五步、Native登录认证 OpenAPI 
+Native登录认证 OpenAPI 代码位置：xxl-sso-sample-native/src/main/java/com/xxl/sso/sample/openapi/controller/NativeOpenAPIController
 
-##### SSO Server认证中心地址（推荐以域名方式配置认证中心，本机可参考章节"2.5"修改host文件配置域名指向）
-xxl.sso.server=http://xxlssoserver.com:8080/xxl-sso-server
+Native登录认证 OpenAPI 接口列表：
 
-##### 注销登陆path，值为Client端应用的相对路径
-xxl.sso.logout.path=/logout
-
-##### 路径排除Path，允许设置多个，且支持Ant表达式。用于排除SSO客户端不需要过滤的路径
-xxl-sso.excluded.paths=
-
-### redis   // redis address, like "{ip}"、"{ip}:{port}"、"{redis/rediss}://xxl-sso:{password}@{ip}:{port:6379}/{db}"；Multiple "," separated
-xxl.sso.redis.address=redis://xxl-sso:password@127.0.0.1:6379/0
-```
-
-### 2.4 验证
-
-- 修改Host文件：域名方式访问认证中心，模拟跨域与线上真实环境
-
-- 分别运行 "xxl-sso-server" 与 "xxl-sso-web-sample-springboot"
-
-
-    1、SSO认证中心地址：
-    http://xxlssoserver.com:8080/xxl-sso-server
-    
-    2、Client01应用地址：
-    http://xxlssoclient1.com:8081/xxl-sso-web-sample-springboot/
-    
-    3、Client02应用地址：
-    http://xxlssoclient2.com:8081/xxl-sso-web-sample-springboot/
-
-
-- SSO登录/注销流程验证
-
-
-    正常情况下，登录流程如下：
-    1、访问 "Client01应用地址" ，将会自动 redirect 到 "SSO认证中心地址" 登录界面
-    2、成功登录后，将会自动 redirect 返回到 "Client01应用地址"，并切换为已登录状态
-    3、此时，访问 "Client02应用地址"，不需登陆将会自动切换为已登录状态
-    
-    正常情况下，注销流程如下：
-    1、访问 "Client01应用地址" 配置的 "注销登陆path"，将会自动 redirect 到 "SSO认证中心地址" 并自动注销登陆状态
-    2、此时，访问 "Client02应用地址"，也将会自动注销登陆状态
-
-
-
-## 三、快速入门（基于Token）
-
-> 基于Token，相关概念可参考 "章节 4.7"；（在一些无法使用Cookie的场景下，可使用该方式，否则可以忽略本章节）
-
-### 3.1 "认证中心（SSO Server）" 搭建
-> 可参考 "章节二" 搭建
-
-"认证中心" 搭建成功后，默认为Token方式登陆提供API接口如下：
-
-- 1、登陆接口：/app/login
-    - 参数：POST参数
-        - username：账号
-        - password：账号
-    - 响应：JSON格式
-        - code：200 表示成功、其他失败
-        - msg：错误提示
-        - data: 登陆用户的 sso sessionid
-
-- 2、注销接口：/app/logout
-    - 参数：POST参数
-        - sessionId：登陆用户的 sso sessionid
-    - 响应：JSON格式
-        - code：200 表示成功、其他失败
-        - msg：错误提示
-
-- 3、登陆状态校验接口：/app/logincheck
-    - 参数：POST参数
-        - sessionId：登陆用户的 sso sessionid
-    - 响应：JSON格式
-        - code：200 表示成功、其他失败
-        - msg：错误提示
-        - data：登陆用户信息
-            - userid：用户ID
-            - username：用户名
-
-### 3.2 部署 "单点登陆Client端接入示例项目" (Token方式)
+##### a、登录 API
 
 ```
-项目名：xxl-sso-token-sample-springboot
+地址格式：{Native认证服务地址}/native/openapi/login
+
+请求数据格式如下，放置在 RequestBody 中，JSON格式：
+    {
+        "username" : "xxxxxx",
+        "password" : "xxxxxx"
+    }
+    
+响应数据格式：
+    {
+        "code": 200,                // 200 表示成功
+        "msg": "",                  // 错误提示消息
+        "data": "xxxx"              // 登录凭证/Token信息；登录成功后才返回；
+    }
 ```
 
-> 可参考 "章节 2.4" 部署 "单点登录Client端接入示例项目"，唯一不同点是：将web应用的 "XxlSsoFilter" 更换为app应用 "XxlSsoTokenFilter"
+##### b、注销 API
 
-### 3.3 验证  (模拟请求 Token 方式接入SSO的接口)
-
-- 修改Host文件：域名方式访问认证中心，模拟跨域与线上真实环境
 ```
-### 在host文件中添加以下内容0
-127.0.0.1 xxlssoserver.com
-127.0.0.1 xxlssoclient1.com
-127.0.0.1 xxlssoclient2.com
+地址格式：{Native认证服务地址}/native/openapi/logout
+
+请求数据格式如下，放置在 RequestBody 中，JSON格式：
+    {
+        "username" : "xxxxxx",
+        "password" : "xxxxxx"
+    }
+    
+响应数据格式：
+    {
+        "code": 200,                // 200 表示成功
+        "msg": ""                   // 错误提示消息
+    }
 ```
 
-- 分别运行 "xxl-sso-server" 与 "xxl-sso-token-sample-springboot"
+##### c、登录信息查询 API
 
+```
+地址格式：{Native认证服务地址}/native/openapi/logincheck
 
-    1、SSO认证中心地址：
-    http://xxlssoserver.com:8080/xxl-sso-server
+请求数据格式如下，放置在 RequestBody 中，JSON格式：
+    {
+        "token" : "xxxxxx"
+    }
     
-    2、Client01应用地址：
-    http://xxlssoclient1.com:8082/xxl-sso-token-sample-springboot/
-    
-    3、Client02应用地址：
-    http://xxlssoclient2.com:8082/xxl-sso-token-sample-springboot/
+响应数据格式：
+    {
+        "code": 200,                    // 200 表示成功
+        "msg": "",                      // 错误提示消息
+        "data": {                       // 登录用户信息
+            "userId": "111",
+            "userName": "xxx",
+            "realName": "xxx",
+            "roleList": ["role1", "role2"],
+            "permissionList": ["xxx", "xxx"]
+        }                  
+    }
+```
+
+#### 第六步、验证
+
+经过上述配置之后，启动示例项目；然后，可通过 测试用例/验证代码 模拟 “Native登录” 相关操作： 
+- **启动项目**：xxl-sso-sample-native
+- **Native登录认证，测试用例/验证代码位置**：xxl-sso-sample-native/src/test/java/com/xxl/app/sample/test/NativeClientTest
+
+测试用例/验证代码，具体逻辑为：
+- **登录流程**：
+  - 1、获取用户输入的账号密码后，请求 Native OpenAPI 登录接口，获取用户 登录凭证/token ；（参考代码：NativeClientTest.login）
+  - 2、登陆成功后，获取到 登录凭证/token，需要主动存储，后续请求时需要设置在 Header参数 中
+  - 3、此时，使用 登录凭证/token 访问受保护的 "Client01应用" 和 "Client02应用" 提供的接口，接口均正常返回（参考代码：NativeClientTest.clientApiRequestTest）
+- **注销流程**：
+  - 1、请求 Native OpenAPI 注销接口，注销登陆凭证 登录凭证/token；（参考代码：NativeClientTest.logout）
+  - 2、注销成功后，登录凭证/token 将会全局失效
+  - 3、此时，使用 登录凭证/token 访问受保护的 "Client01应用" 和 "Client02应用" 提供的接口，接口请求将会被拦截，提示未登录并返回状态码 501（参考代码：NativeClientTest.clientApiRequestTest）
+
+测试用例运行结果：
+```
+15:39:42.831 logback [main] INFO  NativeClientTest - 登录成功：token = eyJ1c2VySWQiOiIxMDAwIiwiZXhwaXJlVGltZSI6MCwidmVyc2lvbiI6IjA2ZmRhOGFhZmU2MzRhMzBhYzYzZWQ4ZjM1YjBjNTExIiwiYXV0b1JlbmV3IjpmYWxzZX0
+15:39:42.838 logback [main] INFO  NativeClientTest - 当前为登录状态：登陆用户 = LoginInfo{userId='1000', userName='user', realName='null', extraInfo=null, roleList=[role01], permissionList=[user:query, user:add], expireTime='1753601982825', version=06fda8aafe634a30ac63ed8f35b0c511, autoRenew=false}
+15:39:42.841 logback [main] INFO  NativeClientTest - 模拟请求APP应用接口：请求成功，登陆用户 = LoginInfo{userId='1000', userName='user', realName='null', extraInfo=null, roleList=[role01], permissionList=[user:query, user:add], expireTime='1753601982825', version=06fda8aafe634a30ac63ed8f35b0c511, autoRenew=false}
+15:39:43.174 logback [main] INFO  NativeClientTest - 模拟请求APP应用接口：请求成功，登陆用户 = LoginInfo{userId='1000', userName='user', realName='null', extraInfo=null, roleList=[role01], permissionList=[user:query, user:add], expireTime='1753601982825', version=06fda8aafe634a30ac63ed8f35b0c511, autoRenew=false}
+15:39:43.177 logback [main] INFO  NativeClientTest - 注销成功
+15:39:43.180 logback [main] INFO  NativeClientTest - 当前为注销状态
+15:39:43.181 logback [main] INFO  NativeClientTest - 模拟请求APP应用接口：请求失败：not login for path:/
+15:39:43.183 logback [main] INFO  NativeClientTest - 模拟请求APP应用接口：请求失败：not login for path:/
+```
+
+### 2.5、接入项目示例（CAS单点登录）
+
+- CAS单点登录：适用于多Web系统部署域名不一致场景，解决了系统 跨域登录认证 问题；但是需要单独部署CAS认证中心，CAS认证中心提供单点登录基础能力；
+- 项目说明：
+  - CAS认证中心: xxl-sso-server
+  - 接入示例项目: xxl-sso-sample-cas
+
+#### 第一步、部署 CAS认证中心 
+
+CAS单点登录 依赖 CAS认证中心，CAS认证中心提供单点登录基础能力；因此需要先行启动 CAS认证中心。
+- CAS认证中心，启动项目: xxl-sso-server
+
+#### 第一步、示例项目引入Maven依赖
+参考章节 “1.4 下载”，pom引入 “xxl-sso-core” 相关maven依赖；
+
+#### 第二步、添加 XXL-SSO 配置
+
+配置文件位置：xxl-sso-sample-cas/src/main/resources/application.properties
+```
+### xxl-sso 登录凭证/token传输key, 用于cookie、header登录凭证传输；
+xxl-sso.token.key=xxl_sso_token
+### xxl-sso 登录凭证/token超时时间，单位毫秒；
+xxl-sso.token.timeout=604800000
+### xxl-sso 登录态持久化配置，如下为Redis组件相关配置；
+xxl-sso.store.redis.nodes=127.0.0.1:6379
+xxl-sso.store.redis.user=
+xxl-sso.store.redis.password=
+### xxl-sso 登录态存储，Redis key前缀
+xxl-sso.store.redis.keyprefix=xxl_sso_user:
+### xxl-sso CAS认证中心 地址；
+xxl.sso.server.address=http://xxlssoserver.com:8080/xxl-sso-server
+### xxl-sso CAS认证中心 登录跳转路径
+xxl.sso.server.login.path=/login
+### xxl-sso CAS认证中心 注销登录跳转路径
+xxl.sso.server.logout.path=/logout
+### xxl-sso 客户端过滤排除路径，如 "/excluded/xpath"?"/excluded/xpath,/excluded/*"
+xxl-sso.client.excluded.paths=
+```
+
+#### 第三步、添加 XXL-SSO 组件
+
+配置组件位置：xxl-sso-sample-cas/src/main/java/com/xxl/sso/sample/config/XxlSsoConfig.java
+```
+/**
+ * 1、配置 XxlSsoBootstrap
+ */
+@Bean(initMethod = "start", destroyMethod = "stop")
+public XxlSsoBootstrap xxlSsoBootstrap() {
+    XxlSsoBootstrap bootstrap = new XxlSsoBootstrap();
+    bootstrap.setLoginStore(new RedisLoginStore(
+            redisNodes,
+            redisUser,
+            redisPassword,
+            redisKeyprefix));
+    bootstrap.setTokenKey(tokenKey);
+    bootstrap.setTokenTimeout(tokenTimeout);
+
+    return bootstrap;
+}
 
 
-- SSO登录/注销流程验证
-> 可参考测试用例 ：com.xxl.app.sample.test.TokenClientTest
+/**
+ * 2、配置 XxlSso 拦截器
+ *
+ * @param registry
+ */
+@Override
+public void addInterceptors(InterceptorRegistry registry) {
+
+    // 2.1、build xxl-sso interceptor
+    XxlSsoCasInterceptor casInterceptor = new XxlSsoCasInterceptor(serverAddress, loginPath, excludedPaths);        // 【专门用于支持 “CAS单点登录” 的 XXL-SSO 拦截器】
+
+    // 2.2、add interceptor
+    registry.addInterceptor(casInterceptor).addPathPatterns("/**");
+}
+```
+
+#### 第四步、代码中进行 XXL-SSO 登录验证、权限验证
+忽略。
+该示例场景与章节 “2.3、接入项目示例（Web登录） 》 第四步、代码中进行 XXL-SSO 登录验证、权限验证” 使用方式一致，如有诉求可参考上文章节，此处不赘述。
+
+#### 第五步、验证
+
+经过上述配置之后，启动示例项目。整体项目模块，以及可访问域名地址如下。
+- **启动项目**：
+  - CAS认证中心: xxl-sso-server
+  - 接入方应用：xxl-sso-sample-cas
+- **访问地址**：
+  - CAS认证中心，域名地址：http://xxlssoserver.com:8080/xxl-sso-server/
+  - Client应用01，域名地址：http://xxlssoclient1.com:8081/xxl-sso-sample-cas/
+  - Client应用02，域名地址：http://xxlssoclient2.com:8081/xxl-sso-sample-cas/
 
 
-    正常情况下，登录流程如下：
-    1、获取用户输入的账号密码后，请求SSO Server的登录接口，获取用户 sso sessionid ；（参考代码：TokenClientTest.loginTest）
-    2、登陆成功后，获取到 sso sessionid ，需要主动存储，后续请求时需要设置在 Header参数 中
-    3、此时，使用 sso sessionid 访问受保护的 "Client01应用" 和 "Client02应用" 提供的接口，接口均正常返回（参考代码：TokenClientTest.clientApiRequestTest）
-    
-    正常情况下，注销流程如下：
-    1、请求SSO Server的注销接口，注销登陆凭证 sso sessionid ；（参考代码：TokenClientTest.logoutTest）
-    2、注销成功后，sso sessionid 将会全局失效
-    3、此时，使用 sso sessionid 访问受保护的 "Client01应用" 和 "Client02应用" 提供的接口，接口请求将会被拦截，提示未登录并返回状态码 501（参考代码：TokenClientTest.clientApiRequestTest）
+CAS登录/注销流程验证：
+- **登录流程**：
+  - 1、访问 "Client应用01" 域名地址 ，将会自动 redirect 到 "CAS认证中心" 登录界面；
+    ![输入图片说明](https://www.xuxueli.com/doc/static/xxl-sso/images/img_04.png "在这里输入图片标题")
+  - 2、成功登录后，将会自动 redirect 返回到 "Client应用01"，并切换为已登录状态；
+    ![输入图片说明](https://www.xuxueli.com/doc/static/xxl-sso/images/img_06.png "在这里输入图片标题")
+  - 3、此时，访问 "Client应用02" 域名地址，不需登陆将会自动切换为已登录状态；
+  - 4、另外，登录后直接访问 "CAS认证中心" 可进入CAS首页；可通过 “打开“Client应用01” 快速打开Client接入方应用。
+    ![输入图片说明](https://www.xuxueli.com/doc/static/xxl-sso/images/img_05.png "在这里输入图片标题")
+
+- **注销流程**：
+  - 1、访问 "Client应用01" 配置的 "注销登陆path"，将会自动 redirect 到 "CAS认证中心" 并自动注销登陆状态；
+  - 2、此时，访问 "Client应用02" 域名地址，也将会自动注销登陆状态；
 
 
 ## 四、总体设计
