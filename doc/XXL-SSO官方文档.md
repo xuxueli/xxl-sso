@@ -98,59 +98,133 @@ XXL-SSO 是 单点登录框架，只需要登录一次就可以访问所有相�
 - Redis：7.4+
 
 
+## 二、快速入门
+
+### 2.1、项目编辑    
+XXL-SSO 作为单点登录框架，支持业务渐进式集成接入使用。结合系统及业务特征差异，仓库代码提供三种业务中接入示例：
+
+- 1、**Web登录**：适用于常规Web系统，不限制接入系统数量；但是限制相关Web系统部署在相同域名下，登录凭证存储在公共域名下；
+- 2、**Native登录**：适用于 移动端、小程序、前后端分离系统 等系统，不限制接入系统数量，且无域名限制，支持多端登录；但是登录凭证需要客户端管理维护；
+- 3、**CAS单点登录**：适用于多Web系统部署域名不一致场景，解决了系统 跨域登录认证 问题；但是需要单独部署CAS认证中心，CAS认证中心提供单点登录基础能力；
+
+```
+- xxl-sso-core: 客户端 核心依赖, 提供登录态持久化、登录认证及权限认证等能力；
+- xxl-sso-server: CAS认证中心，仅 “CAS单点登录” 场景下才会使用；
+- xxl-sso-samples：接入示例项目
+    - xxl-sso-sample-web: Web登录方式，Interceptor（Spring）接入示例；
+    - xxl-sso-sample-native: Native登录，Interceptor（Spring）接入示例；
+    - xxl-sso-sample-cas: CAS单点登录，Interceptor（Spring）接入示例；
+    - filter：
+        - xxl-sso-sample-filter-web: Web登录方式，Filter（Servlet）接入示例；
+        - xxl-sso-sample-filter-native: Native登录，Filter（Servlet）接入示例；
+        - xxl-sso-sample-filter-cas: CAS单点登录，Filter（Servlet）接入示例；
+```
+
+### 2.2、环境配置    
+为模拟并体验生产环境多种登录认证方式，需要修改Host文件，以域名方式访问示例项目：
+
+```
+### 编辑Host 文件，在文件中添加以下内容：
+127.0.0.1 xxlssoserver.com
+127.0.0.1 xxlssoclient1.com
+127.0.0.1 xxlssoclient2.com
+```
+
+### 2.3、接入项目示例（Web登录）
+
+- Web登录：适用于常规Web系统，不限制接入系统数量；但是限制相关Web系统部署在相同域名下，登录凭证存储在公共域名下；
+- 项目名称：xxl-sso-sample-web
+
+#### 第一步、引入Maven依赖
+参考章节 “1.4 下载”，pom引入 “xxl-sso-core” 相关maven依赖；
+
+#### 第二步、修改配置文件
+```
+### xxl-sso 登录凭证/token传输key, 用于cookie、header登录凭证传输；
+xxl-sso.token.key=xxl_sso_token
+### xxl-sso 登录凭证/token超时时间，单位毫秒；
+xxl-sso.token.timeout=604800000
+### xxl-sso 登录态持久化配置，如下为Redis组件相关配置；
+xxl-sso.store.redis.nodes=127.0.0.1:6379
+xxl-sso.store.redis.user=
+xxl-sso.store.redis.password=
+### xxl-sso 登录态存储，Redis key前缀
+xxl-sso.store.redis.keyprefix=xxl_sso_user:
+### xxl-sso 客户端过滤排除路径，如 "/excluded/xpath"?"/excluded/xpath,/excluded/*"
+xxl-sso.client.excluded.paths=/weblogin/*,/static/**
+### xxl-sso 客户端登录页路径
+xxl.sso.client.login.path=/weblogin/login
+```
+
+#### 第三步、修改配置文件
+
+```
+/**
+ * 1、配置 XxlSsoBootstrap
+ */
+@Bean(initMethod = "start", destroyMethod = "stop")
+public XxlSsoBootstrap xxlSsoBootstrap() {
+
+    XxlSsoBootstrap bootstrap = new XxlSsoBootstrap();
+    bootstrap.setLoginStore(new RedisLoginStore(
+            redisNodes,
+            redisUser,
+            redisPassword,
+            redisKeyprefix));
+    bootstrap.setTokenKey(tokenKey);
+    bootstrap.setTokenTimeout(tokenTimeout);
+    return bootstrap;
+}
+
+/**
+ * 2、配置 XxlSso 拦截器
+ *
+ * @param registry
+ */
+@Override
+public void addInterceptors(InterceptorRegistry registry) {
+
+    // 2.1、build xxl-sso interceptor
+    XxlSsoWebInterceptor webInterceptor = new XxlSsoWebInterceptor(excludedPaths, loginPath);
+
+    // 2.2、add interceptor
+    registry.addInterceptor(webInterceptor).addPathPatterns("/**");
+}
+```
+
+#### 第四步、验证
+
+- 启动项目："xxl-sso-sample-web"
+- 访问地址：http://xxlssoclient1.com:8083/xxl-sso-sample-web/
+
+
+### 2.4、接入项目示例（Native登录）
+
+### 2.5、接入项目示例（CAS单点登录）
+
+
+
 ## 二、快速入门（基于Cookie）
-
 > 基于Cookie，相关概念可参考 "章节 4.6"
-
-
-### 2.1：源码编译
-
-```
-- xxl-sso-server：中央认证服务，支持集群
-- xxl-sso-core：Client端依赖
-- xxl-sso-samples：单点登陆Client端接入示例项目
-    - xxl-sso-web-sample-springboot：基于Cookie接入方式，供用户浏览器访问，springboot版本
-    - xxl-sso-token-sample-springboot：基于Token接入方式，常用于无法使用Cookie的场景使用，如APP、Cookie被禁用等，springboot版本
-```
-
 ### 2.2 部署 "认证中心（SSO Server）"
-
 ```
 项目名：xxl-sso-server
 ```
-
 #### 配置说明
-
 配置文件位置：application.properties
 ```
 ……
-
 // redis 地址： 如 "{ip}"、"{ip}:{port}"、"{redis/rediss}://xxl-sso:{password}@{ip}:{port:6379}/{db}"；多地址逗号分隔
 xxl.sso.redis.address=redis://127.0.0.1:6379
 
 // 登录态有效期窗口，默认24H，当登录态有效期窗口过半时，自动顺延一个周期
 xxl.sso.redis.expire.minute=1440
-
 ```
-
 ### 2.3 部署 "单点登陆Client端接入示例项目"
-
 ```
 项目名：xxl-sso-web-sample-springboot
 ```
-
-#### maven依赖
-
-```
-<dependency>
-    <groupId>com.xuxueli</groupId>
-    <artifactId>xxl-sso-core</artifactId>
-    <version>${最新稳定版}</version>
-</dependency>
-```
-
 #### 配置 XxlSsoFilter
-
 参考代码：com.xxl.sso.sample.config.XxlSsoConfig
 ```
 @Bean
@@ -172,8 +246,6 @@ public FilterRegistrationBean xxlSsoFilterRegistration() {
     return registration;
 }
 ```
-
-
 #### 配置说明
 
 配置文件位置：application.properties
@@ -198,12 +270,6 @@ xxl.sso.redis.address=redis://xxl-sso:password@127.0.0.1:6379/0
 ### 2.4 验证
 
 - 修改Host文件：域名方式访问认证中心，模拟跨域与线上真实环境
-```
-### 在host文件中添加以下内容0
-127.0.0.1 xxlssoserver.com
-127.0.0.1 xxlssoclient1.com
-127.0.0.1 xxlssoclient2.com
-```
 
 - 分别运行 "xxl-sso-server" 与 "xxl-sso-web-sample-springboot"
 
