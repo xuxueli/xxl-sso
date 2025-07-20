@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8" />
-    <title>统一认证中心</title>
+    <title>CAS认证中心</title>
 
     <#-- import macro -->
     <#import "common/common.macro.ftl" as netCommon>
@@ -20,7 +20,7 @@
         </div>
         <form id="loginForm" method="post" >
             <div class="login-box-body">
-                <p class="login-box-msg">统一认证中心</p>
+                <p class="login-box-msg">CAS认证中心</p>
                 <div class="form-group has-feedback">
                     <input type="text" name="username" class="form-control" placeholder="Please input username." value="user" maxlength="18" >
                     <span class="glyphicon glyphicon-envelope form-control-feedback"></span>

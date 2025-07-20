@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8" />
-    <title>Cas认证中心</title>
+    <title>CAS认证中心</title>
 
     <#import "common/common.macro.ftl" as netCommon>
     <@netCommon.commonStyle />

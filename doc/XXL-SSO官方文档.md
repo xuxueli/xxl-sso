@@ -14,22 +14,34 @@
 ## 一、简介
 
 ### 1.1 概述
-XXL-SSO 是一个分布式单点登录框架。只需要登录一次就可以访问所有相互信任的应用系统。 拥有"轻量级、分布式、跨域、Cookie+Token均支持、Web+APP均支持"等特性。现已开放源代码，开箱即用。
+XXL-SSO 是 单点登录框架，只需要登录一次就可以访问所有相互信任的应用系统。具备 “轻量级、高扩展、渐进式” 的等特性，支持 “登录认证、权限(角色)认证、分布式会话认证、单点登录、Web登录、Native(前后端分离)登录” 等多登录及认证类型，现已开放源代码，开箱即用。
 
 ### 1.2 特性
 
-- 1、简洁：API直观简洁，可快速上手
-- 2、轻量级：环境依赖小，部署与接入成本较低
-- 3、单点登录：只需要登录一次就可以访问所有相互信任的应用系统
-- 4、分布式：接入SSO认证中心的应用，支持分布式部署
-- 5、HA：Server端与Client端，均支持集群部署，提高系统可用性
-- 6、跨域：支持跨域应用接入SSO认证中心
-- 7、Cookie+Token均支持：支持基于Cookie和基于Token两种接入方式，并均提供Sample项目
-- 8、Web+APP均支持：支持Web和APP接入
-- 9、实时性：系统登陆、注销状态，全部Server与Client端实时共享
-- 10、CS结构：基于CS结构，包括Server"认证中心"与Client"受保护应用"
-- 11、记住密码：未记住密码时，关闭浏览器则登录态失效；记住密码时，支持登录态自动延期，在自定义延期时间的基础上，原则上可以无限延期
-- 12、路径排除：支持自定义多个排除路径，支持Ant表达式,用于排除SSO客户端不需要过滤的路径
+- 1、易用性：支持注解/API多方式接入，一行注解/代码即可实现 登录认证、权限认证、角色认证 等，接入灵活方便；
+- 2、轻量级：针对第三方组件、部署环境零依赖，部署及接入低成本、轻量级；
+- 3、高扩展：得益于模块化抽象设计，各框架组件可灵活扩展；可选用官方提供组件实现或自定义扩展。
+  - 登录态持久化组价（LoginStore）：提供登录态/会话数据持久化能力；官方提供Cache、Redis等组件实现，可选用接入或自定义扩展；
+  - 登录认证组件（Auth）：提供系统登录/认证集成能力；官方提供 Filter（Servlet）和Interceptor（Spring）等实现，可选用接入或自定义扩展；
+  - 登录用户模型（LoginInfo）：提供统一登录用户模型，且模型支持扩展存储自定义扩展属性；
+- 4、渐进式：支持渐进式集成接入使用，从简单到复杂场景，包括：单体Web系统、复杂企业内多系统、互联网多端高并发系统 等，均可接入使用；
+- 5、多登录类型：
+  - Web登录：适用于常规Web系统，不限制接入系统数量；但是限制相关Web系统部署在相同域名下，登录凭证存储在公共域名下；
+  - Native登录：适用于 移动端、小程序、前后端分离系统 等系统，不限制接入系统数量，且无域名限制，支持多端登录；但是登录凭证需要客户端管理维护；
+  - CAS单点登录：适用于多Web系统部署域名不一致场景，解决了系统 跨域登录认证 问题；但是需要单独部署CAS认证中心，CAS认证中心提供单点登录基础能力；
+- 6、多认证方式：
+  - 登录认证：本质为验证用户身份的过程，目的是确认“你是谁”，确保访问者合法可信；
+  - 权限认证：在用户身份认证通过后，校验用户是否具备访问特定资源的权限，决定“你能做什么”；认证维度是“权限”；
+  - 角色认证：在用户身份认证通过后，校验用户是否具备访问特定资源的权限，决定“你能做什么”；认证维度是“角色”；
+- 7、安全性：针对系统框架多个模块落地安全性设计，包括：登录Token安全设计、客户端登录凭证Cookie安全设计、CAS跳转Ticket安全设计 等；
+- 8、分布式会话/认证：支持分布式登录以及会话认证，集成分布式系统可共享的 登录态持久化组价（LoginStore），可选用或参考官方RedisLoginStore；
+- 9、单点登录/注销：针对CAS单点登录场景，提供单点登录及注销能力；
+- 10、高可用/HA：针对CAS单点登录场景，CAS认证中心支持集群部署，并可借助LoginStore实现登录态共享，从而实现系统水平扩展以及高可用；
+- 11、跨域登录认证：针对CAS单点登录场景，支持跨域Web应用接入，解决了系统 跨域登录认证 问题；
+- 12、多端登录认证：针对多端登录场景，如 Web、移动端、小程序 等多端，提供多端登录及认证能力；
+- 13、前后端分离认证：针对前后端分离系统，提供 Native登录 方案，支持前后端分离场景登录认证能力；
+- 14、记住密码：支持记住密码功能；记住密码时，支持登录态自动延期；未记住密码时，关闭浏览器则登录态失效；
+- 15、登录态自动延期：支持自定义登录态有效期窗口，当登录态有效期窗口过半时自动顺延一个周期；
 
 ### 1.3 发展  
 于2018年初，我在github上创建XXL-SSO项目仓库并提交第一个commit，随之进行系统结构设计，UI选型，交互设计……
@@ -44,6 +56,9 @@ XXL-SSO 是一个分布式单点登录框架。只需要登录一次就可以访
     2. 深圳龙华科技有限公司
     3. 摩根国际
     4. 印记云
+    5、小太阳CRM
+    6、盛歌行科技（深圳）有限公司
+    7、苏州安软
 
 > 更多接入的公司，欢迎在 [登记地址](https://github.com/xuxueli/xxl-sso/issues/1 ) 登记，登记仅仅为了产品推广。
 
@@ -408,107 +423,13 @@ SSO User | 登录用户信息，与 SSO SessionId 相对应
 - 3、拼写问题修复；
 
 
-### 核心流程
-
-## sso
-http://xxlssoserver.com:8080/xxl-sso-server/
-## cas
-http://xxlssoclient1.com:8081/xxl-sso-sample-cas/
-http://xxlssoclient2.com:8081/xxl-sso-sample-cas/
-## web
-http://xxlssoclient1.com:8083/xxl-sso-sample-web/
-http://xxlssoclient2.com:8083/xxl-sso-sample-web/test13
-## native
-http://xxlssoclient1.com:8083/xxl-sso-sample-web/
-
-多端登录；
-自动续期；最后操作24H之后，过半续期；
-
-
-- 1、简洁：API直观简洁，可快速上手
-- 2、轻量级：环境依赖小，部署与接入成本较低
-- 3、单点登录：只需要登录一次就可以访问所有相互信任的应用系统
-- 4、分布式：接入SSO认证中心的应用，支持分布式部署
-- 5、HA：Server端与Client端，均支持集群部署，提高系统可用性
-- 6、跨域：支持跨域应用接入SSO认证中心
-- 7、Cookie+Token均支持：支持基于Cookie和基于Token两种接入方式，并均提供Sample项目
-- 8、Web+APP均支持：支持Web和APP接入
-- 9、实时性：系统登陆、注销状态，全部Server与Client端实时共享
-- 10、CS结构：基于CS结构，包括Server"认证中心"与Client"受保护应用"
-- 11、记住密码：未记住密码时，关闭浏览器则登录态失效；记住密码时，支持登录态自动延期，在自定义延期时间的基础上，原则上可以无限延期
-- 12、路径排除：支持自定义多个排除路径，支持Ant表达式,用于排除SSO客户端不需要过滤的路径
-
-- Now：
-  - module
-    - server: openapi + login-page
-    - client  token + web 
-  - auth
-    - token (app)：
-      - client (login) -> sso server(openapi) : generate + server-store [token], client-store [token] (such as: localstorage、sqllite...)
-      - client (logincheck) -> sso client (filter [header]): valid token, success
-      - client (loginout) -> sso server(openapi) : delete token
-    - web: 
-      - client (login1) -> sso client (filter [cookie]): redirect 2 sso-sercer
-      - sso-sercer (login page): generate + server-store [token], cookie store [token], redirect back 2 sso-client
-      - client (logincheck) -> sso client (filter [cookie]): valid token, success
-      - client (loginout) -> sso client(filter) : delete token, redirect 2 sso-server
-
-- Next：
-    - module
-      - server：SsoServer
-        - Openapi: // login（写loginInfo）、logout、loginCheck、checkPermission、checkRole
-        - Login page: 
-      - client：
-        - Filter: login check, redirect 2 sso-server(web)
-        - SDK: loginout、logincheck
-        - // 安全：ip、黑名单；
-    - store:
-        - server: redis（天然统一；写token：loginInfo）
-        - filter: cookie（server读写）, header（k&v返回，前端处理） // redis（读token）
-        - client: cookie（跨域共享问题）, other（天然共享；localstorage/sqllite...）
-    - auth：
-        - Web (cookie): browser + client + server, 页面跳转, 跨域cookie复制；
-        - Native (header)：browser + client + server，openapi请求 + 客户端存token, 请求header携带；
-    - pachage
-      - model：LoginInfo/登录态数据
-        - 用户实体（LoginUser）：{UserId、UserName、RealName、Extra/Map}
-        - 权限实体（RolePermissions）：List<Role, List<Permission>>;
-        - 登录设置（Setting）：expireTime；autoRenew; 租户；
-      - store：LoginStore/登录数据持久化
-        - 抽象扩展：写入（TTL）、删除、查询
-        - 默认实现：localCache、redis、db、
-      - token：
-        - API：生成，检验
-        - 扩展：uuid、用户hash；
-      - filter + helper：
-        - Web：
-              - 相同域名；cookie存储登录token；
-              - XxlSsoWebFilter：1、存储：前端cookie存储token，服务端：直连Store&验证token；2、逻辑：未登录，跳转登录页，写token + 写cookie；已登录，store查询验证cookie；
-              - XxlSsoWebHelper：login（入参logininfo + request，更新cookie+store）、logout（入参request，更新cookie+store）、check（cookie + store）
-        - Cas：【ING】
-              - 不同域名；cookie存储登录token；解决跨域问题（多域名下cookie共享）问题；
-              - CasFilter：1、存储：前端cookie存储token，服务端：直连Store&验证token；2、逻辑：未登录1，跳转SSO登录页；未登录2，判定从SSO跳回，验证cookie + 写cookie；已登录，store查询验证cookie；
-              - CasServerFilter：3、逻辑：未登录，跳登录页，写token + 写cookie，携带cookie跳回Client原始链接；已登录，携带cookie跳回Client原始链接；
-              - CasHelper：login（入参logininfo + request，更新cookie+store）、logout（入参request，更新cookie+store）、check（cookie + store）
-        - Native：【Done】
-              - 终端自定义存储token，不依赖cookie及域名；header认证；
-              - NativeFilter：1、存储：前端，自定义存cookie，header传输token；服务端，直连Store&验证token；2、逻辑：未登录，提示登录失败，客户端请求登录openapi，写token + 存cookie；已登录，store查询验证cookie；
-              - NativeHelper：login/logout（入参logininfo + 更新store）、check（入参cookie + 验证store）
-- 4、sample：
-    - Web：认证中心（登录页） + Client应用（与SSOServer联动）
-    - Native：认证中心（openapi） + Client应用（token校验）
-
 
 ### TODO LIST
-- 1、认证中心与接入端交互数据加密，增强安全性；redirect_url必须和临时AccessToken配合才会生效，AccessToken有效期60s，阅后即焚模式；
-- 2、SSO SessionId 与IP绑定，增强用户增强安全性
-- 3、支持认证分组，分组内共享登陆状态，分组之间登录态隔离，【待考虑】
-- 4、客户端新增属性 "xxl.sso.server"，用于构建跳转连接，防止跳转第三方导致登陆漏洞
-- 5、token验证方式增加jwt方式支持
-- 6、Client端移除Redis依赖，改为 LocalCache/30s + RPC + Server-Redis/Broadcast 校验方式；
-- 7、安全性增强，登陆用户数据中，新增客户端信息如ip、ua等，方式session被窃取；
-- 8、集成网关支持；
-- 9、[迭代中]spring mvc 版本示例；
+- 1、增强用户增强安全性：登陆用户数据中，新增客户端信息如ip、ua等，防止session被窃取；
+- 2、认证中心与接入端交互数据加密，临时AccessToken阅后即焚，增强安全性；
+- 3、CAS认证中心，支持维护客户端应用；防止跳转非法第三方导致登陆信息泄露；
+- 4、集成网关支持；
+- 5、支持认证分组，分组内共享登陆状态，分组之间登录态隔离，
 
 
 ## 六、其他
