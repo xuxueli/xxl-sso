@@ -843,7 +843,6 @@ Response<String> result = XxlSsoHelper.hasPermission(LoginInfo loginInfo, String
 - 10、项目结构梳理，清理冗余依赖，升级多项依赖版本至较近版本
 - 11、路径排除：新增自定义属性 "excludedPaths"，允许设置多个，且支持Ant表达式。用于排除SSO客户端不需要过滤的路径
 
-
 ### 5.3 版本 v1.2.0 Release Notes [2025-07-27]
 - 1、【重构】XXL-SSO 核心代码重构，基于“模块化”与“渐进式”设计思想，在轻量级、高扩展、渐进式的基础上，强化多登录类型、多认证方式等系统能力；
 - 2、【增强】渐进式：支持渐进式集成接入使用，从简单到复杂场景，包括：单体系统(Web常规登录)、复杂企业内多系统(CAS单点登录)、互联网多端&高并发系统(Native登录) 等，均可接入使用；
@@ -858,13 +857,18 @@ Response<String> result = XxlSsoHelper.hasPermission(LoginInfo loginInfo, String
 - 5、【新增】安全性：针对系统框架多个模块落地安全性设计，包括：登录Token安全设计、客户端登录凭证Cookie安全设计、CAS跳转Ticket安全设计 等；
 - 6、【优化】升级多项依赖至较新版本；
 
+### 5.4 版本 v1.2.1 Release Notes [迭代中]
+- 1、【ING】集成WebFlux、Spring-Cloud-Gateway，并提供接入示例；
+- 2、【ING】增强用户增强安全性：登陆用户数据中，新增客户端信息如ip、ua等，防止token被窃取；
+
 
 ### TODO LIST
-- 1、增强用户增强安全性：登陆用户数据中，新增客户端信息如ip、ua等，防止session被窃取；
+- 1、增强用户增强安全性：登陆用户数据中，新增客户端信息如ip、ua等，防止token被窃取；
 - 2、认证中心与接入端交互数据加密，临时AccessToken阅后即焚，增强安全性；
 - 3、CAS认证中心，支持维护客户端应用；防止跳转非法第三方导致登陆信息泄露；
 - 4、集成网关支持；集成WebFlux, Spring-Cloud-Gateway等；
-- 5、支持认证分组，分组内共享登陆状态，分组之间登录态隔离，
+- 5、支持认证分组，分组内共享登陆状态，分组之间登录态隔离；
+- 6、账号中心模块：提供开箱即用账号中心模块，进一步提升用户接入体验；
 
 
 ## 六、其他
