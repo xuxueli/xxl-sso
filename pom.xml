@@ -28,12 +28,12 @@
         <!-- plugin -->
         <maven-source-plugin.version>3.3.1</maven-source-plugin.version>
         <maven-javadoc-plugin.version>3.11.2</maven-javadoc-plugin.version>
-        <maven-gpg-plugin.version>3.2.7</maven-gpg-plugin.version>
-        <central-publishing-maven-plugin.version>0.7.0</central-publishing-maven-plugin.version>
+        <maven-gpg-plugin.version>3.2.8</maven-gpg-plugin.version>
+        <central-publishing-maven-plugin.version>0.8.0</central-publishing-maven-plugin.version>
 
         <!-- base -->
         <slf4j-api.version>2.0.17</slf4j-api.version>
-        <junit-jupiter.version>5.13.1</junit-jupiter.version>
+        <junit-jupiter.version>5.13.4</junit-jupiter.version>
 
         <!-- servlet -->
         <javax.servlet-api.version>4.0.1</javax.servlet-api.version>
