@@ -8,7 +8,7 @@
     <packaging>pom</packaging>
 
     <name>${project.artifactId}</name>
-    <description>a distributed single-sign-on framework.</description>
+    <description>A distributed single-sign-on framework.</description>
     <url>https://www.xuxueli.com/</url>
 
     <modules>
@@ -145,6 +145,16 @@
                         <extensions>true</extensions>
                         <configuration>
                             <publishingServerId>central</publishingServerId>
+                            <excludeArtifacts>
+                                <artifact>xxl-sso-server</artifact>
+                                <artifact>xxl-sso-samples</artifact>
+                                <artifact>xxl-sso-sample-cas</artifact>
+                                <artifact>xxl-sso-sample-native</artifact>
+                                <artifact>xxl-sso-sample-web</artifact>
+                                <artifact>xxl-sso-sample-filter-cas</artifact>
+                                <artifact>xxl-sso-sample-filter-native</artifact>
+                                <artifact>xxl-sso-sample-filter-web</artifact>
+                            </excludeArtifacts>
                         </configuration>
                     </plugin>
                 </plugins>

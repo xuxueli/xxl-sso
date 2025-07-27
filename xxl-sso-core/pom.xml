@@ -11,6 +11,10 @@
     <artifactId>xxl-sso-core</artifactId>
     <packaging>jar</packaging>
 
+    <name>${project.artifactId}</name>
+    <description>A distributed single-sign-on framework.</description>
+    <url>https://www.xuxueli.com/</url>
+
     <dependencies>
 
         <!-- slf4j -->
