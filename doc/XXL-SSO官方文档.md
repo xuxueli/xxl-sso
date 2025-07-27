@@ -14,7 +14,7 @@
 ## 一、简介
 
 ### 1.1 概述
-XXL-SSO 是 单点登录框架，只需要登录一次就可以访问所有相互信任的应用系统。具备 “轻量级、高扩展、渐进式” 的等特性，支持 “登录认证、权限认证、角色认证、分布式会话认证、单点登录、Web登录、前后端分离” 等多登录及认证类型，现已开放源代码，开箱即用。
+XXL-SSO 是 单点登录框架，只需要登录一次就可以访问所有相互信任的应用系统。具备 “轻量级、高扩展、渐进式” 的等特性，支持 “登录认证、权限认证、角色认证、分布式会话认证、单点登录、Web常规登录、前后端分离” 等多登录及认证类型，现已开放源代码，开箱即用。
 
 ### 1.2 特性
 
@@ -24,10 +24,10 @@ XXL-SSO 是 单点登录框架，只需要登录一次就可以访问所有相�
   - 登录态持久化组价（LoginStore）：提供登录态/会话数据持久化能力；官方提供Cache、Redis等组件实现，可选用接入或自定义扩展；
   - 登录认证组件（Auth）：提供系统登录/认证集成能力；官方提供 Filter（Servlet）和Interceptor（Spring）等实现，可选用接入或自定义扩展；
   - 登录用户模型（LoginInfo）：提供统一登录用户模型，且模型支持扩展存储自定义扩展属性；
-- 4、渐进式：支持渐进式集成接入使用，从简单到复杂场景，包括：单体系统(Web登录)、复杂企业内多系统(CAS单点登录)、互联网多端&高并发系统(Native登录) 等，均可接入使用；
+- 4、渐进式：支持渐进式集成接入使用，从简单到复杂场景，包括：单体系统(Web常规登录)、复杂企业内多系统(CAS单点登录)、互联网多端&高并发系统(Native登录) 等，均可接入使用；
 - 5、多登录类型：
-  - Web登录：适用于常规“单体系统”场景；限制相关Web系统部署在相同域名下，登录凭证存储在公共域名下；
-  - Native登录：适用于“移动端、小程序、前后端分离、客户端”等系统场景；无域名限制、支持多端登录，但是登录凭证需要客户端管理维护；
+  - Web常规登录：适用于常规“单体系统”场景；限制相关Web系统部署在相同域名下，登录凭证存储在公共域名下；
+  - Native登录：适用于“移动端、小程序、前后端分离、客户端”等系统场景；适用于无Cookie场景，天然不受限域名。支持多端登录、以及登录态共享，但是登录凭证需要客户端管理维护；
   - CAS单点登录：适用于“多系统跨域、企业多系统统一登录”等系统场景；解决了系统 跨域登录认证、统一登录认证 问题；但是需要单独部署CAS认证中心、提供单点登录相关基础能力；
 - 6、多认证方式：
   - 登录认证：本质为验证用户身份的过程，目的是确认“你是谁”，确保访问者合法可信；
@@ -103,19 +103,19 @@ XXL-SSO 是 单点登录框架，只需要登录一次就可以访问所有相�
 ### 2.1、项目编译    
 XXL-SSO 作为单点登录框架，支持业务渐进式集成接入使用。结合系统及业务特征差异，仓库代码提供三种业务中接入示例：
 
-**1、Web登录**：适用于常规“单体系统”场景；限制相关Web系统部署在相同域名下，登录凭证存储在公共域名下；
-**2、Native登录**：适用于“移动端、小程序、前后端分离、客户端”等系统场景；无域名限制、支持多端登录，但是登录凭证需要客户端管理维护；
+**1、Web常规登录**：适用于常规“单体系统”场景；限制相关Web系统部署在相同域名下，登录凭证存储在公共域名下；
+**2、Native登录**：适用于“移动端、小程序、前后端分离、客户端”等系统场景；适用于无Cookie场景，天然不受限域名。支持多端登录、以及登录态共享，但是登录凭证需要客户端管理维护；
 **3、CAS单点登录**：适用于“多系统跨域、企业多系统统一登录”等系统场景；解决了系统 跨域登录认证、统一登录认证 问题；但是需要单独部署CAS认证中心、提供单点登录相关基础能力；
 
 ```
 - xxl-sso-core: 客户端 核心依赖, 提供登录态持久化、登录认证及权限认证等能力；
 - xxl-sso-server: CAS认证中心，仅 “CAS单点登录” 场景下才会使用；
 - xxl-sso-samples：接入示例项目
-    - xxl-sso-sample-web: Web登录方式，Interceptor（Spring）接入示例；
+    - xxl-sso-sample-web: Web常规登录方式，Interceptor（Spring）接入示例；
     - xxl-sso-sample-native: Native登录，Interceptor（Spring）接入示例；
     - xxl-sso-sample-cas: CAS单点登录，Interceptor（Spring）接入示例；
     - filter：
-        - xxl-sso-sample-filter-web: Web登录方式，Filter（Servlet）接入示例；
+        - xxl-sso-sample-filter-web: Web常规登录方式，Filter（Servlet）接入示例；
         - xxl-sso-sample-filter-native: Native登录，Filter（Servlet）接入示例；
         - xxl-sso-sample-filter-cas: CAS单点登录，Filter（Servlet）接入示例；
 ```
@@ -130,8 +130,8 @@ XXL-SSO 作为单点登录框架，支持业务渐进式集成接入使用。结
 127.0.0.1 xxlssoclient2.com
 ```
 
-### 2.3、接入项目示例（Web登录） 
-**Web登录**：适用于常规“单体系统”场景；限制相关Web系统部署在相同域名下，登录凭证存储在公共域名下；
+### 2.3、接入项目示例（Web常规登录） 
+**Web常规登录**：适用于常规“单体系统”场景；限制相关Web系统部署在相同域名下，登录凭证存储在公共域名下；
 **接入示例项目**：xxl-sso-sample-web
 
 #### 第一步、引入Maven依赖
@@ -188,7 +188,7 @@ public XxlSsoBootstrap xxlSsoBootstrap() {
 public void addInterceptors(InterceptorRegistry registry) {
 
     // 2.1、build xxl-sso interceptor 
-    XxlSsoWebInterceptor webInterceptor = new XxlSsoWebInterceptor(excludedPaths, loginPath);   // 【专门用于支持 “Web登录” 的 XXL-SSO 拦截器】
+    XxlSsoWebInterceptor webInterceptor = new XxlSsoWebInterceptor(excludedPaths, loginPath);   // 【专门用于支持 “Web常规登录” 的 XXL-SSO 拦截器】
 
     // 2.2、add interceptor
     registry.addInterceptor(webInterceptor).addPathPatterns("/**");
@@ -344,7 +344,7 @@ public Response<String> test41(HttpServletRequest request) {
 ```
 
 ### 2.4、接入项目示例（Native登录）
-**Native登录**：适用于“移动端、小程序、前后端分离、客户端”等系统场景；无域名限制、支持多端登录，但是登录凭证需要客户端管理维护；
+**Native登录**：适用于“移动端、小程序、前后端分离、客户端”等系统场景；适用于无Cookie场景，天然不受限域名。支持多端登录、以及登录态共享，但是登录凭证需要客户端管理维护；
 **接入示例项目**：xxl-sso-sample-native
 
 #### 第一步、引入Maven依赖
@@ -408,7 +408,7 @@ public void addInterceptors(InterceptorRegistry registry) {
 
 #### 第四步、代码中进行 XXL-SSO 登录验证、权限验证    
 忽略。
-> 该示例场景与章节 “2.3、接入项目示例（Web登录） 》 第四步、代码中进行 XXL-SSO 登录验证、权限验证” 使用方式一致，如有诉求可参考上文章节，此处不赘述。
+> 该示例场景与章节 “2.3、接入项目示例（Web常规登录） 》 第四步、代码中进行 XXL-SSO 登录验证、权限验证” 使用方式一致，如有诉求可参考上文章节，此处不赘述。
 
 #### 第五步、Native登录认证 OpenAPI 
 Native登录认证 OpenAPI 代码位置：xxl-sso-sample-native/src/main/java/com/xxl/sso/sample/openapi/controller/NativeOpenAPIController
@@ -581,7 +581,7 @@ public void addInterceptors(InterceptorRegistry registry) {
 
 #### 第四步、代码中进行 XXL-SSO 登录验证、权限验证
 忽略。
-> 该示例场景与章节 “2.3、接入项目示例（Web登录） 》 第四步、代码中进行 XXL-SSO 登录验证、权限验证” 使用方式一致，如有诉求可参考上文章节，此处不赘述。
+> 该示例场景与章节 “2.3、接入项目示例（Web常规登录） 》 第四步、代码中进行 XXL-SSO 登录验证、权限验证” 使用方式一致，如有诉求可参考上文章节，此处不赘述。
 
 #### 第五步、验证
 经过上述配置之后，启动示例项目。整体项目模块，以及可访问域名地址如下。
@@ -639,20 +639,81 @@ XXL-SSO 整体基于 模块化领域抽象设计，各领域模块可灵活扩�
 
 XXL-SSO 支持多种登录类型，支持渐进式集成接入使用，从简单到复杂场景，包括：单体系统、前后端分离、多系统跨域、复杂企业内多系统、互联网多端&高并发系统…等，均可接入使用；
 
-| 登录类型          | 适用场景                 | 说明介绍
-|---------------|----------------------| ---
-| **Web登录**     | 单体系统                 |     限制相关Web系统部署在相同域名下，登录凭证存储在公共域名下；
-| **Native登录**  | 移动端、小程序、前后端分离、客户端/终端 | 无域名限制、支持多端登录，但是登录凭证需要客户端管理维护；
-| **CAS单点登录**   | 多系统跨域、企业多系统统一登录      | 解决了系统 跨域登录认证、统一登录认证 问题；但是需要单独部署CAS认证中心、提供单点登录相关基础能力；
+| 登录类型         | 适用场景                 | 说明介绍
+|--------------|----------------------| ---
+| **Web常规登录**  | 单体系统                 |     限制相关Web系统部署在相同域名下，登录凭证存储在公共域名下；
+| **Native登录** | 移动端、小程序、前后端分离、客户端/终端 | 适用于无Cookie场景，天然不受限域名。支持多端登录、以及登录态共享，但是登录凭证需要客户端管理维护；
+| **CAS单点登录**  | 多系统跨域、企业多系统统一登录      | 解决了系统 跨域登录认证、统一登录认证 问题；但是需要单独部署CAS认证中心、提供单点登录相关基础能力；
 
 ### 4.5、核心流程剖析
-#### 4.5.1、核心流程剖析：“Web登录”
+#### 4.5.1、登录类型：“Web常规登录”
+适用于常规“单体系统”场景；限制相关Web系统部署在相同域名下，登录凭证存储在公共域名下；
 
-TODO-
+![输入图片说明](https://www.xuxueli.com/doc/static/xxl-sso/images/img_07.png "在这里输入图片标题")
 
-#### 4.5.2、核心流程剖析：“Native登录”
+a、登录信息实体：
+  - token：登录态标识信息，根据登录态信息（LoginInfo）结合算法生成；
+  - LoginInfo：登录态数据，包括登录 用户信息、权限/角色信息、设置类信息 等；
 
-#### 4.5.3、核心流程剖析：“CAS单点登录”
+b、登录信息存储：
+  - 客户端（Web）：存储在 统一域名Cookie中；
+  - 服务端（后端）：存储在 LoginStore 中，原生提供 LocalLoginStore（本地缓存） 、RedisLoginStore（Redis） 等多种实现可选用，也可以自定义定制实现；
+
+c、登录态识别：
+  - cookie：统一域名下存储认证“cookie”（key支持自定义，value为登录token），服务端解析并识别登录态；
+
+d、核心流程：
+  - 登录流程：
+      - a、访问系统应用（xxl-sso-sample-web），未登录将通过 Interceptor 拦截，并主动跳转 “/login” 路径进入登录页面；
+      - b、登录成功，服务端构建 LoginInfo 写入 LoginStore；生成登录 token 写入 统一域名 Cookie中；
+      - c、跳转返回来源页面，Interceptor 拦截器校验 统一域名 Cookie 中 token ，校验通过放行；
+  - 注销流程：客户端访问 “/logout” 路径，进行注销登录，并跳转登录页面；
+  - 认证流程：客户端请求，将携带域名下认证 “cookie”，服务端解析token，从 LoginStore 中获取登录态信息；
+
+#### 4.5.2、登录类型：“Native登录”
+适用于“移动端、小程序、前后端分离、客户端”等系统场景；适用于无Cookie场景，天然不受限域名。支持多端登录、以及登录态共享，但是登录凭证需要客户端管理维护；
+
+![输入图片说明](https://www.xuxueli.com/doc/static/xxl-sso/images/img_08.png "在这里输入图片标题")
+
+a、登录信息实体：
+  - token：登录态标识信息，根据登录态信息（LoginInfo）结合算法生成；
+  - LoginInfo：登录态数据，包括登录 用户信息、权限/角色信息、设置类信息 等；
+
+b、登录信息存储：
+  - 客户端（APP/Web）：自定义存储介质，如 localStorage（Web）、Sqlite（APP）；针对登录后获取的 token 进行存储管理；
+  - 服务端（后端）：存储在 LoginStore 中，原生提供 LocalLoginStore（本地缓存） 、RedisLoginStore（Redis） 等多种实现可选用，也可以自定义定制实现；
+    
+c、登录态识别：
+  - header：客户端请求设置认证 “header”（key支持自定义，value为登录token），服务端解析 header 识别登录态；
+ 
+d、核心流程：
+  - 登录流程：客户端请求 “登录openapi接口”进行登录。服务端构建 LoginInfo 并生成登录 token；服务端通过LoginStore存储LoginInfo；客户端获取 “登录token”并存储管理；
+  - 注销流程：客户端请求 “注销openapi接口”进行注销。服务端解析认证header，从 LoginStore 中移除登录态信息；客户端移除维护的登录token；
+  - 认证流程：客户端请求设置认证 “header”，服务端解析token，从 LoginStore 中获取登录态信息；
+
+#### 4.5.3、登录类型：“CAS单点登录”
+适用于“多系统跨域、企业多系统统一登录”等系统场景；解决了系统 跨域登录认证、统一登录认证 问题；但是需要单独部署CAS认证中心、提供单点登录相关基础能力；
+
+![输入图片说明](https://www.xuxueli.com/doc/static/xxl-sso/images/img_09.png "在这里输入图片标题")
+
+a、登录信息实体：
+  - token：登录态标识信息，根据登录态信息（LoginInfo）结合算法生成；
+  - LoginInfo：登录态数据，包括登录 用户信息、权限/角色信息、设置类信息 等；
+
+b、登录信息存储：
+  - 客户端（Web）：存储在 域名Cookie中；在 CasSercer 域名、业务域名下，登录Cookie进行存储以及数据同步；
+  - 服务端（后端）：存储在 LoginStore 中，原生提供 LocalLoginStore（本地缓存） 、RedisLoginStore（Redis） 等多种实现可选用，也可以自定义定制实现；
+
+c、登录态识别：
+  - cookie：客户端域名下存储认证“cookie”（key支持自定义，value为登录token），服务端解析并识别登录态；
+
+d、核心流程：
+  - 登录流程：
+      - a、访问 “Client应用（xxl-sso-sample-cas）”，未登录将通过 Interceptor 拦截，并主动跳转 “CasServer（xxl-sso-server）” 进入登录页面；
+      - b、登录成功，服务端构建 LoginInfo 写入 LoginStore，生成登录 token 写入 CasServer 域名 Cookie中；然后，携带登录token 并跳转返回； “Client应用（xxl-sso-sample-cas）”；
+      - c、跳转返回 “Client应用（xxl-sso-sample-cas）”，校验所携带登录token，写入 Client应用 域名 Cookie 中；
+  - 注销流程：客户端访问 “CasServer（xxl-sso-server）” 注销登录页面；将跳转 “CasServer（xxl-sso-server）” 进入登录页面；
+  - 认证流程：客户端请求，将携带域名下认证 “cookie”，服务端解析token，从 LoginStore 中获取登录态信息；
 
 
 ### 4.6、XXL-SSO核心组件
