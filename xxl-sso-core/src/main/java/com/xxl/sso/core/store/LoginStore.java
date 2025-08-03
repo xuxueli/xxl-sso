@@ -48,20 +48,20 @@ public interface LoginStore {
     Response<String> update(LoginInfo loginInfo);
 
     /**
-     * get LoginInfo
-     *
-     * @param userId     the userId of LoginInfo
-     * @return
-     */
-    Response<LoginInfo> get(String userId);
-
-    /**
      * remove LoginInfo
      *
      * @param userId    the userId of LoginInfo
      * @return
      */
     Response<String> remove(String userId);
+
+    /**
+     * get LoginInfo
+     *
+     * @param userId     the userId of LoginInfo
+     * @return
+     */
+    Response<LoginInfo> get(String userId);
 
 
     // ---------------------- for cas ----------------------

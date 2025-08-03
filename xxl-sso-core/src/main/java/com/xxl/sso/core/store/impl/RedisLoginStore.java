@@ -135,6 +135,22 @@ public class RedisLoginStore implements LoginStore {
     }
 
     @Override
+    public Response<String> remove(String userId) {
+
+        // valid userId
+        if (StringTool.isBlank(userId)) {
+            return Response.ofFail("userId invalid.");
+        }
+
+        // generate storeKey
+        String storeKey = parseStoreKey(userId);
+
+        // remove
+        jedisTool.del(storeKey);
+        return Response.ofSuccess();
+    }
+
+    @Override
     public Response<LoginInfo> get(String userId) {
 
         // valid userId
@@ -158,22 +174,6 @@ public class RedisLoginStore implements LoginStore {
         }
 
         return Response.ofSuccess(loginInfo);
-    }
-
-    @Override
-    public Response<String> remove(String userId) {
-
-        // valid userId
-        if (StringTool.isBlank(userId)) {
-            return Response.ofFail("userId invalid.");
-        }
-
-        // generate storeKey
-        String storeKey = parseStoreKey(userId);
-
-        // remove
-        jedisTool.del(storeKey);
-        return Response.ofSuccess();
     }
 
     @Override
