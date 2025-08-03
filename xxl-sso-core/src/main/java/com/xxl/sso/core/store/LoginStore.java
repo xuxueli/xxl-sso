@@ -1,5 +1,6 @@
 package com.xxl.sso.core.store;
 
+import com.xxl.sso.core.exception.XxlSsoException;
 import com.xxl.sso.core.model.LoginInfo;
 import com.xxl.tool.response.Response;
 
@@ -16,12 +17,16 @@ public interface LoginStore {
     /**
      * start
      */
-    public void start();
+    default void start() {
+        // default do nothing
+    }
 
     /**
      * stop
      */
-    public void stop();
+    default void stop() {
+        // default do nothing
+    }
 
 
     // ---------------------- for token ----------------------
@@ -32,7 +37,7 @@ public interface LoginStore {
      * @param   loginInfo   will be stored with key-userId
      * @return
      */
-    public Response<String> set(LoginInfo loginInfo);
+    Response<String> set(LoginInfo loginInfo);
 
     /**
      * update LoginInfo
@@ -40,7 +45,7 @@ public interface LoginStore {
      * @param loginInfo
      * @return
      */
-    public Response<String> update(LoginInfo loginInfo);
+    Response<String> update(LoginInfo loginInfo);
 
     /**
      * get LoginInfo
@@ -48,7 +53,7 @@ public interface LoginStore {
      * @param userId     the userId of LoginInfo
      * @return
      */
-    public Response<LoginInfo> get(String userId);
+    Response<LoginInfo> get(String userId);
 
     /**
      * remove LoginInfo
@@ -56,7 +61,7 @@ public interface LoginStore {
      * @param userId    the userId of LoginInfo
      * @return
      */
-    public Response<String> remove(String userId);
+    Response<String> remove(String userId);
 
 
     // ---------------------- for cas ----------------------
@@ -64,19 +69,23 @@ public interface LoginStore {
     /**
      * create ticket of token
      *
-     * @param   userId          the userId of ticket
-     * @param   token           the token of ticket
-     * @param   ticketTimeout   for millisecond, limit 1s - 3min
-     * @return  Response.data is ticket
+     * @param userId        the userId of ticket
+     * @param token         the token of ticket
+     * @param ticketTimeout for millisecond, limit 1s - 3min
+     * @return Response.data is ticket
      */
-    public Response<String> createTicket(String userId, String token, long ticketTimeout);
+    default Response<String> createTicket(String userId, String token, long ticketTimeout) {
+        throw new XxlSsoException("default not support.");
+    }
 
     /**
      * valid ticket of token
      *
-     * @param   ticket          cas ticket
-     * @return  Response.data is token
+     * @param ticket cas ticket
+     * @return Response.data is token
      */
-    public Response<String> validTicket(String ticket);
+    default Response<String> validTicket(String ticket) {
+        throw new XxlSsoException("default not support.");
+    }
 
 }

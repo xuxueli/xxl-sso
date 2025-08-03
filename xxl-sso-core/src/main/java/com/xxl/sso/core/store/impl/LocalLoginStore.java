@@ -1,6 +1,5 @@
 package com.xxl.sso.core.store.impl;
 
-import com.xxl.sso.core.exception.XxlSsoException;
 import com.xxl.sso.core.model.LoginInfo;
 import com.xxl.sso.core.store.LoginStore;
 import com.xxl.tool.core.StringTool;
@@ -24,14 +23,6 @@ public class LocalLoginStore implements LoginStore {
      */
     private String parseStoreKey(String userId){
         return userId;
-    }
-
-    @Override
-    public void start() {
-    }
-
-    @Override
-    public void stop() {
     }
 
     @Override
@@ -132,16 +123,6 @@ public class LocalLoginStore implements LoginStore {
         // remove
         loginStore.remove(storeKey);
         return Response.ofSuccess();
-    }
-
-    @Override
-    public Response<String> createTicket(String userId, String token, long ticketTimeout) {
-        throw new XxlSsoException("LocalLoginStore not support createTicket");
-    }
-
-    @Override
-    public Response<String> validTicket(String ticket) {
-        throw new XxlSsoException("LocalLoginStore not support validTicket");
     }
 
 }
