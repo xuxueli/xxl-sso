@@ -862,9 +862,11 @@ Response<String> result = XxlSsoHelper.hasPermission(LoginInfo loginInfo, String
 - 2、【安全】登录信息安全升级，登录态签名支持扩展及自定义；
 - 2、【优化】升级多项依赖至较新版本，如jedis等；
 
-### 5.5 版本 v2.0.0 Release Notes [迭代中]
+### 5.5 版本 v2.0.0 Release Notes [2025-08-10]
 - 1、【升级】项目升级JDK17；
 - 2、【升级】升级多项依赖至较新版本，如jakarta、spring等，适配JDK17；
+
+### 5.6 版本 v2.0.1 Release Notes [迭代中]
 - 3、【ING】集成WebFlux、Spring-Cloud-Gateway，并提供接入示例；
 - 4、【ING】增强用户增强安全性：登陆用户数据中，新增客户端信息如ip、ua等，防止token被窃取；
 

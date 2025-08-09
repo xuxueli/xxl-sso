@@ -7,12 +7,12 @@ import com.xxl.sso.core.path.impl.AntPathMatcher;
 import com.xxl.tool.core.StringTool;
 import com.xxl.tool.gson.GsonTool;
 import com.xxl.tool.response.Response;
+import jakarta.servlet.*;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.servlet.*;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
