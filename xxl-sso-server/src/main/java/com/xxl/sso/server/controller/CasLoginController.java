@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -113,10 +114,10 @@ public class CasLoginController {
     @ResponseBody
     public Response<String> doLogin(HttpServletRequest request,
                                     HttpServletResponse response,
-                                    String username,
-                                    String password,
-                                    String ifRemember,
-                                    String redirectUrl) {
+                                    @RequestParam("username") String username,
+                                    @RequestParam("password") String password,
+                                    @RequestParam(value = "ifRemember", required = false) String ifRemember,
+                                    @RequestParam(value = "redirectUrl", required = false) String redirectUrl) {
 
         // process param
         boolean ifRem = "on".equals(ifRemember);
