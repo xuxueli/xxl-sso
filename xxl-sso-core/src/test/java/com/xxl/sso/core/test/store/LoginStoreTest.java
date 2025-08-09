@@ -27,10 +27,10 @@ public class LoginStoreTest {
         LoginInfo loginInfo = new LoginInfo();
         loginInfo.setUserId("666");
         loginInfo.setUserName("zhagnsan");
-        loginInfo.setVersion(UUIDTool.getSimpleUUID());
         loginInfo.setRoleList(Arrays.asList("role1", "role2"));
         loginInfo.setPermissionList(Arrays.asList("permission1", "permission2"));
         loginInfo.setExpireTime(System.currentTimeMillis() + Const.EXPIRE_TIME_FOR_7_DAY);
+        loginInfo.setSignature(UUIDTool.getSimpleUUID());
 
         // set
         Response<String> ret = loginStore.set(loginInfo);
@@ -65,10 +65,10 @@ public class LoginStoreTest {
         LoginInfo loginInfo = new LoginInfo();
         loginInfo.setUserId("666");
         loginInfo.setUserName("zhagnsan");
-        loginInfo.setVersion(UUIDTool.getSimpleUUID());
         loginInfo.setRoleList(Arrays.asList("role1", "role2"));
         loginInfo.setPermissionList(Arrays.asList("permission1", "permission2"));
         loginInfo.setExpireTime(System.currentTimeMillis() + Const.EXPIRE_TIME_FOR_7_DAY);
+        loginInfo.setSignature(UUIDTool.getSimpleUUID());
 
         // set
         Response<String> ret = loginStore.set(loginInfo);

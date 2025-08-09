@@ -21,12 +21,12 @@ public class TokenHelper {
      */
     public static Response<String> generateToken(LoginInfo loginInfo){
         // valid loginInfo
-        if (loginInfo==null || StringTool.isBlank(loginInfo.getUserId()) || StringTool.isBlank(loginInfo.getVersion())) {
+        if (loginInfo==null || StringTool.isBlank(loginInfo.getUserId()) || StringTool.isBlank(loginInfo.getSignature())) {
             return Response.ofFail("generateToken fail, invalid loginInfo.");
         }
 
         // generate token-LoginInfo, only contains: userId + version
-        LoginInfo loginInfoForToken = new LoginInfo(loginInfo.getUserId(), loginInfo.getVersion());
+        LoginInfo loginInfoForToken = new LoginInfo(loginInfo.getUserId(), loginInfo.getSignature());
 
         // generate token
         String json = GsonTool.toJson(loginInfoForToken);

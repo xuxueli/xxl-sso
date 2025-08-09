@@ -858,7 +858,8 @@ Response<String> result = XxlSsoHelper.hasPermission(LoginInfo loginInfo, String
 - 6、【优化】升级多项依赖至较新版本；
 
 ### 5.4 版本 v1.3.0 Release Notes [2025-08-10]
-- 1、【优化】LoginStore优化，针对可选接口添加默认实现，避免实现类组件中进行不必要的方法重写；
+- 1、【优化】登录持久化组件优化，LoginStore可选接口添加默认实现，避免扩展组件进行不必要方法重写；
+- 2、【安全】登录信息安全升级，登录态signature属性支持定制生成；
 - 2、【优化】升级多项依赖至较新版本，如jedis等；
 
 ### 5.5 版本 v2.0.0 Release Notes [迭代中]
@@ -875,6 +876,9 @@ Response<String> result = XxlSsoHelper.hasPermission(LoginInfo loginInfo, String
 - 4、集成网关支持；集成WebFlux, Spring-Cloud-Gateway等；
 - 5、支持认证分组，分组内共享登陆状态，分组之间登录态隔离；
 - 6、账号中心模块：提供开箱即用账号中心模块，进一步提升用户接入体验；
+- 7、隔离升级：
+  - 租户：store数据，前后端key 隔离；
+  - 多端：隔离登陆态，map存多token（用户最长有效期，map维护本次有效期）；
 
 
 ## 六、其他

@@ -204,7 +204,7 @@ public class XxlSsoHelper {
 
         // parse token
         LoginInfo loginInfoForToken = TokenHelper.parseToken(token);
-        if (loginInfoForToken == null) {
+        if (loginInfoForToken == null || StringTool.isBlank(loginInfoForToken.getSignature())) {
             return Response.ofFail("token is invalid");
         }
 
@@ -216,9 +216,9 @@ public class XxlSsoHelper {
         LoginInfo loginInfo = loginInfoResponse.getData();
 
         // valid version
-        if (loginInfo.getVersion()!=null && !loginInfo.getVersion().equals(loginInfoForToken.getVersion())){
+        if (!loginInfoForToken.getSignature().equals(loginInfo.getSignature())){
             // Non-empty and inconsistent
-            return Response.ofFail("token version is invalid");
+            return Response.ofFail("token signature is invalid");
         }
 
         return Response.ofSuccess(loginInfo);

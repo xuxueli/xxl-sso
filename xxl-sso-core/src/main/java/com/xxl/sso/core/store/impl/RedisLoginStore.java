@@ -76,7 +76,7 @@ public class RedisLoginStore implements LoginStore {
         // valid loginInfo
         if (loginInfo == null
                 || StringTool.isBlank(loginInfo.getUserId())
-                || StringTool.isBlank(loginInfo.getVersion())) {
+                || StringTool.isBlank(loginInfo.getSignature())) {
             return Response.ofFail("loginInfo invalid.");
         }
 
