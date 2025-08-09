@@ -859,7 +859,7 @@ Response<String> result = XxlSsoHelper.hasPermission(LoginInfo loginInfo, String
 
 ### 5.4 版本 v1.3.0 Release Notes [2025-08-10]
 - 1、【优化】登录持久化组件优化，LoginStore可选接口添加默认实现，避免扩展组件进行不必要方法重写；
-- 2、【安全】登录信息安全升级，登录态signature属性支持定制生成；
+- 2、【安全】登录信息安全升级，登录态签名支持扩展及自定义；
 - 2、【优化】升级多项依赖至较新版本，如jedis等；
 
 ### 5.5 版本 v2.0.0 Release Notes [迭代中]
