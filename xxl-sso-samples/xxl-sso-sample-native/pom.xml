@@ -6,7 +6,7 @@
     <parent>
         <groupId>com.xuxueli</groupId>
         <artifactId>xxl-sso-samples</artifactId>
-        <version>1.2.1-SNAPSHOT</version>
+        <version>1.3.0</version>
     </parent>
     <artifactId>xxl-sso-sample-native</artifactId>
     <packaging>jar</packaging>
@@ -40,7 +40,7 @@
         <dependency>
             <groupId>com.xuxueli</groupId>
             <artifactId>xxl-sso-core</artifactId>
-            <version>${parent.version}</version>
+            <version>${project.parent.version}</version>
         </dependency>
         <dependency>
             <groupId>redis.clients</groupId>

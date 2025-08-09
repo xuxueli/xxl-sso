@@ -120,7 +120,7 @@
 <#-- page module: Footer-->
 <#macro commonFooter >
     <footer class="main-footer">
-        Powered by <b>XXL-SSO</b> 1.2.1-SNAPSHOT
+        Powered by <b>XXL-SSO</b> 1.3.0
         <div class="pull-right hidden-xs">
             <strong>Copyright &copy; 2018-${.now?string('yyyy')} &nbsp;
                 <a href="https://www.xuxueli.com/" target="_blank" >xuxueli</a>
