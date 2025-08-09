@@ -495,9 +495,9 @@ Native登录认证 OpenAPI 接口列表：
 测试用例运行结果：
 ```
 15:39:42.831 logback [main] INFO  NativeClientTest - 登录成功：token = eyJ1c2VySWQiOiIxMDAwIiwiZXhwaXJlVGltZSI6MCwidmVyc2lvbiI6IjA2ZmRhOGFhZmU2MzRhMzBhYzYzZWQ4ZjM1YjBjNTExIiwiYXV0b1JlbmV3IjpmYWxzZX0
-15:39:42.838 logback [main] INFO  NativeClientTest - 当前为登录状态：登陆用户 = LoginInfo{userId='1000', userName='user', realName='null', extraInfo=null, roleList=[role01], permissionList=[user:query, user:add], expireTime='1753601982825', version=06fda8aafe634a30ac63ed8f35b0c511, autoRenew=false}
-15:39:42.841 logback [main] INFO  NativeClientTest - 模拟请求APP应用接口：请求成功，登陆用户 = LoginInfo{userId='1000', userName='user', realName='null', extraInfo=null, roleList=[role01], permissionList=[user:query, user:add], expireTime='1753601982825', version=06fda8aafe634a30ac63ed8f35b0c511, autoRenew=false}
-15:39:43.174 logback [main] INFO  NativeClientTest - 模拟请求APP应用接口：请求成功，登陆用户 = LoginInfo{userId='1000', userName='user', realName='null', extraInfo=null, roleList=[role01], permissionList=[user:query, user:add], expireTime='1753601982825', version=06fda8aafe634a30ac63ed8f35b0c511, autoRenew=false}
+15:39:42.838 logback [main] INFO  NativeClientTest - 当前为登录状态：登陆用户 = LoginInfo{userId='1000', userName='user', realName='null', extraInfo=null, roleList=[role01], permissionList=[user:query, user:add], expireTime='1753601982825', signature=06fda8aafe634a30ac63ed8f35b0c511, autoRenew=false}
+15:39:42.841 logback [main] INFO  NativeClientTest - 模拟请求APP应用接口：请求成功，登陆用户 = LoginInfo{userId='1000', userName='user', realName='null', extraInfo=null, roleList=[role01], permissionList=[user:query, user:add], expireTime='1753601982825', signature=06fda8aafe634a30ac63ed8f35b0c511, autoRenew=false}
+15:39:43.174 logback [main] INFO  NativeClientTest - 模拟请求APP应用接口：请求成功，登陆用户 = LoginInfo{userId='1000', userName='user', realName='null', extraInfo=null, roleList=[role01], permissionList=[user:query, user:add], expireTime='1753601982825', signature=06fda8aafe634a30ac63ed8f35b0c511, autoRenew=false}
 15:39:43.177 logback [main] INFO  NativeClientTest - 注销成功
 15:39:43.180 logback [main] INFO  NativeClientTest - 当前为注销状态
 15:39:43.181 logback [main] INFO  NativeClientTest - 模拟请求APP应用接口：请求失败：not login for path:/
