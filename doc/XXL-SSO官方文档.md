@@ -863,7 +863,7 @@ Response<String> result = XxlSsoHelper.hasPermission(LoginInfo loginInfo, String
 - 2、【优化】升级多项依赖至较新版本，如jedis等；
 
 ### 5.5 版本 v2.0.0 Release Notes [2025-08-10]
-- 1、【升级】项目升级JDK17；
+- 1、【升级】项目升级 SpringBoot3 + JDK17；
 - 2、【升级】升级多项依赖至较新版本，如jakarta、spring等，适配JDK17；
 
 ### 5.6 版本 v2.0.1 Release Notes [迭代中]
