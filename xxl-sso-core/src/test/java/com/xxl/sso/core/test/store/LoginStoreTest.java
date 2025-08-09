@@ -24,13 +24,15 @@ public class LoginStoreTest {
         LoginStore loginStore = new LocalLoginStore();
 
         // init LoginInfo
-        LoginInfo loginInfo = new LoginInfo();
-        loginInfo.setUserId("666");
-        loginInfo.setUserName("zhagnsan");
-        loginInfo.setRoleList(Arrays.asList("role1", "role2"));
-        loginInfo.setPermissionList(Arrays.asList("permission1", "permission2"));
-        loginInfo.setExpireTime(System.currentTimeMillis() + Const.EXPIRE_TIME_FOR_7_DAY);
-        loginInfo.setSignature(UUIDTool.getSimpleUUID());
+        LoginInfo loginInfo = new LoginInfo(
+                "666",
+                "zhagnsan",
+                null,
+                null,
+                Arrays.asList("role1", "role2"),
+                Arrays.asList("permission1", "permission2"),
+                System.currentTimeMillis() + Const.EXPIRE_TIME_FOR_7_DAY,
+                UUIDTool.getSimpleUUID());
 
         // set
         Response<String> ret = loginStore.set(loginInfo);
@@ -62,13 +64,15 @@ public class LoginStoreTest {
         loginStore.start();
 
         // init LoginInfo
-        LoginInfo loginInfo = new LoginInfo();
-        loginInfo.setUserId("666");
-        loginInfo.setUserName("zhagnsan");
-        loginInfo.setRoleList(Arrays.asList("role1", "role2"));
-        loginInfo.setPermissionList(Arrays.asList("permission1", "permission2"));
-        loginInfo.setExpireTime(System.currentTimeMillis() + Const.EXPIRE_TIME_FOR_7_DAY);
-        loginInfo.setSignature(UUIDTool.getSimpleUUID());
+        LoginInfo loginInfo = new LoginInfo(
+                "666",
+                "zhagnsan",
+                null,
+                null,
+                Arrays.asList("role1", "role2"),
+                Arrays.asList("permission1", "permission2"),
+                System.currentTimeMillis() + Const.EXPIRE_TIME_FOR_7_DAY,
+                UUIDTool.getSimpleUUID());
 
         // set
         Response<String> ret = loginStore.set(loginInfo);

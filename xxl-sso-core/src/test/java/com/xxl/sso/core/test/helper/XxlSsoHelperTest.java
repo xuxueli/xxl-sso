@@ -41,13 +41,15 @@ public class XxlSsoHelperTest {
 
 
         // build LoginInfo
-        LoginInfo loginInfo = new LoginInfo();
-        loginInfo.setUserId("666");
-        loginInfo.setUserName("zhagnsan");
-        loginInfo.setVersion(UUIDTool.getSimpleUUID());
-        loginInfo.setRoleList(Arrays.asList("role1", "role2"));
-        loginInfo.setPermissionList(Arrays.asList("permission1", "permission2"));
-        loginInfo.setExpireTime(System.currentTimeMillis() + Const.EXPIRE_TIME_FOR_7_DAY);
+        LoginInfo loginInfo = new LoginInfo(
+                "666",
+                "zhagnsan",
+                null,
+                null,
+                Arrays.asList("role1", "role2"),
+                Arrays.asList("permission1", "permission2"),
+                System.currentTimeMillis() + Const.EXPIRE_TIME_FOR_7_DAY,
+                UUIDTool.getSimpleUUID());
 
         // login
         Response<String> loginResponse = XxlSsoHelper.login(loginInfo);
