@@ -154,7 +154,7 @@ xxl-sso.store.redis.keyprefix=xxl_sso_user:
 ### xxl-sso 客户端过滤排除路径，如 "/excluded/xpath"?"/excluded/xpath,/excluded/*"
 xxl-sso.client.excluded.paths=/weblogin/*,/static/**
 ### xxl-sso 客户端登录页路径
-xxl.sso.client.login.path=/weblogin/login
+xxl-sso.client.login.path=/weblogin/login
 ```
 
 #### 第三步、添加 XXL-SSO 组件
