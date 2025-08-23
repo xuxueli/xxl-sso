@@ -867,6 +867,7 @@ Response<String> result = XxlSsoHelper.hasPermission(LoginInfo loginInfo, String
 - 2、【升级】升级多项依赖至较新版本，如jakarta、spring等，适配JDK17；
 
 ### 5.6 版本 v2.0.1 Release Notes [迭代中]
+- 1、【优化】系统日志调整，支持启动时指定 -DLOG_HOME 参数自定义日志位置；同时优化日志格式提升易读性；
 - 3、【ING】集成WebFlux、Spring-Cloud-Gateway，并提供接入示例；
 - 4、【ING】增强用户增强安全性：登陆用户数据中，新增客户端信息如ip、ua等，防止token被窃取；
 
