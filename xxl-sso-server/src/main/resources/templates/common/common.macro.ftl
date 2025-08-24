@@ -3,6 +3,7 @@
 
     <#-- favicon、logo -->
     <link rel="icon" href="${request.contextPath}/static/favicon.ico" />
+    <title>CAS认证中心</title>
 
     <#-- meta -->
     <meta charset="utf-8">
@@ -29,19 +30,25 @@
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
 
+    <!-- pace -->
+    <link rel="stylesheet" href="${request.contextPath}/static/adminlte/bower_components/PACE/themes/blue/pace-theme-flash.css">
+
 </#macro>
 
 <#macro commonScript>
-
     <!-- jQuery -->
     <script src="${request.contextPath}/static/adminlte/bower_components/jquery/jquery.min.js"></script>
     <!-- Bootstrap -->
     <script src="${request.contextPath}/static/adminlte/bower_components/bootstrap/js/bootstrap.min.js"></script>
+    <!-- PACE -->
+    <script src="${request.contextPath}/static/adminlte/bower_components/PACE/pace.min.js"></script>
     <!-- SlimScroll -->
     <script src="${request.contextPath}/static/adminlte/bower_components/jquery-slimscroll/jquery.slimscroll.min.js"></script>
     <!-- FastClick -->
     <script src="${request.contextPath}/static/adminlte/bower_components/fastclick/fastclick.js"></script>
 
+    <#-- jquery cookie -->
+    <script src="${request.contextPath}/static/plugins/jquery/jquery.cookie.js"></script>
     <#-- jquery.validate -->
     <script src="${request.contextPath}/static/plugins/jquery/jquery.validate.min.js"></script>
     <#-- layer -->
@@ -55,19 +62,27 @@
     <!-- AdminLTE App -->
     <script src="${request.contextPath}/static/adminlte/dist/js/adminlte.min.js"></script>
 
-    <script src="${request.contextPath}/static/js/common.1.js"></script>
-
+    <#-- common js -->
+    <script src="${request.contextPath}/static/js/common/common.js"></script>
 </#macro>
 
 <#-- page module: Header-->
 <#macro commonHeader>
     <header class="main-header">
+        <!-- header-logo -->
         <a href="${request.contextPath}/" class="logo">
             <span class="logo-mini"><b>XXL</b></span>
             <span class="logo-lg"><b>XXL SSO</b></span>
         </a>
         <nav class="navbar navbar-static-top" role="navigation">
-            <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button"><span class="sr-only">切换导航</span></a>
+            <!--header left -->
+            <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </a>
+            <!--header right -->
             <div class="navbar-custom-menu">
                 <ul class="nav navbar-nav">
                     <li class="dropdown user user-menu">
@@ -79,6 +94,20 @@
             </div>
         </nav>
     </header>
+</#macro>
+
+<#-- page module: Footer-->
+<#macro commonFooter >
+    <footer class="main-footer">
+        Powered by <b>XXL-SSO</b> 2.0.1-SNAPSHOT
+        <div class="pull-right hidden-xs">
+            <strong>Copyright &copy; 2018-${.now?string('yyyy')} &nbsp;
+                <a href="https://www.xuxueli.com/" target="_blank" >xuxueli</a>
+                &nbsp;
+                <a href="https://github.com/xuxueli/xxl-sso" target="_blank" >github</a>
+            </strong><!-- All rights reserved. -->
+        </div>
+    </footer>
 </#macro>
 
 <#-- page module: Left-->
@@ -97,16 +126,3 @@
     </aside>
 </#macro>
 
-<#-- page module: Footer-->
-<#macro commonFooter >
-    <footer class="main-footer">
-        Powered by <b>XXL-SSO</b> 2.0.1-SNAPSHOT
-        <div class="pull-right hidden-xs">
-            <strong>Copyright &copy; 2018-${.now?string('yyyy')} &nbsp;
-                <a href="https://www.xuxueli.com/" target="_blank" >xuxueli</a>
-                &nbsp;
-                <a href="https://github.com/xuxueli/xxl-sso" target="_blank" >github</a>
-            </strong><!-- All rights reserved. -->
-        </div>
-    </footer>
-</#macro>

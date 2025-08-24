@@ -1,9 +1,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8" />
-    <title>CAS认证中心</title>
-
     <#-- import macro -->
     <#import "common/common.macro.ftl" as netCommon>
 
