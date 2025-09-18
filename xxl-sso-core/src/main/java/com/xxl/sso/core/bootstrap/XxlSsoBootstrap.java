@@ -46,7 +46,7 @@ public class XxlSsoBootstrap {
         // 2、helper init
         XxlSsoHelper.init(loginStore, tokenKey, tokenTimeout);
 
-        logger.info(">>>>>>>>>>> xxl-mq XxlSsoBootstrap started.");
+        logger.info(">>>>>>>>>>> xxl-sso XxlSsoBootstrap started.");
     }
 
     public void stop() {
