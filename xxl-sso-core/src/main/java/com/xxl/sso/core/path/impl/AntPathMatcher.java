@@ -408,7 +408,9 @@ public class AntPathMatcher implements PathMatcher {
 	 * @return the tokenized path parts
 	 */
 	protected String[] tokenizePath(String path) {
-		return StringTool.tokenizeToArray(path, this.pathSeparator, this.trimTokens, true);
+		List<String> result = StringTool.split(path, this.pathSeparator);
+		return result.toArray(new String[0]);
+		//return StringTool.tokenizeToArray(path, this.pathSeparator, this.trimTokens, true);
 	}
 
 	/**
@@ -473,8 +475,8 @@ public class AntPathMatcher implements PathMatcher {
 	 */
 	@Override
 	public String extractPathWithinPattern(String pattern, String path) {
-		String[] patternParts = StringTool.tokenizeToArray(pattern, this.pathSeparator, this.trimTokens, true);
-		String[] pathParts = StringTool.tokenizeToArray(path, this.pathSeparator, this.trimTokens, true);
+		String[] patternParts = tokenizePath(pattern);	//StringTool.tokenizeToArray(pattern, this.pathSeparator, this.trimTokens, true);
+		String[] pathParts = tokenizePath(path);		//StringTool.tokenizeToArray(path, this.pathSeparator, this.trimTokens, true);
 		StringBuilder builder = new StringBuilder();
 		boolean pathStarted = false;
 
