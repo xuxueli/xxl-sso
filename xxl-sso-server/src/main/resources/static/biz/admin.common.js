@@ -1,5 +1,10 @@
 $(function(){
 
+	/**
+	 * 1、slideToTop
+	 * 2、menu, sidebar-toggle
+	 */
+
 	// ---------------------- slideToTop ----------------------
 
 	// slideToTop
@@ -45,32 +50,50 @@ $(function(){
 	});
 
 
-	// ---------------------- body fixed ----------------------
-
-	// init body fixed
-	$('body').addClass('fixed');
-
-
 	// ---------------------- menu, sidebar-toggle ----------------------
 
 	// init menu speed
 	$('.sidebar-menu').attr('data-animation-speed', 1);
 
 	// init menu status
-	if ( 'close' === $.cookie('sidebar_status') ) {
+	let sidebar = loadStore('admin_sidebar_status');
+	if ( 'close' === sidebar ) {
 		$('body').addClass('sidebar-collapse');
 	} else {
 		$('body').removeClass('sidebar-collapse');
 	}
-	console.log(111);
 
 	// change menu status
 	$('.sidebar-toggle').click(function(){
-		if ( 'close' === $.cookie('sidebar_status') ) {
-			$.cookie('sidebar_status', 'open', { expires: 7 });
+		if ( 'close' === loadStore('admin_sidebar_status') ) {
+			store('admin_sidebar_status', 'open')
 		} else {
-			$.cookie('sidebar_status', 'close', { expires: 7 });	//$.cookie('the_cookie', '', { expires: -1 });
+			store('admin_sidebar_status', 'close')
 		}
 	});
+
+	// ---------------------- localStorage ----------------------
+
+	/**
+	 * store
+	 */
+	function store(name, val) {
+		if (typeof (Storage) !== "undefined") {
+			localStorage.setItem(name, val);
+		} else {
+			window.alert('Please use a modern browser to properly view this template!');
+		}
+	}
+
+	/**
+	 * get
+	 */
+	function loadStore(name) {
+		if (typeof (Storage) !== "undefined") {
+			return localStorage.getItem(name);
+		} else {
+			window.alert('Please use a modern browser to properly view this template!');
+		}
+	}
 
 });
