@@ -54,7 +54,7 @@ public class XxlSsoBootstrap {
         // 1、loginStore stop
         loginStore.stop();
 
-        logger.info(">>>>>>>>>>> xxl-mq XxlSsoBootstrap stopped.");
+        logger.info(">>>>>>>>>>> xxl-sso XxlSsoBootstrap stopped.");
     }
 
 

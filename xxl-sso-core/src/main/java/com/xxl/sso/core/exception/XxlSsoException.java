@@ -8,7 +8,7 @@ import com.xxl.sso.core.constant.Const;
 public class XxlSsoException extends RuntimeException {
     private static final long serialVersionUID = 42L;
 
-    private int errorCode = Const.CODE_SYSTEM_ERROR;
+    private int errorCode = Const.CODE_LOGIN_ERROR;
 
     public XxlSsoException(String msg) {
         super(msg);

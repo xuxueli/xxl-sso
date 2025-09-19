@@ -868,7 +868,9 @@ Response<String> result = XxlSsoHelper.hasPermission(LoginInfo loginInfo, String
 
 ### 5.6 版本 v2.1.0 Release Notes [2025-09-19]
 - 1、【优化】系统日志调整，支持启动时指定 -DLOG_HOME 参数自定义日志位置；同时优化日志格式提升易读性；
-- 2、【升级】升级多项依赖至较新版本，如 spring、xxl-tool、jedis、gson 等；
+- 2、【优化】认证中心与示例项目交互代码重构优化；
+- 3、【优化】客户端SDK日志格式优化；登录及权限错误码规范；
+- 4、【升级】升级多项依赖至较新版本，如 spring、xxl-tool、jedis、gson 等；
 
 ### 5.7 版本 v2.2.0 Release Notes [ING]
 - 3、【ING】集成WebFlux、Spring-Cloud-Gateway，并提供接入示例；

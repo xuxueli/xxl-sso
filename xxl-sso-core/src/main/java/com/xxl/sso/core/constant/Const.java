@@ -50,24 +50,24 @@ public class Const {
 
 
     /**
-     * code for role fail
+     * code for login error
      */
-    public static final int CODE_SYSTEM_ERROR = 500;
+    public static final int CODE_LOGIN_ERROR = 300;
 
     /**
      * code for login fail
      */
-    public static final int CODE_LOGIN_FAIL = 501;
+    public static final int CODE_LOGIN_FAIL = 301;
 
     /**
      * code for permission fail
      */
-    public static final int CODE_PERMISSION_FAIL = 502;
+    public static final int CODE_PERMISSION_FAIL = 302;
 
     /**
      * code for role fail
      */
-    public static final int CODE_ROLE_FAIL = 503;
+    public static final int CODE_ROLE_FAIL = 303;
 
 
 
