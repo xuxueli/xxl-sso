@@ -1,20 +1,57 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8" />
-    <title>XXL-SSO接入示例</title>
+    <#-- import macro -->
+    <#import "./common/common.macro.ftl" as netCommon>
 
-    <#import "common/common.macro.ftl" as netCommon>
+    <!-- 1-style start -->
     <@netCommon.commonStyle />
+    <!-- 1-style end -->
+
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
-        <!-- header -->
-    <@netCommon.commonHeader />
-        <!-- left -->
-    <@netCommon.commonLeft "help" />
 
-    <!-- Content Wrapper. Contains page content -->
+    <!-- 2-header start -->
+    <header class="main-header">
+        <a href="${request.contextPath}/" class="logo">
+            <span class="logo-mini"><b>XXL</b></span>
+            <span class="logo-lg"><b>XXL SSO</b></span>
+        </a>
+        <nav class="navbar navbar-static-top" role="navigation">
+            <!--header left -->
+            <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </a>
+            <!--header right -->
+            <div class="navbar-custom-menu">
+                <ul class="nav navbar-nav">
+                    <li class="dropdown user user-menu">
+                        <a href="javascript:void(0);" id="logoutBtn"  >
+                            <span class="hidden-xs">注销【${loginInfo.userName}】</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+    <!-- 2-header end -->
+
+    <!-- 3-left start -->
+    <aside class="main-sidebar">
+        <section class="sidebar">
+            <ul class="sidebar-menu">
+                <li class="header">导航</li>
+                <li class="nav-click active" ><a href="${request.contextPath}/"><i class="fa fa-circle-o text-gray"></i><span>使用教程</span></a></li>
+            </ul>
+        </section>
+    </aside>
+    <!-- 3-left end -->
+
+    <!-- 4-right start -->
     <div class="content-wrapper">
         <!-- Content Header (Page header) -->
         <section class="content-header">
@@ -38,13 +75,28 @@
                 <p></p>
             </div>
         </section>
-        <!-- /.content -->
     </div>
-    <!-- /.content-wrapper -->
+    <!-- 4-right end -->
 
-    <!-- footer -->
-<@netCommon.commonFooter />
+    <!-- 5-footer start -->
+    <footer class="main-footer">
+        Powered by <b>XXL-SSO</b> 2.1.0
+        <div class="pull-right hidden-xs">
+            <strong>Copyright &copy; 2018-${.now?string('yyyy')} &nbsp;
+                <a href="https://www.xuxueli.com/" target="_blank" >xuxueli</a>
+                &nbsp;
+                <a href="https://github.com/xuxueli/xxl-sso" target="_blank" >github</a>
+            </strong><!-- All rights reserved. -->
+        </div>
+    </footer>
+    <!-- 5-footer end -->
+
 </div>
 </body>
+
+<!-- 6-script start -->
 <@netCommon.commonScript />
+<script src="${request.contextPath}/static/biz/admin.common.js"></script>
+<!-- 6-script end -->
+
 </html>
