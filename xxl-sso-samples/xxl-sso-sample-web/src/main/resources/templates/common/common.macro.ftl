@@ -17,7 +17,6 @@
     <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
-    <link rel="stylesheet" href="${request.contextPath}/static/plugins/nprogress/nprogress.css">
 
 </#macro>
 
@@ -31,8 +30,6 @@
     <script src="${request.contextPath}/static/adminlte/bower_components/fastclick/fastclick.js"></script>
     <script src="${request.contextPath}/static/plugins/jquery/jquery.validate.min.js"></script>
     <script src="${request.contextPath}/static/plugins/layer/layer.js"></script>
-    <script src="${request.contextPath}/static/plugins/nprogress/nprogress.js"></script>
-    <script src="${request.contextPath}/static/plugins/fullscreen/jquery.fullscreen.js"></script>
     <script>
         // init page param
         var base_url = '${request.contextPath}';

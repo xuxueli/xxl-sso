@@ -1,18 +1,19 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8" />
-    <title>XXL-SSO接入示例</title>
-
     <#-- import macro -->
-    <#import "common/common.macro.ftl" as netCommon>
+    <#import "./common/common.macro.ftl" as netCommon>
 
-    <#-- commonStyle -->
+    <!-- 1-style start -->
     <@netCommon.commonStyle />
     <!-- iCheck -->
     <link rel="stylesheet" href="${request.contextPath}/static/adminlte/plugins/iCheck/square/blue.css">
+    <!-- 1-style end -->
+
 </head>
 <body class="hold-transition login-page">
+
+    <!-- 2-biz start -->
 
     <div class="login-box">
         <div class="login-logo">
@@ -33,7 +34,7 @@
                     <div class="col-xs-8">
                         <div class="checkbox icheck">
                             <label>
-                                <input type="checkbox" name="ifRemember" >记住密码
+                                <input type="checkbox" name="ifRemember" > 记住密码
                             </label>
                         </div>
                     </div><!-- /.col -->
@@ -46,11 +47,87 @@
         </form>
     </div>
 
-    <#-- commonScript -->
-    <@netCommon.commonScript />
-    <!-- icheck -->
-    <script src="${request.contextPath}/static/adminlte/plugins/iCheck/icheck.min.js"></script>
-    <!-- login file -->
-    <script src="${request.contextPath}/static/js/login.1.js"></script>
+    <!-- 2-biz end -->
+
+<!-- 3-script start -->
+<@netCommon.commonScript />
+<script src="${request.contextPath}/static/adminlte/plugins/iCheck/icheck.min.js"></script>
+<script>
+    $(function(){
+
+        // do login
+        var loginFormValid = $("#loginForm").validate({
+            errorElement : 'span',
+            errorClass : 'help-block',
+            focusInvalid : true,
+            rules : {
+                username : {
+                    required : true ,
+                    minlength: 4,
+                    maxlength: 18
+                },
+                password : {
+                    required : true ,
+                    minlength: 4,
+                    maxlength: 18
+                }
+            },
+            messages : {
+                username : {
+                    required  : "请输入用户名",
+                    minlength : "输入用户名长度非法"
+                },
+                password : {
+                    required  : "请输入密码",
+                    minlength : "输入密码长度非法"
+                }
+            },
+            highlight : function(element) {
+                $(element).closest('.form-group').addClass('has-error');
+            },
+            success : function(label) {
+                label.closest('.form-group').removeClass('has-error');
+                label.remove();
+            },
+            errorPlacement : function(error, element) {
+                element.parent('div').append(error);
+            },
+            submitHandler : function(form) {
+
+                // dologin
+                $.post(base_url + "/weblogin/doLogin", $("#loginForm").serialize(), function(data, status) {
+                    if (data.code == "200") {
+
+                        layer.msg( "登录成功，跳转中..." );
+                        setTimeout(function(){
+                            window.location.href = base_url + "/";
+                        }, 1000);
+                        return;
+
+                    } else {
+                        layer.open({
+                            title: "提示",
+                            btn: "确认",
+                            content: (data.msg || "登录失败" ),
+                            icon: '2'
+                        });
+                    }
+                });
+
+            }
+        });
+
+
+        // input iCheck
+        $('input').iCheck({
+            checkboxClass: 'icheckbox_square-blue',
+            radioClass: 'iradio_square-blue',
+            increaseArea: '20%' // optional
+        });
+
+    });
+</script>
+<!-- 3-script end -->
+
 </body>
 </html>
