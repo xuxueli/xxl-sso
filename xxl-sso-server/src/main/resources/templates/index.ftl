@@ -94,7 +94,7 @@
 
     <!-- 5-footer start -->
     <footer class="main-footer">
-        Powered by <b>XXL-SSO</b> 2.1.1
+        Powered by <b>XXL-SSO</b> 2.2.0-SNAPSHOT
         <div class="pull-right hidden-xs">
             <strong>Copyright &copy; 2018-${.now?string('yyyy')} &nbsp;
                 <a href="https://www.xuxueli.com/" target="_blank" >xuxueli</a>
