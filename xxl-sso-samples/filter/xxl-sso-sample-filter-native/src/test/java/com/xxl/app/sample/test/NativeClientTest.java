@@ -13,10 +13,6 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * @author xuxueli 2018-04-09 11:38:15
  */
@@ -86,12 +82,13 @@ public class NativeClientTest {
 		// url
 		String finalUrl = url + "/";
 
-		// param
-		Map<String, String> headerParam = new HashMap<>();
-		headerParam.put(Const.XXL_SSO_TOKEN, token);
-
 		// invoke
-		String resultJson = HttpTool.postBody(finalUrl, null, headerParam, 3*1000);
+		String resultJson = HttpTool
+				.createPost(finalUrl)
+				.header(Const.XXL_SSO_TOKEN, token)
+				.connectTimeout(3*1000)
+				.execute()
+				.response();
 		Response<LoginInfo> loginResult = GsonTool.fromJson(resultJson, Response.class, LoginInfo.class);
 
 		// result
@@ -114,7 +111,11 @@ public class NativeClientTest {
 		String requestBody = GsonTool.toJson(loginRequest);
 
 		// invoke
-		String loginResultJson = HttpTool.postBody(loginUrl, requestBody);
+		String loginResultJson = HttpTool
+				.createPost(loginUrl)
+				.body(requestBody)
+				.execute()
+				.response();
 		Response<String> loginResult = GsonTool.fromJson(loginResultJson, Response.class, String.class);
 
 		// result
@@ -142,7 +143,11 @@ public class NativeClientTest {
 		String requestBody = GsonTool.toJson(logoutRequest);
 
 		// invoke
-		String logoutResultJson = HttpTool.postBody(logoutUrl, requestBody);
+		String logoutResultJson = HttpTool
+				.createPost(logoutUrl)
+				.body(requestBody)
+				.execute()
+				.response();
 		Response<String> loginResult = GsonTool.fromJson(logoutResultJson, Response.class, String.class);
 
 		// result
@@ -168,7 +173,11 @@ public class NativeClientTest {
 		String requestBody = GsonTool.toJson(loginCheckRequest);
 
 		// invoke
-		String logincheckResultJson = HttpTool.postBody(logincheckUrl, requestBody);
+		String logincheckResultJson = HttpTool
+				.createPost(logincheckUrl)
+				.body(requestBody)
+				.execute()
+				.response();
 		Response<LoginInfo> loginResult = GsonTool.fromJson(logincheckResultJson, Response.class, LoginInfo.class);
 
 		// result

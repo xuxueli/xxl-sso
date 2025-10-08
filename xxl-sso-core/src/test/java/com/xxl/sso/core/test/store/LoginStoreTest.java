@@ -41,7 +41,7 @@ public class LoginStoreTest {
 
         // update
         loginInfo.setUserName("zhagnsan22");
-        loginInfo.setExtraInfo(MapTool.newHashMap("k1", "v1"));
+        loginInfo.setExtraInfo(MapTool.newMap("k1", "v1"));
         loginInfo.setRoleList(Arrays.asList("role1", "role2"));
         loginInfo.setPermissionList(Arrays.asList("permission1", "permission2"));
         loginInfo.setExpireTime(System.currentTimeMillis() + Const.EXPIRE_TIME_FOR_7_DAY);
@@ -81,7 +81,7 @@ public class LoginStoreTest {
 
         // update
         loginInfo.setUserName("zhagnsan22");
-        loginInfo.setExtraInfo(MapTool.newHashMap("k1", "v1"));
+        loginInfo.setExtraInfo(MapTool.newMap("k1", "v1"));
         loginInfo.setRoleList(Arrays.asList("role1", "role2"));
         loginInfo.setPermissionList(Arrays.asList("permission1", "permission2"));
         loginInfo.setExpireTime(System.currentTimeMillis() + Const.EXPIRE_TIME_FOR_7_DAY);
