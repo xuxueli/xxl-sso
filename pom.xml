@@ -26,27 +26,28 @@
         <maven.compiler.target>17</maven.compiler.target>
         <maven.test.skip>true</maven.test.skip>
         <!-- plugin -->
-        <maven-compiler-plugin.version>3.14.0</maven-compiler-plugin.version>
+        <maven-compiler-plugin.version>3.14.1</maven-compiler-plugin.version>
         <maven-source-plugin.version>3.3.1</maven-source-plugin.version>
-        <maven-javadoc-plugin.version>3.11.3</maven-javadoc-plugin.version>
+        <maven-javadoc-plugin.version>3.12.0</maven-javadoc-plugin.version>
         <maven-gpg-plugin.version>3.2.8</maven-gpg-plugin.version>
-        <central-publishing-maven-plugin.version>0.8.0</central-publishing-maven-plugin.version>
+        <central-publishing-maven-plugin.version>0.9.0</central-publishing-maven-plugin.version>
         <!-- base -->
         <slf4j-api.version>2.0.17</slf4j-api.version>
-        <junit-jupiter.version>5.13.4</junit-jupiter.version>
-
-        <!-- xxl-tool( +support) -->
-        <xxl-tool.version>2.1.0</xxl-tool.version>
-        <gson.version>2.13.2</gson.version>
+        <junit-jupiter.version>6.0.0</junit-jupiter.version>
 
         <!-- servlet -->
         <jakarta.servlet-api.version>6.1.0</jakarta.servlet-api.version>
 
+        <!-- spring -->
+        <spring-boot.version>3.5.6</spring-boot.version>
+        <spring.version>6.2.11</spring.version>
+
+        <!-- xxl-tool( +support) -->
+        <xxl-tool.version>2.2.0</xxl-tool.version>
+        <gson.version>2.13.2</gson.version>
+
         <!-- jedis -->
         <jedis.version>6.2.0</jedis.version>
-        <!-- spring-boot -->
-        <spring.version>6.2.11</spring.version>
-        <spring-boot.version>3.5.6</spring-boot.version>
     </properties>
 
 

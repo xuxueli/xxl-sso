@@ -872,7 +872,10 @@ Response<String> result = XxlSsoHelper.hasPermission(LoginInfo loginInfo, String
 - 3、【优化】客户端SDK日志格式优化；登录及权限错误码规范；
 - 4、【升级】升级多项依赖至较新版本，如 spring、xxl-tool、jedis、gson 等；
 
-### 5.7 版本 v2.2.0 Release Notes [ING]
+### 5.7 版本 v2.1.1 Release Notes [2025-10-08]
+- 1、【升级】升级多项依赖至较新版本，如 xxl-tool、junit、gson 等；
+
+### 5.8 版本 v2.2.0 Release Notes [ING]
 - 3、【ING】集成WebFlux、Spring-Cloud-Gateway，并提供接入示例；
 - 4、【ING】增强用户增强安全性：登陆用户数据中，新增客户端信息如ip、ua等，防止token被窃取；
 
