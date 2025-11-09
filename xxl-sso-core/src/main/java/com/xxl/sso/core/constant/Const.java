@@ -41,7 +41,7 @@ public class Const {
     /**
      * xxl-sso login-user store key prefix, like redis-key-prefix
      */
-    public static final String XXL_SSO_STORE_PREFIX = "xxl_sso:";
+    public static final String XXL_SSO_STORE_PREFIX = "xxl_sso";
 
     /**
      * xxl-sso ticket, for cas redirect ticket

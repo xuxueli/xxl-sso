@@ -15,14 +15,12 @@ public class RedisLoginStore implements LoginStore {
     private JedisTool jedisTool;
     private String storeKeyPrefix;
     public RedisLoginStore(String nodes, String user, String password, String storeKeyPrefix) {
-        // valid
-        if (StringTool.isBlank(storeKeyPrefix)) {
-            storeKeyPrefix = Const.XXL_SSO_STORE_PREFIX;
-        }
-
         // init
         this.jedisTool = new JedisTool(nodes, user, password);
-        this.storeKeyPrefix = storeKeyPrefix;
+        this.storeKeyPrefix = (StringTool.isNotBlank(storeKeyPrefix)
+                ? storeKeyPrefix.trim()
+                : Const.XXL_SSO_STORE_PREFIX)
+                + ":";
     }
 
 

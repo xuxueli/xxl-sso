@@ -151,7 +151,7 @@ xxl-sso.store.redis.nodes=127.0.0.1:6379
 xxl-sso.store.redis.user=
 xxl-sso.store.redis.password=
 ### xxl-sso 登录态存储，Redis key前缀
-xxl-sso.store.redis.keyprefix=xxl_sso_user:
+xxl-sso.store.redis.keyprefix=xxl_sso_user
 ### xxl-sso 客户端过滤排除路径，如 "/excluded/xpath"?"/excluded/xpath,/excluded/*"
 xxl-sso.client.excluded.paths=/weblogin/*,/static/**
 ### xxl-sso 客户端登录页路径
@@ -364,7 +364,7 @@ xxl-sso.store.redis.nodes=127.0.0.1:6379
 xxl-sso.store.redis.user=
 xxl-sso.store.redis.password=
 ### xxl-sso 登录态存储，Redis key前缀
-xxl-sso.store.redis.keyprefix=xxl_sso_user:
+xxl-sso.store.redis.keyprefix=xxl_sso_user
 ### xxl-sso 客户端过滤排除路径，如 "/excluded/xpath"?"/excluded/xpath,/excluded/*"
 xxl-sso.client.excluded.paths=/native/openapi/*
 ```
@@ -531,7 +531,7 @@ xxl-sso.store.redis.nodes=127.0.0.1:6379
 xxl-sso.store.redis.user=
 xxl-sso.store.redis.password=
 ### xxl-sso 登录态存储，Redis key前缀
-xxl-sso.store.redis.keyprefix=xxl_sso_user:
+xxl-sso.store.redis.keyprefix=xxl_sso_user
 ### xxl-sso CAS认证中心 地址；
 xxl.sso.server.address=http://xxlssoserver.com:8080/xxl-sso-server
 ### xxl-sso CAS认证中心 登录跳转路径
