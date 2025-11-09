@@ -35,15 +35,15 @@ public interface LoginStore {
      * set LoginInfo
      *
      * @param   loginInfo   will be stored with key-userId
-     * @return
+     * @return  response
      */
     Response<String> set(LoginInfo loginInfo);
 
     /**
      * update LoginInfo
      *
-     * @param loginInfo
-     * @return
+     * @param loginInfo     loginInfo
+     * @return  response
      */
     Response<String> update(LoginInfo loginInfo);
 
@@ -51,7 +51,7 @@ public interface LoginStore {
      * remove LoginInfo
      *
      * @param userId    the userId of LoginInfo
-     * @return
+     * @return  response
      */
     Response<String> remove(String userId);
 
@@ -59,7 +59,7 @@ public interface LoginStore {
      * get LoginInfo
      *
      * @param userId     the userId of LoginInfo
-     * @return
+     * @return Response.data is LoginInfo
      */
     Response<LoginInfo> get(String userId);
 

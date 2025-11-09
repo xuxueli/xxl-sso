@@ -18,7 +18,7 @@ import java.util.Set;
  * @author xuxueli 2015-7-10 18:34:07
  */
 public class JedisTool {
-    private static Logger logger = LoggerFactory.getLogger(JedisTool.class);
+    private static final Logger logger = LoggerFactory.getLogger(JedisTool.class);
 
 
     // ---------------------- param ----------------------
@@ -76,7 +76,7 @@ public class JedisTool {
         // pooled client
         if (clusterNodes.size() > 1) {
             try {
-                GenericObjectPoolConfig<Connection> poolConfig = new GenericObjectPoolConfig();
+                GenericObjectPoolConfig<Connection> poolConfig = new GenericObjectPoolConfig<>();
                 JedisClientConfig clientConfig = DefaultJedisClientConfig
                         .builder()
                         .timeoutMillis(soTimeout)
@@ -133,9 +133,9 @@ public class JedisTool {
     /**
      * set
      *
-     * @param key
-     * @param value
-     * @param seconds
+     * @param key       key
+     * @param value     value
+     * @param seconds   seconds
      */
     public void set(String key, Object value, long seconds) {
         if (jedisCluster!=null) {
@@ -155,7 +155,8 @@ public class JedisTool {
                 if (seconds < 0) {
                     jedis.set(key.getBytes(StandardCharsets.UTF_8), valueBytes);
                 } else {
-                    jedis.psetex(key.getBytes(StandardCharsets.UTF_8), seconds, valueBytes);
+                    long milliseconds = seconds * 1000;
+                    jedis.psetex(key.getBytes(StandardCharsets.UTF_8), milliseconds, valueBytes);
                 }
             } catch (Exception e) {
                 logger.error(e.getMessage(), e);
@@ -166,8 +167,8 @@ public class JedisTool {
     /**
      * get
      *
-     * @param key
-     * @return
+     * @param key   key
+     * @return  value
      */
     public Object get(String key) {
         if (jedisCluster!=null) {
@@ -199,7 +200,7 @@ public class JedisTool {
     /**
      * delete
      *
-     * @param key
+     * @param key   key
      */
     public void del(String key) {
         if (jedisCluster!=null) {

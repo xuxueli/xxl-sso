@@ -27,7 +27,7 @@ public class XxlSsoHelper {
 
     /**
      * init
-     * @param loginStore
+     * @param loginStore login store
      */
     public static void init(LoginStore loginStore, String tokenKey, long tokenTimeout){
         instance = new XxlSsoHelper(loginStore, tokenKey, tokenTimeout);
@@ -36,7 +36,7 @@ public class XxlSsoHelper {
     /**
      * get instance
      *
-     * @return
+     * @return instance
      */
     public static XxlSsoHelper getInstance(){
         return instance;
@@ -49,7 +49,15 @@ public class XxlSsoHelper {
      * login store
      */
     private final LoginStore loginStore;
+
+    /**
+     * token key
+     */
     private String tokenKey;
+
+    /**
+     * token timeout, by milliseconds
+     */
     private long tokenTimeout;
 
     public XxlSsoHelper(LoginStore loginStore, String tokenKey, long tokenTimeout) {
@@ -111,8 +119,8 @@ public class XxlSsoHelper {
     /**
      * login with token (write LoginStore and response-cookie )
      *
-     * @param loginInfo
-     * @param response
+     * @param loginInfo     login data
+     * @param response      response
      * @return  Response#data is token
      */
     public static Response<String> loginWithCookie(LoginInfo loginInfo, HttpServletResponse response, boolean ifRemember) {
@@ -135,8 +143,8 @@ public class XxlSsoHelper {
     /**
      * login update ( update LoginInfo in LoginStore)
      *
-     * @param loginInfo
-     * @return
+     * @param loginInfo     login data
+     * @return              response
      */
     public static Response<String> loginUpdate(LoginInfo loginInfo) {
 
@@ -155,7 +163,7 @@ public class XxlSsoHelper {
     /**
      * logout with token
      *
-     * @param token
+     * @param token     token
      */
     public static Response<String> logout(String token) {
 
@@ -172,8 +180,8 @@ public class XxlSsoHelper {
     /**
      * logout with cookie
      *
-     * @param request
-     * @param response
+     * @param request       request
+     * @param response      response
      */
     public static Response<String> logoutWithCookie(HttpServletRequest request, HttpServletResponse response) {
 
@@ -197,8 +205,8 @@ public class XxlSsoHelper {
     /**
      * login check with token
      *
-     * @param token
-     * @return
+     * @param token     token
+     * @return          loginInfo
      */
     public static Response<LoginInfo> loginCheck(String token) {
 
@@ -227,8 +235,8 @@ public class XxlSsoHelper {
     /**
      * login check with request-header
      *
-     * @param request
-     * @return
+     * @param request       request
+     * @return              loginInfo
      */
     public static Response<LoginInfo> loginCheckWithHeader(HttpServletRequest request) {
         String token = request.getHeader(getInstance().getTokenKey());
@@ -238,8 +246,8 @@ public class XxlSsoHelper {
     /**
      * login check with request-cookie
      *
-     * @param request
-     * @return
+     * @param request       request
+     * @return              response
      */
     public static Response<LoginInfo> loginCheckWithCookie(HttpServletRequest request, HttpServletResponse response) {
         // get cookie
@@ -256,8 +264,8 @@ public class XxlSsoHelper {
     /**
      * login check with request-attribute
      *
-     * @param request
-     * @return
+     * @param request       request
+     * @return              loginInfo
      */
     public static Response<LoginInfo> loginCheckWithAttr(HttpServletRequest request) {
         LoginInfo loginInfo = (LoginInfo) request.getAttribute(Const.XXL_SSO_USER);
@@ -272,8 +280,8 @@ public class XxlSsoHelper {
     /**
      * create ticket, from token in cookie
      *
-     * @param request
-     * @return      Response.data is ticket
+     * @param request   request
+     * @return          Response.data is ticket
      */
     public static Response<String> createTicket(HttpServletRequest request) {
 
@@ -297,8 +305,9 @@ public class XxlSsoHelper {
     /**
      * valid ticket and write cookie, from parameter
      *
-     * @param request
-     * @return
+     * @param request       request
+     * @param response      response
+     * @return              loginInfo
      */
     public static Response<LoginInfo> validTicket(HttpServletRequest request, HttpServletResponse response) {
 
@@ -330,9 +339,9 @@ public class XxlSsoHelper {
     /**
      * has role valid
      *
-     * @param loginInfo
-     * @param role
-     * @return
+     * @param loginInfo     loginInfo
+     * @param role          role
+     * @return              response
      */
     public static Response<String> hasRole(LoginInfo loginInfo, String role) {
         if (StringTool.isBlank(role)) {
@@ -351,9 +360,9 @@ public class XxlSsoHelper {
     /**
      * has permission valid
      *
-     * @param loginInfo
-     * @param permission
-     * @return
+     * @param loginInfo     loginInfo
+     * @param permission    permission
+     * @return              response
      */
     public static Response<String> hasPermission(LoginInfo loginInfo, String permission) {
         if (StringTool.isBlank(permission)) {

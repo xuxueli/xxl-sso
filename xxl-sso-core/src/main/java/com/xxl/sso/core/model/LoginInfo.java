@@ -78,7 +78,7 @@ public class LoginInfo implements Serializable {
     // ---------------------- setting ----------------------
 
     /**
-     * expire time
+     * expire time, ms
      */
     private long expireTime;
 

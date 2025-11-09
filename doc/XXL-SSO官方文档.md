@@ -820,7 +820,7 @@ Response<String> result = XxlSsoHelper.hasPermission(LoginInfo loginInfo, String
 
 
 ## 五、版本更新日志
-### 5.1 版本 v0.1.0，新特性[2018-04-04]
+### v0.1.0，新特性[2018-04-04]
 - 1、简洁：API直观简洁，可快速上手
 - 2、轻量级：环境依赖小，部署与接入成本较低
 - 3、单点登录：只需要登录一次就可以访问所有相互信任的应用系统
@@ -830,7 +830,7 @@ Response<String> result = XxlSsoHelper.hasPermission(LoginInfo loginInfo, String
 - 7、CS结构：基于CS结构，包括Server"认证中心"与Client"受保护应用"
 - 8、跨域：支持跨域应用接入SSO认证中心
 
-### 5.2 版本 v1.1.0 Release Notes [2018-11-06]
+### v1.1.0 Release Notes [2018-11-06]
 - 1、 Redis配置方式增强，支持自定义DB、密码、IP、PORT等等
 - 2、 Token接入方式；除了常规Cookie方式外，新增Token接入方式，并提供Sample项目
 - 3、 登录态自动延期：支持自定义登录态有效期窗口，默认24H，当登录态有效期窗口过半时，自动顺延一个周期
@@ -843,7 +843,7 @@ Response<String> result = XxlSsoHelper.hasPermission(LoginInfo loginInfo, String
 - 10、项目结构梳理，清理冗余依赖，升级多项依赖版本至较近版本
 - 11、路径排除：新增自定义属性 "excludedPaths"，允许设置多个，且支持Ant表达式。用于排除SSO客户端不需要过滤的路径
 
-### 5.3 版本 v1.2.0 Release Notes [2025-07-27]
+### v1.2.0 Release Notes [2025-07-27]
 - 1、【重构】XXL-SSO 核心代码重构，基于“模块化”与“渐进式”设计思想，在轻量级、高扩展、渐进式的基础上，强化多登录类型、多认证方式等系统能力；
 - 2、【增强】渐进式：支持渐进式集成接入使用，从简单到复杂场景，包括：单体系统(Web常规登录)、复杂企业内多系统(CAS单点登录)、互联网多端&高并发系统(Native登录) 等，均可接入使用；
 - 3、【增强】多登录类型：
@@ -857,27 +857,31 @@ Response<String> result = XxlSsoHelper.hasPermission(LoginInfo loginInfo, String
 - 5、【新增】安全性：针对系统框架多个模块落地安全性设计，包括：登录Token安全设计、客户端登录凭证Cookie安全设计、CAS跳转Ticket安全设计 等；
 - 6、【优化】升级多项依赖至较新版本；
 
-### 5.4 版本 v1.3.0 Release Notes [2025-08-10]
+### v1.3.0 Release Notes [2025-08-10]
 - 1、【优化】登录持久化组件优化，LoginStore可选接口添加默认实现，避免扩展组件进行不必要方法重写；
 - 2、【安全】登录信息安全升级，登录态签名支持扩展及自定义；
 - 2、【优化】升级多项依赖至较新版本，如jedis等；
 
-### 5.5 版本 v2.0.0 Release Notes [2025-08-10]
+### v2.0.0 Release Notes [2025-08-10]
 - 1、【升级】项目升级 SpringBoot3 + JDK17；
 - 2、【升级】升级多项依赖至较新版本，如jakarta、spring等，适配JDK17；
 
-### 5.6 版本 v2.1.0 Release Notes [2025-09-19]
+### v2.1.0 Release Notes [2025-09-19]
 - 1、【优化】系统日志调整，支持启动时指定 -DLOG_HOME 参数自定义日志位置；同时优化日志格式提升易读性；
 - 2、【优化】认证中心与示例项目交互代码重构优化；
 - 3、【优化】客户端SDK日志格式优化；登录及权限错误码规范；
 - 4、【升级】升级多项依赖至较新版本，如 spring、xxl-tool、jedis、gson 等；
 
-### 5.7 版本 v2.1.1 Release Notes [2025-10-08]
+### v2.1.1 Release Notes [2025-10-08]
 - 1、【升级】升级多项依赖至较新版本，如 xxl-tool、junit、gson 等；
 
-### 5.8 版本 v2.2.0 Release Notes [ING]
-- 3、【ING】集成WebFlux、Spring-Cloud-Gateway，并提供接入示例；
-- 4、【ING】增强用户增强安全性：登陆用户数据中，新增客户端信息如ip、ua等，防止token被窃取；
+### v2.2.0 Release Notes [2025-11-09]
+- 1、【升级】升级多项依赖至较新版本，如 xxl-tool、jedis、gson 等；
+- 2、【修复】RedisLoginStore token计算时效问题修复(ISSUE-83)；
+
+### v2.2.1 Release Notes [ING]
+- 1、【ING】集成WebFlux、Spring-Cloud-Gateway，并提供接入示例；
+- 2、【ING】增强用户增强安全性：登陆用户数据中，新增客户端信息如ip、ua等，防止token被窃取；
 
 
 ### TODO LIST
