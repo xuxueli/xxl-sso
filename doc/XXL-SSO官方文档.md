@@ -885,7 +885,7 @@ Response<String> result = XxlSsoHelper.hasPermission(LoginInfo loginInfo, String
 - 2、【优化】重构Sample项目代码，降低项目层级结构；
 
 ### v2.3.1 Release Notes [ING]
-- 1、【ING】集成WebFlux、Spring-Cloud-Gateway，并提供接入示例；
+- 1、【ING】集成WebFlux、Spring-Cloud-Gateway，并提供接入示例；（支持 interceptor、filter、webflux、gateway）
 - 2、【ING】增强用户增强安全性：登陆用户数据中，新增客户端信息如ip、ua等，防止token被窃取；
 
 
