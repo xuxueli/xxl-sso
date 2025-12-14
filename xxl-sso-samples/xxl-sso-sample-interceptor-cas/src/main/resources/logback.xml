@@ -2,7 +2,7 @@
 <configuration debug="false" scan="true" scanPeriod="1 seconds">
 
     <contextName>logback</contextName>
-    <property name="log.path" value="${LOG_HOME:-/data/applogs}/xxl-sso/xxl-sso-sample-web.log" />
+    <property name="log.path" value="${LOG_HOME:-/data/applogs}/xxl-sso/xxl-sso-sample-interceptor-cas.log" />
     <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
             <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
@@ -21,7 +21,7 @@
 
     <root level="info">
         <appender-ref ref="console"/>
-        <!--<appender-ref ref="file"/>-->
+        <appender-ref ref="file"/>
     </root>
 
 </configuration>

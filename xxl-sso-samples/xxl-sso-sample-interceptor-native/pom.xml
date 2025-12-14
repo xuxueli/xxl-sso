@@ -8,7 +8,7 @@
         <artifactId>xxl-sso-samples</artifactId>
         <version>2.3.1-SNAPSHOT</version>
     </parent>
-    <artifactId>xxl-sso-sample-cas</artifactId>
+    <artifactId>xxl-sso-sample-interceptor-native</artifactId>
     <packaging>jar</packaging>
 
     <dependencyManagement>
@@ -34,12 +34,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
-        </dependency>
-
-        <!-- freemarker -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-freemarker</artifactId>
         </dependency>
 
         <!-- xxl-sso-core -->
