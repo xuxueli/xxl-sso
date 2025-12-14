@@ -7,9 +7,8 @@
         <groupId>com.xuxueli</groupId>
         <artifactId>xxl-sso-samples</artifactId>
         <version>2.3.0</version>
-        <relativePath>../../pom.xml</relativePath>
     </parent>
-    <artifactId>xxl-sso-sample-filter-web</artifactId>
+    <artifactId>xxl-sso-sample-filter-native</artifactId>
     <packaging>jar</packaging>
 
     <dependencyManagement>
@@ -35,12 +34,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
-        </dependency>
-
-        <!-- freemarker -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-freemarker</artifactId>
         </dependency>
 
         <!-- xxl-sso-core -->

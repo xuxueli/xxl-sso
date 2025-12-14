@@ -7,7 +7,6 @@
         <groupId>com.xuxueli</groupId>
         <artifactId>xxl-sso-samples</artifactId>
         <version>2.3.0</version>
-        <relativePath>../../pom.xml</relativePath>
     </parent>
     <artifactId>xxl-sso-sample-filter-cas</artifactId>
     <packaging>jar</packaging>

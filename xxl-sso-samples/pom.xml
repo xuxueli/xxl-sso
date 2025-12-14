@@ -15,9 +15,9 @@
         <module>xxl-sso-sample-web</module>
         <module>xxl-sso-sample-native</module>
         <module>xxl-sso-sample-cas</module>
-        <module>filter/xxl-sso-sample-filter-web</module>
-        <module>filter/xxl-sso-sample-filter-native</module>
-        <module>filter/xxl-sso-sample-filter-cas</module>
+        <module>xxl-sso-sample-filter-web</module>
+        <module>xxl-sso-sample-filter-native</module>
+        <module>xxl-sso-sample-filter-cas</module>
     </modules>
 
     <properties>
