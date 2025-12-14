@@ -67,9 +67,9 @@
                     <h3 class="box-title">Welcome：${loginInfo.userName} </h3>
                 </div>
                 <div class="box-body">
-                    <a href="http://xxlssoclient1.com:8081/xxl-sso-sample-cas/" target="_blank" class="label-danger" >打开“Client应用01”</a>
+                    <a href="http://xxlssoclient1.com:8081/" target="_blank" class="label-danger" >打开“Client应用01”</a>
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    <a href="http://xxlssoclient2.com:8081/xxl-sso-sample-cas/" target="_blank" class="label-danger" >打开“Client应用02”</a>
+                    <a href="http://xxlssoclient2.com:8081/" target="_blank" class="label-danger" >打开“Client应用02”</a>
                 </div>
                 <!-- /.box-body -->
             </div>

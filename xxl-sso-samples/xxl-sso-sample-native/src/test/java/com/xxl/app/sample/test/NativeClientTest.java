@@ -22,8 +22,8 @@ public class NativeClientTest {
 	/**
 	 * native client, support multi-domain client applications
 	 */
-	public static String client01 = "http://xxlssoclient1.com:8082/xxl-sso-sample-native";
-	public static String client02 = "http://xxlssoclient2.com:8082/xxl-sso-sample-native";
+	public static String client01 = "http://xxlssoclient1.com:8082";
+	public static String client02 = "http://xxlssoclient2.com:8082";
 
 	/**
 	 * For openapi server, it is recommended to deploy and provide services separately
