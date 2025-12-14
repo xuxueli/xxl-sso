@@ -17,7 +17,7 @@
 
     <div class="login-box">
         <div class="login-logo">
-            <a><b>XXL</b>SSO</a>
+            <a><b>XXL-SSO</b></a>
         </div>
         <form id="loginForm" method="post" >
             <div class="login-box-body">
