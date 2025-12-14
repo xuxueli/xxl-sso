@@ -880,10 +880,13 @@ Response<String> result = XxlSsoHelper.hasPermission(LoginInfo loginInfo, String
 - 1、【升级】升级多项依赖至较新版本，如 xxl-tool、jedis、gson 等；
 - 2、【修复】RedisLoginStore token计算时效问题修复(ISSUE-83)；
 
-### v2.3.0 Release Notes [ING]
+### v2.3.0 Release Notes [2025-12-14]
 - 1、【升级】升级至 SpringBoot4；升级多项maven依赖至较新版本，如 spring、gson、jedis、xxl-tool 等；
-- 2、【ING】集成WebFlux、Spring-Cloud-Gateway，并提供接入示例；
-- 3、【ING】增强用户增强安全性：登陆用户数据中，新增客户端信息如ip、ua等，防止token被窃取；
+- 2、【优化】重构Sample项目代码，降低项目层级结构；
+
+### v2.3.1 Release Notes [ING]
+- 1、【ING】集成WebFlux、Spring-Cloud-Gateway，并提供接入示例；
+- 2、【ING】增强用户增强安全性：登陆用户数据中，新增客户端信息如ip、ua等，防止token被窃取；
 
 
 ### TODO LIST
