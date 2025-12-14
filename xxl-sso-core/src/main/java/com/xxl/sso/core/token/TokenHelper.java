@@ -2,8 +2,8 @@ package com.xxl.sso.core.token;
 
 import com.xxl.sso.core.model.LoginInfo;
 import com.xxl.tool.core.StringTool;
-import com.xxl.tool.encrypt.Base64Tool;
-import com.xxl.tool.gson.GsonTool;
+import com.xxl.tool.crypto.Base64Tool;
+import com.xxl.tool.json.GsonTool;
 import com.xxl.tool.response.Response;
 
 /**

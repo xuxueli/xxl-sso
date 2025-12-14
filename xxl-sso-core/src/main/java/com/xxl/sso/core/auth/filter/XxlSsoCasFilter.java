@@ -6,7 +6,7 @@ import com.xxl.sso.core.helper.XxlSsoHelper;
 import com.xxl.sso.core.model.LoginInfo;
 import com.xxl.sso.core.path.impl.AntPathMatcher;
 import com.xxl.tool.core.StringTool;
-import com.xxl.tool.gson.GsonTool;
+import com.xxl.tool.json.GsonTool;
 import com.xxl.tool.response.Response;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
