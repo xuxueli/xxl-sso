@@ -26,7 +26,6 @@
         <maven.compiler.target>17</maven.compiler.target>
         <maven.test.skip>true</maven.test.skip>
         <!-- plugin -->
-        <maven-compiler-plugin.version>3.14.1</maven-compiler-plugin.version>
         <maven-source-plugin.version>3.4.0</maven-source-plugin.version>
         <maven-javadoc-plugin.version>3.12.0</maven-javadoc-plugin.version>
         <maven-gpg-plugin.version>3.2.8</maven-gpg-plugin.version>
