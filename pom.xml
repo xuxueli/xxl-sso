@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.xuxueli</groupId>
     <artifactId>xxl-sso</artifactId>
-    <version>2.3.1</version>
+    <version>2.3.2-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>${project.artifactId}</name>
@@ -147,9 +147,9 @@
                             <excludeArtifacts>
                                 <artifact>xxl-sso-server</artifact>
                                 <artifact>xxl-sso-samples</artifact>
-                                <artifact>xxl-sso-sample-cas</artifact>
-                                <artifact>xxl-sso-sample-native</artifact>
-                                <artifact>xxl-sso-sample-web</artifact>
+                                <artifact>xxl-sso-sample-interceptor-cas</artifact>
+                                <artifact>xxl-sso-sample-interceptor-native</artifact>
+                                <artifact>xxl-sso-sample-interceptor-web</artifact>
                                 <artifact>xxl-sso-sample-filter-cas</artifact>
                                 <artifact>xxl-sso-sample-filter-native</artifact>
                                 <artifact>xxl-sso-sample-filter-web</artifact>
