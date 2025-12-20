@@ -112,13 +112,14 @@ XXL-SSO 作为单点登录框架，支持业务渐进式集成接入使用。结
 - xxl-sso-core: 客户端 核心依赖, 提供登录态持久化、登录认证及权限认证等能力；
 - xxl-sso-server: CAS认证中心，仅 “CAS单点登录” 场景下才会使用；
 - xxl-sso-samples：接入示例项目
-    - xxl-sso-sample-web: Web常规登录方式，Interceptor（Spring）接入示例；
-    - xxl-sso-sample-native: Native登录，Interceptor（Spring）接入示例；
-    - xxl-sso-sample-cas: CAS单点登录，Interceptor（Spring）接入示例；
-    - filter：
-        - xxl-sso-sample-filter-web: Web常规登录方式，Filter（Servlet）接入示例；
-        - xxl-sso-sample-filter-native: Native登录，Filter（Servlet）接入示例；
-        - xxl-sso-sample-filter-cas: CAS单点登录，Filter（Servlet）接入示例；
+    // Interceptor（Spring）接入示例；
+    - xxl-sso-sample-interceptor-web: Web常规登录方式
+    - xxl-sso-sample-interceptor-native: Native、前后端分离登录
+    - xxl-sso-sample-interceptor-cas: CAS单点登录
+    // Filter（Servlet）接入示例；
+    - xxl-sso-sample-filter-filtr-web: Web常规登录方式，
+    - xxl-sso-sample-filter-filtr-native: Native、前后端分离登录
+    - xxl-sso-sample-filter-filtr-cas: CAS单点登录
 ```
 
 ### 2.2、环境配置    
@@ -133,13 +134,13 @@ XXL-SSO 作为单点登录框架，支持业务渐进式集成接入使用。结
 
 ### 2.3、接入项目示例（Web常规登录） 
 **Web常规登录**：适用于常规“单体系统”场景；限制相关Web系统部署在相同域名下，登录凭证存储在公共域名下；
-**接入示例项目**：xxl-sso-sample-web
+**接入示例项目**：xxl-sso-sample-interceptor-web
 
 #### 第一步、引入Maven依赖
 参考章节 “1.4 下载”，pom引入 “xxl-sso-core” 相关maven依赖；
 
 #### 第二步、添加 XXL-SSO 配置
-配置文件位置：xxl-sso-sample-web/src/main/resources/application.properties
+配置文件位置：xxl-sso-sample-interceptor-web/src/main/resources/application.properties
 
 ```
 ### xxl-sso 登录凭证/token传输key, 用于cookie、header登录凭证传输；
@@ -160,7 +161,7 @@ xxl-sso.client.login.path=/weblogin/login
 
 #### 第三步、添加 XXL-SSO 组件
 
-配置组件位置：xxl-sso-sample-web/src/main/java/com/xxl/sso/sample/config/XxlSsoConfig
+配置组件位置：xxl-sso-sample-interceptor-web/src/main/java/com/xxl/sso/sample/config/XxlSsoConfig
 
 ```
 /**
@@ -319,8 +320,8 @@ public Response<String> test41(HttpServletRequest request) {
 #### 第五步、验证
 
 经过上述配置之后，启动示例项目，并访问如下域名地址访问系统：
-- **启动项目**：xxl-sso-sample-web
-- **访问地址**：http://xxlssoclient1.com:8083/xxl-sso-sample-web/
+- **启动项目**：xxl-sso-sample-interceptor-web
+- **访问地址**：http://xxlssoclient1.com:8083/
 
 由于未进行登录，XXL-SSO 将会自动跳转到配置的登录页面：
 ![输入图片说明](https://www.xuxueli.com/doc/static/xxl-sso/images/img_02.png "在这里输入图片标题")
@@ -331,8 +332,8 @@ public Response<String> test41(HttpServletRequest request) {
 
 访问如下接口地址，验证 登录验证、权限验证 逻辑：（参考 “第四步、代码中进行 XXL-SSO 登录验证、权限验证” 中代码）
 
-- a、示例接口01（接口逻辑：需要登录 & 示例登录用户有接口权限）：http://xxlssoclient1.com:8083/xxl-sso-sample-web/test21
-- b、示例接口02（接口限制：需要登录 & 示例登录用户无接口权限）：http://xxlssoclient1.com:8083/xxl-sso-sample-web/test22
+- a、示例接口01（接口逻辑：需要登录 & 示例登录用户有接口权限）：http://xxlssoclient1.com:8083/test21
+- b、示例接口02（接口限制：需要登录 & 示例登录用户无接口权限）：http://xxlssoclient1.com:8083/test22
 
 ```
 // 未登录：接口响应数据提示未登录，符合预期；
@@ -346,13 +347,13 @@ public Response<String> test41(HttpServletRequest request) {
 
 ### 2.4、接入项目示例（Native登录）
 **Native登录**：适用于“移动端、小程序、前后端分离、客户端”等系统场景；适用于无Cookie场景，天然不受限域名。支持多端登录、以及登录态共享，但是登录凭证需要客户端管理维护；
-**接入示例项目**：xxl-sso-sample-native
+**接入示例项目**：xxl-sso-sample-interceptor-native
 
 #### 第一步、引入Maven依赖
 参考章节 “1.4 下载”，pom引入 “xxl-sso-core” 相关maven依赖；
 
 #### 第二步、添加 XXL-SSO 配置
-配置文件位置：xxl-sso-sample-native/src/main/resources/application.properties
+配置文件位置：xxl-sso-sample-interceptor-native/src/main/resources/application.properties
 
 ```
 ### xxl-sso 登录凭证/token传输key, 用于cookie、header登录凭证传输；
@@ -370,7 +371,7 @@ xxl-sso.client.excluded.paths=/native/openapi/*
 ```
 
 #### 第三步、添加 XXL-SSO 组件
-配置组件位置：xxl-sso-sample-native/src/main/java/com/xxl/sso/sample/config/XxlSsoConfig
+配置组件位置：xxl-sso-sample-interceptor-native/src/main/java/com/xxl/sso/sample/config/XxlSsoConfig
 
 ```
 /**
@@ -412,7 +413,7 @@ public void addInterceptors(InterceptorRegistry registry) {
 > 该示例场景与章节 “2.3、接入项目示例（Web常规登录） 》 第四步、代码中进行 XXL-SSO 登录验证、权限验证” 使用方式一致，如有诉求可参考上文章节，此处不赘述。
 
 #### 第五步、Native登录认证 OpenAPI 
-Native登录认证 OpenAPI 代码位置：xxl-sso-sample-native/src/main/java/com/xxl/sso/sample/openapi/controller/NativeOpenAPIController
+Native登录认证 OpenAPI 代码位置：xxl-sso-sample-interceptor-native/src/main/java/com/xxl/sso/sample/openapi/controller/NativeOpenAPIController
 Native登录认证 OpenAPI 接口列表：
 
 ##### a、登录 API
@@ -479,8 +480,8 @@ Native登录认证 OpenAPI 接口列表：
 #### 第六步、验证
 
 经过上述配置之后，启动示例项目；然后，可通过 测试用例/验证代码 模拟 “Native登录” 相关操作： 
-- **启动项目**：xxl-sso-sample-native
-- **Native登录认证，测试用例/验证代码位置**：xxl-sso-sample-native/src/test/java/com/xxl/app/sample/test/NativeClientTest
+- **启动项目**：xxl-sso-sample-interceptor-native
+- **Native登录认证，测试用例/验证代码位置**：xxl-sso-sample-interceptor-native/src/test/java/com/xxl/app/sample/test/NativeClientTest
 
 测试用例/验证代码，具体逻辑为：
 **a、登录流程**：
@@ -510,7 +511,7 @@ Native登录认证 OpenAPI 接口列表：
 **CAS单点登录**：适用于“多系统跨域、企业多系统统一登录”等系统场景；解决了系统 跨域登录认证、统一登录认证 问题；但是需要单独部署CAS认证中心、提供单点登录相关基础能力；
 **项目说明**：
 - CAS认证中心: xxl-sso-server
-- 接入示例项目: xxl-sso-sample-cas
+- 接入示例项目: xxl-sso-sample-interceptor-cas
 
 #### 第一步、部署 CAS认证中心 
 CAS单点登录 依赖 CAS认证中心，CAS认证中心提供单点登录基础能力；因此需要先行启动 CAS认证中心（xxl-sso-server）。
@@ -519,7 +520,7 @@ CAS单点登录 依赖 CAS认证中心，CAS认证中心提供单点登录基础
 参考章节 “1.4 下载”，pom引入 “xxl-sso-core” 相关maven依赖；
 
 #### 第二步、添加 XXL-SSO 配置
-配置文件位置：xxl-sso-sample-cas/src/main/resources/application.properties
+配置文件位置：xxl-sso-sample-interceptor-cas/src/main/resources/application.properties
 
 ```
 ### xxl-sso 登录凭证/token传输key, 用于cookie、header登录凭证传输；
@@ -543,7 +544,7 @@ xxl-sso.client.excluded.paths=
 ```
 
 #### 第三步、添加 XXL-SSO 组件
-配置组件位置：xxl-sso-sample-cas/src/main/java/com/xxl/sso/sample/config/XxlSsoConfig
+配置组件位置：xxl-sso-sample-interceptor-cas/src/main/java/com/xxl/sso/sample/config/XxlSsoConfig
 
 ```
 /**
@@ -588,12 +589,12 @@ public void addInterceptors(InterceptorRegistry registry) {
 经过上述配置之后，启动示例项目。整体项目模块，以及可访问域名地址如下。
 **启动项目**：
 - CAS认证中心: xxl-sso-server
-- 接入方应用：xxl-sso-sample-cas
+- 接入方应用：xxl-sso-sample-interceptor-cas
 
 **访问地址**：
 - CAS认证中心，域名地址：http://xxlssoserver.com:8080/xxl-sso-server/
-- Client应用01，域名地址：http://xxlssoclient1.com:8081/xxl-sso-sample-cas/
-- Client应用02，域名地址：http://xxlssoclient2.com:8081/xxl-sso-sample-cas/
+- Client应用01，域名地址：http://xxlssoclient1.com:8081/
+- Client应用02，域名地址：http://xxlssoclient2.com:8081/
 
 
 CAS登录/注销流程验证：
@@ -621,7 +622,7 @@ CAS登录/注销流程验证：
 | 概念                          | 说明
 |-----------------------------| ---
 | Cas Server                  | Cas认证中心，提供单点登录基础能力；仅 “CAS单点登录” 登录类型依赖该服务；
-| Cas Client                  | Cas客户端应用，即接入CAS单点登录的Client应用，如 “xxl-sso-sample-cas”；仅 “CAS单点登录” 登录类型存在该概念；
+| Cas Client                  | Cas客户端应用，即接入CAS单点登录的Client应用，如 “xxl-sso-sample-interceptor-cas”；仅 “CAS单点登录” 登录类型存在该概念；
 | Ticket                      | Cas Client 与 Cas Server 信息交换的临时票据信息；
 | Token                       | 用户登录凭证信息；
 | LoginInfo                   | 登录用户结构化信息，与 登录凭证/Token 相对应；
@@ -665,7 +666,7 @@ c、登录态识别：
 
 d、核心流程：
   - 登录流程：
-      - a、访问系统应用（xxl-sso-sample-web），未登录将通过 Interceptor 拦截，并主动跳转 “/login” 路径进入登录页面；
+      - a、访问系统应用（xxl-sso-sample-interceptor-web），未登录将通过 Interceptor 拦截，并主动跳转 “/login” 路径进入登录页面；
       - b、登录成功，服务端构建 LoginInfo 写入 LoginStore；生成登录 token 写入 统一域名 Cookie中；
       - c、跳转返回来源页面，Interceptor 拦截器校验 统一域名 Cookie 中 token ，校验通过放行；
   - 注销流程：客户端访问 “/logout” 路径，进行注销登录，并跳转登录页面；
@@ -710,9 +711,9 @@ c、登录态识别：
 
 d、核心流程：
   - 登录流程：
-      - a、访问 “Client应用（xxl-sso-sample-cas）”，未登录将通过 Interceptor 拦截，并主动跳转 “CasServer（xxl-sso-server）” 进入登录页面；
-      - b、登录成功，服务端构建 LoginInfo 写入 LoginStore，生成登录 token 写入 CasServer 域名 Cookie中；然后，携带登录token 并跳转返回； “Client应用（xxl-sso-sample-cas）”；
-      - c、跳转返回 “Client应用（xxl-sso-sample-cas）”，校验所携带登录token，写入 Client应用 域名 Cookie 中；
+      - a、访问 “Client应用（xxl-sso-sample-interceptor-cas）”，未登录将通过 Interceptor 拦截，并主动跳转 “CasServer（xxl-sso-server）” 进入登录页面；
+      - b、登录成功，服务端构建 LoginInfo 写入 LoginStore，生成登录 token 写入 CasServer 域名 Cookie中；然后，携带登录token 并跳转返回； “Client应用（xxl-sso-sample-interceptor-cas）”；
+      - c、跳转返回 “Client应用（xxl-sso-sample-interceptor-cas）”，校验所携带登录token，写入 Client应用 域名 Cookie 中；
   - 注销流程：客户端访问 “CasServer（xxl-sso-server）” 注销登录页面；将跳转 “CasServer（xxl-sso-server）” 进入登录页面；
   - 认证流程：客户端请求，将携带域名下认证 “cookie”，服务端解析token，从 LoginStore 中获取登录态信息；
 
@@ -779,7 +780,7 @@ Response<String> result = XxlSsoHelper.hasPermission(LoginInfo loginInfo, String
 ### 4.7、登录认证  
 XXL-SSO 支持灵活的登录认证能力；系统实现上，当前提供 注解、API 多种方式支持。
 
-注解 使用示例：（如下示例参考项目“xxl-sso-sample-web”）
+注解 使用示例：（如下示例参考项目“xxl-sso-sample-interceptor-web”）
 ```
 @XxlSso                         // 限制需要登录；
 @XxlSso(login=false)            // 不需要登录；
@@ -799,7 +800,7 @@ XXL-SSO 支持 权限、角色 多个维度进行权限认证：
 
 系统实现上，当前提供 注解、API 多种方式支持。
 
-注解 使用示例：（如下示例参考项目“xxl-sso-sample-web”）
+注解 使用示例：（如下示例参考项目“xxl-sso-sample-interceptor-web”）
 ```
 @XxlSso(permission = "user:add")	// 限制需要登录；限制需要拥有指定注解
 @XxlSso(role = "admin")				// 限制需要登录；限制需要拥有指定角色
@@ -884,7 +885,10 @@ Response<String> result = XxlSsoHelper.hasPermission(LoginInfo loginInfo, String
 - 1、【升级】升级至 SpringBoot4；升级多项maven依赖至较新版本，如 spring、gson、jedis、xxl-tool 等；
 - 2、【优化】重构Sample项目代码，降低项目层级结构；
 
-### v2.3.1 Release Notes [ING]
+### v2.3.1 Release Notes [2025-12-20]
+- 1、【升级】升级多项依赖至较新版本，如 jedis、xxl-tool、spring 等；
+
+### v2.3.2 Release Notes [ING]
 - 1、【ING】集成WebFlux、Spring-Cloud-Gateway，并提供接入示例；（支持 interceptor、filter、webflux、gateway）
 - 2、【ING】增强用户增强安全性：登陆用户数据中，新增客户端信息如ip、ua等，防止token被窃取；
 
