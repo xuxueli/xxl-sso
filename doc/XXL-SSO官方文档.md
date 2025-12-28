@@ -888,7 +888,11 @@ Response<String> result = XxlSsoHelper.hasPermission(LoginInfo loginInfo, String
 ### v2.3.1 Release Notes [2025-12-20]
 - 1、【升级】升级多项依赖至较新版本，如 jedis、xxl-tool、spring 等；
 
-### v2.3.2 Release Notes [ING]
+### v2.3.2 Release Notes [2025-12-28]
+- 1、【升级】重构项目依赖管理，将依赖版本统一到父级pom；
+- 2、【升级】升级多项依赖至较新版本，如 xxl-tool 等；
+
+### v2.3.3 Release Notes [ING]
 - 1、【ING】集成WebFlux、Spring-Cloud-Gateway，并提供接入示例；（支持 interceptor、filter、webflux、gateway）
 - 2、【ING】增强用户增强安全性：登陆用户数据中，新增客户端信息如ip、ua等，防止token被窃取；
 

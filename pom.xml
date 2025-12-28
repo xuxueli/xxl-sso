@@ -46,12 +46,78 @@
         <jedis.version>7.2.0</jedis.version>
     </properties>
 
+    <dependencyManagement>
+        <dependencies>
+            <!-- springboot -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring-boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
 
-    <build>
-        <plugins>
-        </plugins>
-    </build>
+            <!-- slf4j -->
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${slf4j-api.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-reload4j</artifactId>
+                <version>${slf4j-api.version}</version>
+            </dependency>
+            <!-- junit -->
+            <dependency>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter-engine</artifactId>
+                <version>${junit-jupiter.version}</version>
+            </dependency>
 
+            <!-- xxl-tool -->
+            <dependency>
+                <groupId>com.xuxueli</groupId>
+                <artifactId>xxl-tool</artifactId>
+                <version>${xxl-tool.version}</version>
+            </dependency>
+            <!-- gson -->
+            <dependency>
+                <groupId>com.google.code.gson</groupId>
+                <artifactId>gson</artifactId>
+                <version>${gson.version}</version>
+            </dependency>
+
+            <!-- servlet -->
+            <dependency>
+                <groupId>jakarta.servlet</groupId>
+                <artifactId>jakarta.servlet-api</artifactId>
+                <version>${jakarta.servlet-api.version}</version>
+            </dependency>
+
+            <!-- jedis (support redis store) -->
+            <dependency>
+                <groupId>redis.clients</groupId>
+                <artifactId>jedis</artifactId>
+                <version>${jedis.version}</version>
+            </dependency>
+
+            <!-- springmvc (support annotation) -->
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-webmvc</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+
+            <!-- xxl-sso-core -->
+            <dependency>
+                <groupId>com.xuxueli</groupId>
+                <artifactId>xxl-sso-core</artifactId>
+                <version>${project.parent.version}</version>
+            </dependency>
+
+        </dependencies>
+    </dependencyManagement>
 
     <licenses>
         <license>
@@ -59,7 +125,6 @@
             <url>https://opensource.org/licenses/GPL-3.0</url>
         </license>
     </licenses>
-
     <scm>
         <tag>master</tag>
         <url>https://github.com/xuxueli/xxl-sso.git</url>
@@ -74,6 +139,11 @@
             <url>https://github.com/xuxueli</url>
         </developer>
     </developers>
+
+    <build>
+        <plugins>
+        </plugins>
+    </build>
 
     <profiles>
 
