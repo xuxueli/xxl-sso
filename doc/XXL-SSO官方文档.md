@@ -324,10 +324,10 @@ public Response<String> test41(HttpServletRequest request) {
 - **访问地址**：http://xxlssoclient1.com:8083/
 
 由于未进行登录，XXL-SSO 将会自动跳转到配置的登录页面：
-![输入图片说明](https://www.xuxueli.com/doc/static/xxl-sso/images/img_02.png "在这里输入图片标题")
+![输入图片说明](https://www.xuxueli.com/project/static/xxl-sso/images/img_02.png "在这里输入图片标题")
 
 页面登录之后，将会跳转到系统主页：
-![输入图片说明](https://www.xuxueli.com/doc/static/xxl-sso/images/img_03.png "在这里输入图片标题")
+![输入图片说明](https://www.xuxueli.com/project/static/xxl-sso/images/img_03.png "在这里输入图片标题")
 
 
 访问如下接口地址，验证 登录验证、权限验证 逻辑：（参考 “第四步、代码中进行 XXL-SSO 登录验证、权限验证” 中代码）
@@ -600,12 +600,12 @@ public void addInterceptors(InterceptorRegistry registry) {
 CAS登录/注销流程验证：
 **a、登录流程**：
 - 1、访问 "Client应用01" 域名地址 ，将会自动 redirect 到 "CAS认证中心" 登录界面；
-  ![输入图片说明](https://www.xuxueli.com/doc/static/xxl-sso/images/img_04.png "在这里输入图片标题")
+  ![输入图片说明](https://www.xuxueli.com/project/static/xxl-sso/images/img_04.png "在这里输入图片标题")
 - 2、成功登录后，将会自动 redirect 返回到 "Client应用01"，并切换为已登录状态；
-  ![输入图片说明](https://www.xuxueli.com/doc/static/xxl-sso/images/img_06.png "在这里输入图片标题")
+  ![输入图片说明](https://www.xuxueli.com/project/static/xxl-sso/images/img_06.png "在这里输入图片标题")
 - 3、此时，访问 "Client应用02" 域名地址，不需登陆将会自动切换为已登录状态；
 - 4、另外，登录后直接访问 "CAS认证中心" 可进入CAS首页；可通过 “打开“Client应用01” 快速打开Client接入方应用。
-  ![输入图片说明](https://www.xuxueli.com/doc/static/xxl-sso/images/img_05.png "在这里输入图片标题")
+  ![输入图片说明](https://www.xuxueli.com/project/static/xxl-sso/images/img_05.png "在这里输入图片标题")
 
 **b、注销流程**：
 - 1、访问 "Client应用01" 配置的 "注销登陆path"，将会自动 redirect 到 "CAS认证中心" 并自动注销登陆状态；
@@ -615,7 +615,7 @@ CAS登录/注销流程验证：
 ## 四、总体设计
 ### 4.1、架构图
 
-![输入图片说明](https://www.xuxueli.com/doc/static/xxl-sso/images/img_01.png "在这里输入图片标题")
+![输入图片说明](https://www.xuxueli.com/project/static/xxl-sso/images/img_01.png "在这里输入图片标题")
 
 ### 4.2、核心概念
 
@@ -651,7 +651,7 @@ XXL-SSO 支持多种登录类型，支持渐进式集成接入使用，从简单
 #### 4.5.1、登录类型：“Web常规登录”
 适用于常规“单体系统”场景；限制相关Web系统部署在相同域名下，登录凭证存储在公共域名下；
 
-![输入图片说明](https://www.xuxueli.com/doc/static/xxl-sso/images/img_07.png "在这里输入图片标题")
+![输入图片说明](https://www.xuxueli.com/project/static/xxl-sso/images/img_07.png "在这里输入图片标题")
 
 a、登录信息实体：
   - token：登录态标识信息，根据登录态信息（LoginInfo）结合算法生成；
@@ -675,7 +675,7 @@ d、核心流程：
 #### 4.5.2、登录类型：“Native登录”
 适用于“移动端、小程序、前后端分离、客户端”等系统场景；适用于无Cookie场景，天然不受限域名。支持多端登录、以及登录态共享，但是登录凭证需要客户端管理维护；
 
-![输入图片说明](https://www.xuxueli.com/doc/static/xxl-sso/images/img_08.png "在这里输入图片标题")
+![输入图片说明](https://www.xuxueli.com/project/static/xxl-sso/images/img_08.png "在这里输入图片标题")
 
 a、登录信息实体：
   - token：登录态标识信息，根据登录态信息（LoginInfo）结合算法生成；
@@ -696,7 +696,7 @@ d、核心流程：
 #### 4.5.3、登录类型：“CAS单点登录”
 适用于“多系统跨域、企业多系统统一登录”等系统场景；解决了系统 跨域登录认证、统一登录认证 问题；但是需要单独部署CAS认证中心、提供单点登录相关基础能力；
 
-![输入图片说明](https://www.xuxueli.com/doc/static/xxl-sso/images/img_09.png "在这里输入图片标题")
+![输入图片说明](https://www.xuxueli.com/project/static/xxl-sso/images/img_09.png "在这里输入图片标题")
 
 a、登录信息实体：
   - token：登录态标识信息，根据登录态信息（LoginInfo）结合算法生成；
