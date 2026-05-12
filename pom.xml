@@ -38,7 +38,7 @@
         <jakarta.servlet-api.version>6.1.0</jakarta.servlet-api.version>
         <!-- spring -->
         <spring-boot.version>4.0.5</spring-boot.version>
-        <spring.version>7.0.6</spring.version>
+        <spring.version>7.0.7</spring.version>
 
         <!-- xxl-tool -->
         <xxl-tool.version>2.5.0</xxl-tool.version>
