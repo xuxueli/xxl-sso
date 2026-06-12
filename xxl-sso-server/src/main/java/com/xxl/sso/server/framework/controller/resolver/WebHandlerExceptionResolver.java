@@ -1,4 +1,4 @@
-package com.xxl.sso.server.controller.resolver;
+package com.xxl.sso.server.framework.controller.resolver;
 
 import com.xxl.tool.json.GsonTool;
 import com.xxl.tool.response.Response;

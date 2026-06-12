@@ -1,6 +1,6 @@
-package com.xxl.sso.server.service;
+package com.xxl.sso.server.framework.service;
 
-import com.xxl.sso.server.model.AccountInfo;
+import com.xxl.sso.server.framework.model.AccountInfo;
 import com.xxl.tool.response.Response;
 
 public interface AccountService {

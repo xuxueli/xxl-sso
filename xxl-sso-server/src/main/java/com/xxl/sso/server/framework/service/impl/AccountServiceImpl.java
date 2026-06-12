@@ -1,7 +1,7 @@
-package com.xxl.sso.server.service.impl;
+package com.xxl.sso.server.framework.service.impl;
 
-import com.xxl.sso.server.model.AccountInfo;
-import com.xxl.sso.server.service.AccountService;
+import com.xxl.sso.server.framework.model.AccountInfo;
+import com.xxl.sso.server.framework.service.AccountService;
 import com.xxl.tool.core.StringTool;
 import com.xxl.tool.response.Response;
 import org.springframework.stereotype.Service;

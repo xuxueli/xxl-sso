@@ -1,4 +1,4 @@
-package com.xxl.sso.server.model;
+package com.xxl.sso.server.framework.model;
 
 import java.util.List;
 

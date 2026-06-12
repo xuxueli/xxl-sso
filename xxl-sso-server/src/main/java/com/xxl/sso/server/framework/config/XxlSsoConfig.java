@@ -1,4 +1,4 @@
-package com.xxl.sso.server.config;
+package com.xxl.sso.server.framework.config;
 
 import com.xxl.sso.core.bootstrap.XxlSsoBootstrap;
 import com.xxl.sso.core.store.impl.RedisLoginStore;

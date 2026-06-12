@@ -1,10 +1,10 @@
-package com.xxl.sso.server.controller;
+package com.xxl.sso.server.framework.controller;
 
 import com.xxl.sso.core.constant.Const;
 import com.xxl.sso.core.helper.XxlSsoHelper;
 import com.xxl.sso.core.model.LoginInfo;
-import com.xxl.sso.server.model.AccountInfo;
-import com.xxl.sso.server.service.AccountService;
+import com.xxl.sso.server.framework.model.AccountInfo;
+import com.xxl.sso.server.framework.service.AccountService;
 import com.xxl.tool.core.StringTool;
 import com.xxl.tool.id.UUIDTool;
 import com.xxl.tool.response.Response;
