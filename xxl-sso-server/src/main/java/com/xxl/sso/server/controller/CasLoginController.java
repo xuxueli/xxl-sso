@@ -38,7 +38,7 @@ public class CasLoginController {
 
         if (loginCheckResult!=null && loginCheckResult.isSuccess()) {
             model.addAttribute("loginInfo", loginCheckResult.getData());
-            return "index";
+            return "framework/index";
         } else {
             return "redirect:/login";
         }
@@ -73,7 +73,7 @@ public class CasLoginController {
             // 2.2、login fail, go to login-page
             model.addAttribute(Const.CLIENT_REDIRECT_URL, redirectUrl);
 
-            return "login";
+            return "framework/login";
         }
     }
 
