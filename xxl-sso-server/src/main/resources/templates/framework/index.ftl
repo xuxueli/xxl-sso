@@ -110,7 +110,7 @@
 
 <!-- 6-script start -->
 <@netCommon.commonScript />
-<script src="${request.contextPath}/static/biz/admin.common.js"></script>
+<script src="${request.contextPath}/static/framework/admin.common.js"></script>
 <!-- 6-script end -->
 
 </html>
