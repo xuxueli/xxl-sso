@@ -298,7 +298,7 @@ public class XxlSsoHelper {
         String ticket = loginInfoForToken.getUserId().concat("_").concat(UUIDTool.getSimpleUUID());
 
         // valid ticket
-        long ticketTimeout = 60 * 1000;
+        long ticketTimeout = 60;
         return getInstance().getLoginStore().createTicket(ticket, token, ticketTimeout);
     }
 

@@ -118,7 +118,7 @@ public class LoginStoreTest {
         String ticket = loginInfo.getUserId().concat("_").concat(UUIDTool.getSimpleUUID());
 
         // createTicket
-        Response<String> ret = loginStore.createTicket(ticket, token, 30*1000);
+        Response<String> ret = loginStore.createTicket(ticket, token, 30);
         logger.info("store ticket:{}", ticket);
 
         // validTicket

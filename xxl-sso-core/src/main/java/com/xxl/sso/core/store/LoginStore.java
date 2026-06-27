@@ -71,7 +71,7 @@ public interface LoginStore {
      *
      * @param userId        the userId of ticket
      * @param token         the token of ticket
-     * @param ticketTimeout for millisecond, limit 1s - 3min
+     * @param ticketTimeout for second, limit 1s - 3min
      * @return Response.data is ticket
      */
     default Response<String> createTicket(String userId, String token, long ticketTimeout) {

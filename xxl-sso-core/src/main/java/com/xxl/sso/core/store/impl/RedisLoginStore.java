@@ -181,8 +181,8 @@ public class RedisLoginStore implements LoginStore {
         if (StringTool.isBlank(ticket)) {
             return Response.ofFail("ticket is invalid");
         }
-        if (!(ticketTimeout>=1000 && ticketTimeout<=1000 * 60 * 3)) {
-            return Response.ofFail("ticketTimeout is invalid");
+        if (!(ticketTimeout>=1 && ticketTimeout<=60 * 3)) {
+            return Response.ofFail("ticket timeout is invalid");
         }
 
         // build ticket
