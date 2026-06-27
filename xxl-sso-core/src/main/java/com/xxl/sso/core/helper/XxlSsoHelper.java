@@ -199,6 +199,23 @@ public class XxlSsoHelper {
         return logoutResult;
     }
 
+    /**
+     * logout with header
+     *
+     * @param request       request
+     */
+    public static Response<String> logoutWithHeader(HttpServletRequest request) {
+
+        // get header
+        String token = request.getHeader(getInstance().getTokenKey());
+        if (StringTool.isBlank(token)) {
+            return Response.ofSuccess();    // not login; no need to logout.
+        }
+
+        // do logout
+        return logout(token);
+    }
+
 
     // ---------------------- loginCheck ----------------------
 
