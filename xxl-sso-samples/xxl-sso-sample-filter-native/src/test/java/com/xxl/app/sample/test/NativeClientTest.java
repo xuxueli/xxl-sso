@@ -2,11 +2,9 @@ package com.xxl.app.sample.test;
 
 import com.xxl.sso.core.constant.Const;
 import com.xxl.sso.core.model.LoginInfo;
-import com.xxl.sso.sample.openapi.model.LoginCheckRequest;
 import com.xxl.sso.sample.openapi.model.LoginRequest;
-import com.xxl.sso.sample.openapi.model.LogoutRequest;
-import com.xxl.tool.json.GsonTool;
 import com.xxl.tool.http.HttpTool;
+import com.xxl.tool.json.GsonTool;
 import com.xxl.tool.response.Response;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -24,6 +22,7 @@ public class NativeClientTest {
 	 */
 	public static String client01 = "http://xxlssoclient1.com:8082";
 	public static String client02 = "http://xxlssoclient2.com:8082";
+	private static final String TEST_TOKEN_KEY = "xxl_sso_token";		// same with application.properties
 
 	/**
 	 * For openapi server, it is recommended to deploy and provide services separately
@@ -138,14 +137,10 @@ public class NativeClientTest {
 		// url
 		String logoutUrl = openApiServer + "/native/openapi/logout";
 
-		// param
-		LogoutRequest logoutRequest = new LogoutRequest(token);
-		String requestBody = GsonTool.toJson(logoutRequest);
-
 		// invoke
 		String logoutResultJson = HttpTool
 				.createPost(logoutUrl)
-				.body(requestBody)
+				.header(TEST_TOKEN_KEY, token)
 				.execute()
 				.response();
 		Response<String> loginResult = GsonTool.fromJson(logoutResultJson, Response.class, String.class);
@@ -168,14 +163,10 @@ public class NativeClientTest {
 		// url
 		String logincheckUrl = openApiServer + "/native/openapi/logincheck";
 
-		// param
-		LoginCheckRequest loginCheckRequest = new LoginCheckRequest(token);
-		String requestBody = GsonTool.toJson(loginCheckRequest);
-
 		// invoke
 		String logincheckResultJson = HttpTool
 				.createPost(logincheckUrl)
-				.body(requestBody)
+				.header(TEST_TOKEN_KEY, token)
 				.execute()
 				.response();
 		Response<LoginInfo> loginResult = GsonTool.fromJson(logincheckResultJson, Response.class, LoginInfo.class);

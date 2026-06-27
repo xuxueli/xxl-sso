@@ -1,14 +1,14 @@
 package com.xxl.sso.sample.openapi.controller;
 
+import com.xxl.sso.core.annotation.XxlSso;
 import com.xxl.sso.core.helper.XxlSsoHelper;
 import com.xxl.sso.core.model.LoginInfo;
 import com.xxl.sso.sample.openapi.model.AccountInfo;
-import com.xxl.sso.sample.openapi.model.LoginCheckRequest;
 import com.xxl.sso.sample.openapi.model.LoginRequest;
-import com.xxl.sso.sample.openapi.model.LogoutRequest;
 import com.xxl.sso.sample.openapi.service.AccountService;
 import com.xxl.tool.id.UUIDTool;
 import com.xxl.tool.response.Response;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,12 +30,10 @@ public class NativeOpenAPIController {
 
     /**
      * Login
-     *
-     * @param loginRequest
-     * @return
      */
     @RequestMapping("/login")
     @ResponseBody
+    @XxlSso(login = false)
     public Response<String> login(@RequestBody(required = false) LoginRequest loginRequest) {
         // base valid
         if (loginRequest == null) {
@@ -72,39 +70,21 @@ public class NativeOpenAPIController {
 
     /**
      * Logout
-     *
-     * @param logoutRequest
-     * @return
      */
     @RequestMapping("/logout")
     @ResponseBody
-    public Response<String> logout(@RequestBody(required = false) LogoutRequest logoutRequest) {
-        // base valid
-        if (logoutRequest == null) {
-            return Response.ofFail("token is invalid.");
-        }
-
-        // 1、logout  (remove store)
-        Response<String> logoutResult = XxlSsoHelper.logout(logoutRequest.getToken());
-        return logoutResult;
+    @XxlSso(login = false)
+    public Response<String> logout(HttpServletRequest request) {
+        return XxlSsoHelper.logoutWithHeader(request);
     }
 
     /**
      * loginCheck
-     *
-     * @param loginCheckRequest
-     * @return
      */
     @RequestMapping("/logincheck")
     @ResponseBody
-    public Response<LoginInfo> logincheck(@RequestBody(required = false) LoginCheckRequest loginCheckRequest) {
-        // base valid
-        if (loginCheckRequest == null) {
-            return Response.ofFail("token is invalid.");
-        }
-
-        // 1、logout
-        return XxlSsoHelper.loginCheck(loginCheckRequest.getToken());
+    public Response<LoginInfo> logincheck(HttpServletRequest request) {
+        // login check
+        return XxlSsoHelper.loginCheckWithAttr(request);
     }
-
 }

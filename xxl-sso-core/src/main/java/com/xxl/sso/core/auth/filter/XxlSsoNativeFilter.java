@@ -107,6 +107,7 @@ public class XxlSsoNativeFilter implements Filter {
             return;
         }
 
+        // filter cannot process biz-method( @XxlSso ) , exclude-logic must use excludedPaths
 
         // 3、login check
         Response<LoginInfo> loginCheckResult = XxlSsoHelper.loginCheckWithHeader(request);
