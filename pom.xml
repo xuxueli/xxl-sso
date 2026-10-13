@@ -39,7 +39,7 @@
 
         <!-- spring -->
         <spring-boot.version>4.1.0</spring-boot.version>
-        <spring.version>7.0.8</spring.version>
+        <spring.version>7.0.9</spring.version>
         <!-- reactor -->
         <reactor.version>3.8.6</reactor.version>
 
