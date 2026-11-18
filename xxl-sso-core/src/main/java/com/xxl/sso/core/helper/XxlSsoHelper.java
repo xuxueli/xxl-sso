@@ -166,15 +166,18 @@ public class XxlSsoHelper {
      * @param token     token
      */
     public static Response<String> logout(String token) {
+        if (StringTool.isBlank(token)) {
+            return Response.ofSuccess();
+        }
 
-        // parse token
-        LoginInfo loginInfoForToken = TokenHelper.parseToken(token);
-        if (loginInfoForToken == null) {
-            return Response.ofSuccess();        // invalid token; no need to logout.
+        // Verify token signature against store before removing session.
+        Response<LoginInfo> loginCheckResult = loginCheck(token);
+        if (!loginCheckResult.isSuccess()) {
+            return Response.of(loginCheckResult.getCode(), loginCheckResult.getMsg());
         }
 
         // remove store-LoginInfo
-        return getInstance().getLoginStore().remove(loginInfoForToken.getUserId());
+        return getInstance().getLoginStore().remove(loginCheckResult.getData().getUserId());
     }
 
     /**
