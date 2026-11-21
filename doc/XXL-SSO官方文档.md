@@ -904,15 +904,18 @@ Response<String> result = XxlSsoHelper.hasPermission(LoginInfo loginInfo, String
 - 5、【升级】升级多项依赖至较新版本；
 
 ### v2.4.2 Release Notes [ING]
-- 1、【ING】增强用户增强安全性：登陆用户数据中，新增客户端信息如ip、ua等，防止token被窃取；
-- 2、【ING】集成 Spring-Cloud-Gateway，并提供接入示例；（支持 interceptor、filter、webflux、gateway）
+- 1、【AI】AI编程规范：新增 Agents.md，提供Agent编程规范，约束并提升Agent开发质量；
+- 2、【ING】增强用户增强安全性：登陆用户数据中，新增客户端信息如ip、ua等，防止token被窃取；
 - 3、【ING】SSO 请求Token，下划线间隔改为中划线方式，避免Nginx等默认不支持问题；
+- 4、【ING】安全增强；
+- 5、【升级】升级多项依赖至较新版本；
+
 
 ### TODO LIST
 - 1、增强用户增强安全性：登陆用户数据中，新增客户端信息如ip、ua等，防止token被窃取；
 - 2、认证中心与接入端交互数据加密，临时AccessToken阅后即焚，增强安全性；
 - 3、CAS认证中心，支持维护客户端应用；防止跳转非法第三方导致登陆信息泄露；
-- 4、集成网关支持；集成WebFlux, Spring-Cloud-Gateway等；
+- 4、集成 Spring-Cloud-Gateway，并提供接入示例；（支持 interceptor、filter、webflux、gateway）
 - 5、分组隔离：分组内共享登陆状态，分组之间登录态隔离；
   - 租户：store数据，前后端key 隔离；
   - 多端：隔离登陆态，map存多token（用户最长有效期，map维护本次有效期）；
