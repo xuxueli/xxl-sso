@@ -932,6 +932,8 @@ Response<String> result = XxlSsoHelper.hasPermission(LoginInfo loginInfo, String
 - 11、【优化】未登录请求识别统一：Ajax/JSON请求判定支持Accept、X-Requested-With与Content-Type，Servlet与WebFlux分别抽取WebTool、ReactiveWebTool，保持两端行为一致；
 - 12、【升级】升级多项依赖至较新版本；CI 构建 Actions 升级至较新版本；AntPathMatcher升级，提升路径匹配效率；
 
+### v2.5.1 Release Notes [ING]
+
 
 ### TODO LIST
 - 1、增强用户增强安全性：登陆用户数据中，新增客户端信息如ip、ua等，防止token被窃取；
