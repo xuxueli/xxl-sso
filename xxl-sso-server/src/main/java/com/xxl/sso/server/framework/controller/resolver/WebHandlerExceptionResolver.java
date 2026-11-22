@@ -15,22 +15,40 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
+ * web handler exception resolver
+ *
+ * <p>
+ * 统一处理认证中心未捕获异常：@ResponseBody 接口返回 JSON，页面请求返回统一错误页。
+ * </p>
+ *
  * @author xuxueli 2017-08-01 21:51:21
  */
 @Component
 public class WebHandlerExceptionResolver implements HandlerExceptionResolver {
-    private static transient Logger logger = LoggerFactory.getLogger(WebHandlerExceptionResolver.class);
 
+    /**
+     * logger
+     */
+    private static final Logger logger = LoggerFactory.getLogger(WebHandlerExceptionResolver.class);
+
+    /**
+     * resolve exception and write error response
+     *
+     * @param request   request
+     * @param response  response
+     * @param handler   current handler
+     * @param ex        exception
+     * @return empty ModelAndView; response is written directly or error page is rendered
+     */
     @Override
     public ModelAndView resolveException(HttpServletRequest request,
                                          HttpServletResponse response,
                                          Object handler,
                                          Exception ex) {
 
-        //logger.error("WebExceptionResolver:{}", ex.getMessage(), ex);
         logger.warn("WebExceptionResolver:{}", ex.getMessage());
 
-        // if json
+        // json response when handler method annotated with @ResponseBody
         boolean isJson = false;
         if (handler instanceof HandlerMethod) {
             HandlerMethod method = (HandlerMethod)handler;
@@ -40,12 +58,10 @@ public class WebHandlerExceptionResolver implements HandlerExceptionResolver {
             }
         }
 
-
-
         // error result
         Response<String> errorResult = Response.ofFail(ex.toString().replaceAll("\n", "<br/>"));
 
-        // response
+        // response: json for @ResponseBody, error page otherwise
         ModelAndView mv = new ModelAndView();
         if (isJson) {
             try {

@@ -923,15 +923,14 @@ Response<String> result = XxlSsoHelper.hasPermission(LoginInfo loginInfo, String
 - 2、【安全】CAS客户端来源防护：CAS登录跳转新增客户端来源白名单校验（支持AntPathMatcher），规避开放重定向导致票据泄露风险；
 - 3、【安全】CAS票据安全防护：CAS登陆票据改为一次性使用，防止重放攻击；
 - 4、【安全】登出安全增强：登陆请求二次进行token验证，防止恶意登出；合并PR-91；
-- 5、【调整】SSO认证Token兼容：XXL_SSO_TOKEN下划线间隔改为中划线，避免Nginx等默认不支持问题（升级注意：默认 Cookie/Header key 由 xxl_sso_token 变更为 xxl-sso-token，已接入系统需同步调整 xxl-sso.token.key，否则存量登录态将失效）；
-- 6、【升级】升级多项依赖至较新版本；CI 构建 Actions 升级至较新版本；
-- 7、【优化】AntPathMatcher升级，提升路径匹配效率；
-- 8、【安全】CAS登录地址构建优化：客户端跳转CAS登录页时，redirect_url统一URL编码，避免地址中的&、=等字符截断参数；同时丢弃原地址query，避免票据参数累积导致重定向循环；
-- 9、【优化】未登录请求识别统一：Ajax/JSON请求判定支持Accept、X-Requested-With与Content-Type，Servlet与WebFlux分别抽取WebTool、ReactiveWebTool，保持两端行为一致；
-- 10、【优化】LocalLoginStore优化：升级为LRU有界缓存：默认容量10000，支持构造器自定义容量；容量满时淘汰最久未使用登录态，避免本地登录态无界增长；
-- 11、【修复】RedisLoginStore有效期修复：登录态有效期不足1秒时TTL限制为最小1秒，避免Redis TTL取整为0导致登录态提前过期问题；
-- 12、【优化】稳定性修复：XxlSsoBootstrap未配置LoginStore时启动快速失败，stop容错；JedisTool的start/stop支持幂等与重启；hasRole/hasPermission在loginInfo为空时返回失败，避免NPE；
-- 13、【调整】有效期TTL调整：过期时间单位由毫秒统一调整为秒，规范化时间单位，避免误解（升级注意：xxl-sso.token.timeout 与 LoginInfo.expireTime 均改为秒，存量配置需同步换算，如 604800000 调整为 604800；自定义 LoginStore 需按秒进行过期判断与 TTL 计算）；
+- 5、【调整】SSO认证Token兼容：XXL_SSO_TOKEN下划线间隔改为中划线，避免Nginx等默认不支持问题；
+- 6、【安全】CAS登录地址构建优化：客户端跳转CAS登录页时，redirect_url统一URL编码，避免地址中的&、=等字符截断参数；同时丢弃原地址query，避免票据参数累积导致重定向循环；
+- 7、【优化】LocalLoginStore优化：升级为LRU有界缓存：默认容量10000，支持构造器自定义容量；容量满时淘汰最久未使用登录态，避免本地登录态无界增长；
+- 8、【调整】登陆有效期TTL标准化：过期时间单位统一为秒，规范化时间单位，避免误解；
+- 9、【修复】RedisLoginStore有效期修复：登录态有效期不足1秒时TTL限制为最小1秒，避免Redis TTL取整为0导致登录态提前过期问题；
+- 10、【优化】组件稳定性优化：XxlSsoBootstrap未配置LoginStore时启动快速失败，stop容错；JedisTool的start/stop支持幂等与重启；hasRole/hasPermission在loginInfo为空时返回失败，避免NPE；
+- 11、【优化】未登录请求识别统一：Ajax/JSON请求判定支持Accept、X-Requested-With与Content-Type，Servlet与WebFlux分别抽取WebTool、ReactiveWebTool，保持两端行为一致；
+- 12、【升级】升级多项依赖至较新版本；CI 构建 Actions 升级至较新版本；AntPathMatcher升级，提升路径匹配效率；
 
 
 ### TODO LIST

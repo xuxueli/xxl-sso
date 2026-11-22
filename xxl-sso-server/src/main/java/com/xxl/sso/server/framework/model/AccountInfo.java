@@ -3,6 +3,12 @@ package com.xxl.sso.server.framework.model;
 import java.util.List;
 
 /**
+ * account info
+ *
+ * <p>
+ * 认证中心账号模型，仅用于示例与联调；包含账号基础信息、角色与权限列表。
+ * </p>
+ *
  * @author xuxueli 2018-03-22 23:51:51
  */
 public class AccountInfo {

@@ -535,7 +535,7 @@ public class XxlSsoHelper {
             return Response.ofFail("not login.");
         }
         if (CollectionTool.isEmpty(loginInfo.getRoleList())) {
-            return Response.ofFail("has no role[2]");
+            return Response.ofFail("has no role");
         }
 
         return loginInfo.getRoleList().contains(role)
@@ -563,7 +563,7 @@ public class XxlSsoHelper {
             return Response.ofFail("not login.");
         }
         if (CollectionTool.isEmpty(loginInfo.getPermissionList())) {
-            return Response.ofFail("has no permission[2]");
+            return Response.ofFail("has no permission");
         }
 
         return loginInfo.getPermissionList().contains(permission)
