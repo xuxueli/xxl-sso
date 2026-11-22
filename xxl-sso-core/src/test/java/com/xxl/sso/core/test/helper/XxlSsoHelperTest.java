@@ -91,7 +91,7 @@ public class XxlSsoHelperTest {
         logger.info("Login Check Response(after logout) = " + XxlSsoHelper.loginCheck(token));
 
         // do stop
-        start();
+        stop();
     }
 
     @Test

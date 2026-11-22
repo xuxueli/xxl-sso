@@ -205,7 +205,7 @@ public class XxlSsoReactiveHelper {
 
         // parse token
         LoginInfo loginInfoForToken = TokenHelper.parseToken(token);
-        if (loginInfoForToken == null) {
+        if (loginInfoForToken == null || StringTool.isBlank(loginInfoForToken.getUserId())) {
             return Response.ofFail("create ticket fail, not login.");
         }
 

@@ -49,14 +49,14 @@ public class JedisTool {
     private String password;
 
     /**
-     * connection timeout, seconds
+     * connection timeout, ms
      */
-    private int connectionTimeout = 2;
+    private int connectionTimeout = 2000;
 
     /**
-     * socket read timeout, seconds
+     * socket read timeout, ms
      */
-    private int soTimeout = 2;
+    private int soTimeout = 2000;
 
     /**
      * max redirect attempts for cluster
@@ -139,8 +139,8 @@ public class JedisTool {
                 GenericObjectPoolConfig<Connection> poolConfig = new GenericObjectPoolConfig<>();
                 JedisClientConfig clientConfig = DefaultJedisClientConfig
                         .builder()
-                        .timeoutMillis(soTimeout * 1000)
-                        .connectionTimeoutMillis(connectionTimeout * 1000)
+                        .timeoutMillis(soTimeout)
+                        .connectionTimeoutMillis(connectionTimeout)
                         .user(user)
                         .password(password)
                         .build();
@@ -155,8 +155,8 @@ public class JedisTool {
                 JedisPoolConfig poolConfig = new JedisPoolConfig();
                 JedisClientConfig clientConfig = DefaultJedisClientConfig
                         .builder()
-                        .timeoutMillis(soTimeout * 1000)
-                        .connectionTimeoutMillis(connectionTimeout * 1000)
+                        .timeoutMillis(soTimeout)
+                        .connectionTimeoutMillis(connectionTimeout)
                         .user(user)
                         .password(password)
                         .build();

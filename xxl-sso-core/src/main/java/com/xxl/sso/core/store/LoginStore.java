@@ -12,6 +12,11 @@ import com.xxl.tool.response.Response;
  * 实现需明确序列化方式、过期语义、并发安全与 {@link #start()} / {@link #stop()} 资源释放。
  * </p>
  *
+ * <p>
+ * 时间单位统一为秒：{@link LoginInfo#getExpireTime()} 为 epoch seconds，票据 {@code ticketTimeout} 为秒。
+ * 存储实现必须按秒进行过期判断与 TTL 计算。
+ * </p>
+ *
  * @author xuxueli 2018-04-02 20:03:11
  */
 public interface LoginStore {

@@ -248,6 +248,11 @@ public class RedisLoginStore implements LoginStore {
      */
     @Override
     public Response<String> validTicket(String ticket) {
+        // valid ticket
+        if (StringTool.isBlank(ticket)) {
+            return Response.ofFail("ticket is invalid");
+        }
+
         // parse storeKey
         String storeKey = parseTicketStoreKey(ticket);
 
