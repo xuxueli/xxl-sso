@@ -213,7 +213,7 @@ public class XxlSsoReactiveHelper {
         String ticket = loginInfoForToken.getUserId().concat("_").concat(UUIDTool.getSimpleUUID());
 
         // valid ticket
-        long ticketTimeout = 60;
+        long ticketTimeout = Const.CAS_TICKET_TIMEOUT;
         return XxlSsoHelper.getInstance().getLoginStore().createTicket(ticket, token, ticketTimeout);
     }
 

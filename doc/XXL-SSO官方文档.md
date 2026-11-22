@@ -923,10 +923,15 @@ Response<String> result = XxlSsoHelper.hasPermission(LoginInfo loginInfo, String
 - 2、【安全】CAS客户端来源防护：CAS登录跳转新增客户端来源白名单校验（支持AntPathMatcher），规避开放重定向导致票据泄露风险；
 - 3、【安全】CAS票据安全防护：CAS登陆票据改为一次性使用，防止重放攻击；
 - 4、【安全】登出安全增强：登陆请求二次进行token验证，防止恶意登出；合并PR-91；
-- 5、【ING】增强用户增强安全性：登陆用户数据中，新增客户端信息如ip、ua等，防止token被窃取；
-- 6、【ING】SSO 请求Token，下划线间隔改为中划线方式，避免Nginx等默认不支持问题；
-- 7、【升级】升级多项依赖至较新版本；CI 构建 Actions 升级至较新版本；
-- 8、【优化】AntPathMatcher升级，提升路径匹配效率；
+- 5、【调整】SSO认证Token：XXL_SSO_TOKEN下划线间隔改为中划线，避免Nginx等默认不支持问题；
+- 6、【升级】升级多项依赖至较新版本；CI 构建 Actions 升级至较新版本；
+- 7、【优化】AntPathMatcher升级，提升路径匹配效率；
+- 8、【安全】CAS登录地址构建优化：客户端跳转CAS登录页时，redirect_url统一URL编码，避免地址中的&、=等字符截断参数；同时丢弃原地址query，避免票据参数累积导致重定向循环；
+- 9、【优化】未登录请求识别统一：Ajax/JSON请求判定支持Accept、X-Requested-With与Content-Type，Servlet与WebFlux分别抽取WebTool、ReactiveWebTool，保持两端行为一致；
+- 10、【优化】LocalLoginStore升级为LRU有界缓存：默认容量10000，支持构造器自定义容量；容量满时淘汰最久未使用登录态，避免本地登录态无界增长；
+- 11、【修复】RedisLoginStore登录态剩余有效期不足1秒时Redis TTL取整为0的问题，TTL最小1秒；
+- 12、【优化】XxlSsoBootstrap未配置LoginStore时启动快速失败，stop容错；JedisTool的start/stop支持幂等与重启；
+- 13、【修复】hasRole/hasPermission在loginInfo为空时返回失败，避免NPE；
 
 
 ### TODO LIST
@@ -950,6 +955,7 @@ Response<String> result = XxlSsoHelper.hasPermission(LoginInfo loginInfo, String
     - client：统一身份管控客户端。sso接入；用户登陆、权限检验。
     - core：依赖；
     - sample：示例。
+- 7、【ING】增强用户增强安全性：登陆用户数据中，新增客户端信息如ip、ua等，防止token被窃取；
 
 
 ## 六、其他

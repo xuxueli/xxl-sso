@@ -2,10 +2,10 @@ package com.xxl.sso.core.auth.reactive;
 
 import com.xxl.sso.core.constant.Const;
 import com.xxl.sso.core.exception.XxlSsoException;
-import com.xxl.sso.core.helper.XxlSsoHelper;
 import com.xxl.sso.core.helper.XxlSsoReactiveHelper;
 import com.xxl.sso.core.model.LoginInfo;
 import com.xxl.sso.core.path.impl.AntPathMatcher;
+import com.xxl.sso.core.util.CasUrlTool;
 import com.xxl.sso.core.util.ReactiveWebTool;
 import com.xxl.tool.core.StringTool;
 import com.xxl.tool.json.GsonTool;
@@ -178,7 +178,7 @@ public class XxlSsoCasReactiveFilter implements WebFilter {
                 String originUrl = exchange.getRequest().getURI().toString();
 
                 // redirect login-path (encoded redirect_url, drop original query)
-                String finalLoginPath = XxlSsoHelper.casGenerateLoginUrl(serverAddress, loginPath, originUrl);
+                String finalLoginPath = CasUrlTool.buildLoginUrl(serverAddress, loginPath, originUrl);
 
                 ServerHttpResponse response = exchange.getResponse();
                 response.setStatusCode(HttpStatus.FOUND);

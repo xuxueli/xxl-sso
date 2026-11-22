@@ -1,22 +1,22 @@
 package com.xxl.sso.core.test.util;
 
-import com.xxl.sso.core.util.CasRedirectUrlValidator;
+import com.xxl.sso.core.util.CasUrlTool;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 /**
- * CasRedirectUrlValidator test
+ * CasUrlTool test
  *
  * @author xuxueli 2026-11-22
  */
-public class CasRedirectUrlValidatorTest {
+public class CasUrlToolTest {
 
     private static final String WHITELIST = "http://xxlssoclient1.com:8081/**,"
             + "http://127.0.0.1:8081/**,"
             + "http://*.example.com:8081/app/**,"
             + "https://app.example.com/**";
 
-    private static final CasRedirectUrlValidator VALIDATOR = new CasRedirectUrlValidator(WHITELIST);
+    private static final CasUrlTool VALIDATOR = new CasUrlTool(WHITELIST);
 
     @Test
     public void exactOriginTest() {
@@ -43,7 +43,7 @@ public class CasRedirectUrlValidatorTest {
 
     @Test
     public void emptyWhitelistTest() {
-        CasRedirectUrlValidator validator = new CasRedirectUrlValidator("");
+        CasUrlTool validator = new CasUrlTool("");
         Assertions.assertTrue(validator.isAllowed("https://evil.com/index"));
 
         // 跳转地址为空，始终拒绝
@@ -66,17 +66,17 @@ public class CasRedirectUrlValidatorTest {
     @Test
     public void invalidWhitelistTest() {
         Assertions.assertThrows(IllegalArgumentException.class,
-                () -> new CasRedirectUrlValidator("app.example.com/**"));
+                () -> new CasUrlTool("app.example.com/**"));
     }
 
     @Test
     public void appendQueryParamTest() {
         Assertions.assertEquals("http://a.com/index?ticket=1",
-                CasRedirectUrlValidator.appendQueryParam("http://a.com/index", "ticket", "1"));
+                CasUrlTool.appendQueryParam("http://a.com/index", "ticket", "1"));
         Assertions.assertEquals("http://a.com/index?k=v&ticket=1",
-                CasRedirectUrlValidator.appendQueryParam("http://a.com/index?k=v", "ticket", "1"));
+                CasUrlTool.appendQueryParam("http://a.com/index?k=v", "ticket", "1"));
         Assertions.assertEquals("http://a.com/index?ticket=1",
-                CasRedirectUrlValidator.appendQueryParam("http://a.com/index#fragment", "ticket", "1"));
+                CasUrlTool.appendQueryParam("http://a.com/index#fragment", "ticket", "1"));
     }
 
 }

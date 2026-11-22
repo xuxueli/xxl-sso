@@ -4,7 +4,7 @@ import com.xxl.sso.core.constant.Const;
 import com.xxl.sso.core.model.LoginInfo;
 import com.xxl.sso.core.store.LoginStore;
 import com.xxl.sso.core.token.TokenHelper;
-import com.xxl.sso.core.util.CasRedirectUrlValidator;
+import com.xxl.sso.core.util.CasUrlTool;
 import com.xxl.tool.core.CollectionTool;
 import com.xxl.tool.core.StringTool;
 import com.xxl.tool.http.CookieTool;
@@ -87,7 +87,7 @@ public class XxlSsoHelper {
     /**
      * cas redirect url validator
      */
-    private final CasRedirectUrlValidator redirectValidator;
+    private final CasUrlTool redirectValidator;
 
     /**
      * create helper without cas whitelist
@@ -112,7 +112,7 @@ public class XxlSsoHelper {
         this.loginStore = loginStore;
         this.tokenKey = tokenKey;
         this.tokenTimeout = tokenTimeout;
-        this.redirectValidator = new CasRedirectUrlValidator(casWhitelist);
+        this.redirectValidator = new CasUrlTool(casWhitelist);
 
         // valid
         if (StringTool.isBlank(this.tokenKey)) {
@@ -399,7 +399,7 @@ public class XxlSsoHelper {
      * 与 {@link #casGenerateRedirectUrl(HttpServletRequest, String)} 配套使用：
      *      客户端跳转 CAS 登录页时，由本方法拼接登录地址；
      *      登录成功后由 {@code casGenerateRedirectUrl} 校验回跳地址并追加票据。
-     *      地址处理细节统一由 {@link CasRedirectUrlValidator} 实现。
+     *      地址处理细节统一由 {@link CasUrlTool} 实现。
      * </p>
      *
      * @param serverAddress cas server address
@@ -408,7 +408,7 @@ public class XxlSsoHelper {
      * @return              cas login url with encoded redirect_url
      */
     public static String casGenerateLoginUrl(String serverAddress, String loginPath, String originUrl) {
-        return CasRedirectUrlValidator.buildLoginUrl(serverAddress, loginPath, originUrl);
+        return CasUrlTool.buildLoginUrl(serverAddress, loginPath, originUrl);
     }
 
     /**
@@ -436,7 +436,7 @@ public class XxlSsoHelper {
         }
 
         // build redirect url
-        String redirectUrlFinal = CasRedirectUrlValidator.appendQueryParam
+        String redirectUrlFinal = CasUrlTool.appendQueryParam
                 (redirectUrl.trim(),
                         Const.XXL_SSO_TICKET,
                         createTicketResult.getData());
@@ -471,7 +471,7 @@ public class XxlSsoHelper {
         String ticket = loginInfoForToken.getUserId().concat("_").concat(UUIDTool.getSimpleUUID());
 
         // valid ticket
-        long ticketTimeout = 60 * 3;
+        long ticketTimeout = Const.CAS_TICKET_TIMEOUT;
         return getInstance().getLoginStore().createTicket(ticket, token, ticketTimeout);
     }
 

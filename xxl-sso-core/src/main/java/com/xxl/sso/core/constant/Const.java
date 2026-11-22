@@ -51,6 +51,10 @@ public class Const {
      * xxl-sso ticket, for cas redirect ticket
      */
     public static final String XXL_SSO_TICKET = "xxl_sso_ticket";
+    /**
+     * cas ticket timeout, seconds, limit 1s - 3min
+     */
+    public static final long CAS_TICKET_TIMEOUT = 60 * 3;
 
 
     /**

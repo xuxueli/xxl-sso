@@ -12,7 +12,12 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * CAS redirect url validator
+ * CAS url tool
+ *
+ * <p>
+ * 统一处理 CAS 跳转相关的地址能力：客户端到登录页的登录地址构建（{@link #buildLoginUrl}），
+ * 以及登录成功后服务端到客户端的回跳地址白名单校验（{@link #isAllowed}）。
+ * </p>
  *
  * <pre>
  *  http://127.0.0.1:8081/**             匹配该来源下全部路径
@@ -27,7 +32,7 @@ import java.util.List;
  *
  * @author xuxueli 2026-11-22
  */
-public class CasRedirectUrlValidator {
+public class CasUrlTool {
 
     private static final AntPathMatcher PATH_MATCHER = new AntPathMatcher();
 
@@ -37,13 +42,13 @@ public class CasRedirectUrlValidator {
     private final List<String> patternList;
 
     /**
-     * create cas redirect url validator
+     * create cas url tool
      *
      * @param casWhitelist whitelist expressions, comma separated, must start with http:// or https://;
      *                     blank means no whitelist validation
      * @throws IllegalArgumentException when any expression is not a valid http(s) url pattern
      */
-    public CasRedirectUrlValidator(String casWhitelist) {
+    public CasUrlTool(String casWhitelist) {
         // 路径为空，表示不校验
         if (StringTool.isBlank(casWhitelist)) {
             this.patternList = Collections.emptyList();
