@@ -155,7 +155,7 @@ public class LoginInfo implements Serializable {
     private String userId;
 
     /**
-     * expire time, ms
+     * expire time, seconds
      */
     private long expireTime;
 }

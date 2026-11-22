@@ -39,7 +39,7 @@ public class XxlSsoBootstrap {
     private String tokenKey;
 
     /**
-     * token timeout, by milliseconds
+     * token timeout, by seconds
      */
     private long tokenTimeout;
 
@@ -69,7 +69,7 @@ public class XxlSsoBootstrap {
     /**
      * set token timeout
      *
-     * @param tokenTimeout  token timeout, by milliseconds
+     * @param tokenTimeout  token timeout, by seconds
      */
     public void setTokenTimeout(long tokenTimeout) {
         this.tokenTimeout = tokenTimeout;

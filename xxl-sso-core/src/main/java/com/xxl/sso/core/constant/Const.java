@@ -80,25 +80,25 @@ public class Const {
 
 
     /**
-     * expire milliseconds for 1 day
+     * expire seconds for 1 day
      */
-    public static final long EXPIRE_TIME_1_DAY = 1000 * 60 * 60 * 24;
+    public static final long EXPIRE_SECOND_1_DAY = 60 * 60 * 24;
     /**
-     * expire milliseconds for 7 day
+     * expire seconds for 7 day
      */
-    public static final long EXPIRE_TIME_FOR_7_DAY = EXPIRE_TIME_1_DAY * 7;
+    public static final long EXPIRE_SECOND_FOR_7_DAY = EXPIRE_SECOND_1_DAY * 7;
     /**
-     * expire milliseconds for 30 day
+     * expire seconds for 30 day
      */
-    public static final long EXPIRE_TIME_FOR_30_DAY = EXPIRE_TIME_1_DAY * 30;
+    public static final long EXPIRE_SECOND_FOR_30_DAY = EXPIRE_SECOND_1_DAY * 30;
     /**
-     * expire milliseconds for 1 year
+     * expire seconds for 1 year
      */
-    public static final long EXPIRE_TIME_FOR_1_YEAR = EXPIRE_TIME_1_DAY * 365;
+    public static final long EXPIRE_SECOND_FOR_1_YEAR = EXPIRE_SECOND_1_DAY * 365;
     /**
-     * expire milliseconds for 10 year
+     * expire seconds for 10 year
      */
-    public static final long EXPIRE_TIME_FOR_10_YEAR = EXPIRE_TIME_1_DAY * 365 * 10;
+    public static final long EXPIRE_SECOND_FOR_10_YEAR = EXPIRE_SECOND_1_DAY * 365 * 10;
 
 
 }

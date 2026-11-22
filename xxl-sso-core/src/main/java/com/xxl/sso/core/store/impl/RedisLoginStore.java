@@ -114,13 +114,14 @@ public class RedisLoginStore implements LoginStore {
             return Response.ofFail("loginInfo invalid.");
         }
 
-        // valid expire-time
-        if (loginInfo.getExpireTime() < System.currentTimeMillis()) {
+        // valid expire-time ( seconds )
+        long nowSecond = System.currentTimeMillis() / 1000;
+        if (loginInfo.getExpireTime() < nowSecond) {
             return Response.ofFail("expireTime invalid.");
         }
 
         // generate redis timeout (seconds), at least 1s to avoid invalid zero TTL
-        long seconds = Math.max(1, (loginInfo.getExpireTime() - System.currentTimeMillis()) / 1000);
+        long seconds = Math.max(1, loginInfo.getExpireTime() - nowSecond);
 
         // generate storeKey
         String storeKey = parseStoreKey(loginInfo.getUserId());
@@ -144,8 +145,9 @@ public class RedisLoginStore implements LoginStore {
         // generate storeKey
         String storeKey = parseStoreKey(loginInfo.getUserId());
 
-        // valid expire-time
-        if (loginInfo.getExpireTime() < System.currentTimeMillis()) {
+        // valid expire-time ( seconds )
+        long nowSecond = System.currentTimeMillis() / 1000;
+        if (loginInfo.getExpireTime() < nowSecond) {
             return Response.ofFail("expireTime invalid.");
         }
 
@@ -164,7 +166,7 @@ public class RedisLoginStore implements LoginStore {
         loginInfoStore.setExpireTime(loginInfo.getExpireTime());
 
         // generate redis timeout (seconds), at least 1s to avoid invalid zero TTL
-        long seconds = Math.max(1, (loginInfo.getExpireTime() - System.currentTimeMillis()) / 1000);
+        long seconds = Math.max(1, loginInfo.getExpireTime() - nowSecond);
 
         // write
         jedisTool.set(storeKey, loginInfoStore, seconds);
@@ -210,8 +212,8 @@ public class RedisLoginStore implements LoginStore {
             return Response.ofFail("loginInfo not exists.");
         }
 
-        // valid expire time
-        if (loginInfo.getExpireTime() < System.currentTimeMillis()) {
+        // valid expire time ( seconds )
+        if (loginInfo.getExpireTime() < System.currentTimeMillis() / 1000) {
             jedisTool.del(storeKey);
             return Response.ofFail("loginInfo is timeout");
         }

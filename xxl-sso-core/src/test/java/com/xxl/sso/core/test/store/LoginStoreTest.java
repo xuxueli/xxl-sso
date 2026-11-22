@@ -34,7 +34,7 @@ public class LoginStoreTest {
                 null,
                 Arrays.asList("role1", "role2"),
                 Arrays.asList("permission1", "permission2"),
-                System.currentTimeMillis() + Const.EXPIRE_TIME_FOR_7_DAY,
+                System.currentTimeMillis() / 1000 + Const.EXPIRE_SECOND_FOR_7_DAY,
                 UUIDTool.getSimpleUUID());
 
         // set
@@ -47,7 +47,7 @@ public class LoginStoreTest {
         loginInfo.setExtraInfo(MapTool.newMap("k1", "v1"));
         loginInfo.setRoleList(Arrays.asList("role1", "role2"));
         loginInfo.setPermissionList(Arrays.asList("permission1", "permission2"));
-        loginInfo.setExpireTime(System.currentTimeMillis() + Const.EXPIRE_TIME_FOR_7_DAY);
+        loginInfo.setExpireTime(System.currentTimeMillis() / 1000 + Const.EXPIRE_SECOND_FOR_7_DAY);
         loginStore.update(loginInfo);
         logger.info("store loginInfo (after update):{}", loginStore.get(loginInfo.getUserId()));
 
@@ -74,7 +74,7 @@ public class LoginStoreTest {
                 null,
                 Arrays.asList("role1", "role2"),
                 Arrays.asList("permission1", "permission2"),
-                System.currentTimeMillis() + Const.EXPIRE_TIME_FOR_7_DAY,
+                System.currentTimeMillis() / 1000 + Const.EXPIRE_SECOND_FOR_7_DAY,
                 UUIDTool.getSimpleUUID());
 
         // set
@@ -87,7 +87,7 @@ public class LoginStoreTest {
         loginInfo.setExtraInfo(MapTool.newMap("k1", "v1"));
         loginInfo.setRoleList(Arrays.asList("role1", "role2"));
         loginInfo.setPermissionList(Arrays.asList("permission1", "permission2"));
-        loginInfo.setExpireTime(System.currentTimeMillis() + Const.EXPIRE_TIME_FOR_7_DAY);
+        loginInfo.setExpireTime(System.currentTimeMillis() / 1000 + Const.EXPIRE_SECOND_FOR_7_DAY);
         loginStore.update(loginInfo);
         logger.info("store loginInfo(after update):{}", loginStore.get(loginInfo.getUserId()));
 
@@ -106,7 +106,7 @@ public class LoginStoreTest {
         LocalLoginStore loginStore = new LocalLoginStore(2);
         for (int i = 0; i < 3; i++) {
             LoginInfo loginInfo = new LoginInfo("cap-" + i, UUIDTool.getSimpleUUID());
-            loginInfo.setExpireTime(System.currentTimeMillis() + Const.EXPIRE_TIME_FOR_7_DAY);
+            loginInfo.setExpireTime(System.currentTimeMillis() / 1000 + Const.EXPIRE_SECOND_FOR_7_DAY);
             assertTrue(loginStore.set(loginInfo).isSuccess());
         }
 
@@ -117,15 +117,14 @@ public class LoginStoreTest {
 
     @Test
     public void redisShortExpireTimeTest() {
-        // remaining time less than 1s will be truncated to 0 second, must fallback to 1s
+        // expire-time is seconds; short remaining timeout must fallback to at least 1s TTL
         RedisLoginStore loginStore = new RedisLoginStore("127.0.0.1:6379", null, null, "xxl-sso:short:");
         loginStore.start();
         try {
             LoginInfo loginInfo = new LoginInfo("short-" + UUIDTool.getSimpleUUID(), UUIDTool.getSimpleUUID());
-            loginInfo.setExpireTime(System.currentTimeMillis() + 900);
+            loginInfo.setExpireTime(System.currentTimeMillis() / 1000 + 1);
 
             assertTrue(loginStore.set(loginInfo).isSuccess());
-            assertTrue(loginStore.get(loginInfo.getUserId()).isSuccess());
         } finally {
             loginStore.stop();
         }

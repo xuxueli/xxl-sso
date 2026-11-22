@@ -49,14 +49,14 @@ public class JedisTool {
     private String password;
 
     /**
-     * connection timeout, ms
+     * connection timeout, seconds
      */
-    private int connectionTimeout = 2000;
+    private int connectionTimeout = 2;
 
     /**
-     * socket read timeout, ms
+     * socket read timeout, seconds
      */
-    private int soTimeout = 2000;
+    private int soTimeout = 2;
 
     /**
      * max redirect attempts for cluster
@@ -139,8 +139,8 @@ public class JedisTool {
                 GenericObjectPoolConfig<Connection> poolConfig = new GenericObjectPoolConfig<>();
                 JedisClientConfig clientConfig = DefaultJedisClientConfig
                         .builder()
-                        .timeoutMillis(soTimeout)
-                        .connectionTimeoutMillis(connectionTimeout)
+                        .timeoutMillis(soTimeout * 1000)
+                        .connectionTimeoutMillis(connectionTimeout * 1000)
                         .user(user)
                         .password(password)
                         .build();
@@ -155,8 +155,8 @@ public class JedisTool {
                 JedisPoolConfig poolConfig = new JedisPoolConfig();
                 JedisClientConfig clientConfig = DefaultJedisClientConfig
                         .builder()
-                        .timeoutMillis(soTimeout)
-                        .connectionTimeoutMillis(connectionTimeout)
+                        .timeoutMillis(soTimeout * 1000)
+                        .connectionTimeoutMillis(connectionTimeout * 1000)
                         .user(user)
                         .password(password)
                         .build();
@@ -224,8 +224,7 @@ public class JedisTool {
                 if (seconds < 0) {
                     jedis.set(key.getBytes(StandardCharsets.UTF_8), valueBytes);
                 } else {
-                    long milliseconds = seconds * 1000;
-                    jedis.psetex(key.getBytes(StandardCharsets.UTF_8), milliseconds, valueBytes);
+                    jedis.setex(key.getBytes(StandardCharsets.UTF_8), seconds, valueBytes);
                 }
             } catch (Exception e) {
                 logger.error(e.getMessage(), e);

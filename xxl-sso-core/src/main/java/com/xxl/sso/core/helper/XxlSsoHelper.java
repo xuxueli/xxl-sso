@@ -39,7 +39,7 @@ public class XxlSsoHelper {
      *
      * @param loginStore    login store
      * @param tokenKey      token key, fallback to {@link Const#XXL_SSO_TOKEN} when blank
-     * @param tokenTimeout  token timeout, by milliseconds, fallback to {@link Const#EXPIRE_TIME_FOR_10_YEAR} when not positive
+     * @param tokenTimeout  token timeout, by seconds, fallback to {@link Const#EXPIRE_SECOND_FOR_10_YEAR} when not positive
      */
     public static void init(LoginStore loginStore, String tokenKey, long tokenTimeout){
         init(loginStore, tokenKey, tokenTimeout, null);
@@ -50,7 +50,7 @@ public class XxlSsoHelper {
      *
      * @param loginStore    login store
      * @param tokenKey      token key, fallback to {@link Const#XXL_SSO_TOKEN} when blank
-     * @param tokenTimeout  token timeout, by milliseconds, fallback to {@link Const#EXPIRE_TIME_FOR_10_YEAR} when not positive
+     * @param tokenTimeout  token timeout, by seconds, fallback to {@link Const#EXPIRE_SECOND_FOR_10_YEAR} when not positive
      * @param casWhitelist  cas redirect whitelist, support AntPathMatcher; blank means no whitelist validation
      */
     public static void init(LoginStore loginStore, String tokenKey, long tokenTimeout, String casWhitelist){
@@ -80,7 +80,7 @@ public class XxlSsoHelper {
     private String tokenKey;
 
     /**
-     * token timeout, by milliseconds
+     * token timeout, by seconds
      */
     private long tokenTimeout;
 
@@ -94,7 +94,7 @@ public class XxlSsoHelper {
      *
      * @param loginStore    login store
      * @param tokenKey      token key, fallback to {@link Const#XXL_SSO_TOKEN} when blank
-     * @param tokenTimeout  token timeout, by milliseconds, fallback to {@link Const#EXPIRE_TIME_FOR_10_YEAR} when not positive
+     * @param tokenTimeout  token timeout, by seconds, fallback to {@link Const#EXPIRE_SECOND_FOR_10_YEAR} when not positive
      */
     public XxlSsoHelper(LoginStore loginStore, String tokenKey, long tokenTimeout) {
         this(loginStore, tokenKey, tokenTimeout, null);
@@ -105,7 +105,7 @@ public class XxlSsoHelper {
      *
      * @param loginStore    login store
      * @param tokenKey      token key, fallback to {@link Const#XXL_SSO_TOKEN} when blank
-     * @param tokenTimeout  token timeout, by milliseconds, fallback to {@link Const#EXPIRE_TIME_FOR_10_YEAR} when not positive
+     * @param tokenTimeout  token timeout, by seconds, fallback to {@link Const#EXPIRE_SECOND_FOR_10_YEAR} when not positive
      * @param casWhitelist  cas redirect whitelist, support AntPathMatcher; blank means no whitelist validation
      */
     public XxlSsoHelper(LoginStore loginStore, String tokenKey, long tokenTimeout, String casWhitelist) {
@@ -119,7 +119,7 @@ public class XxlSsoHelper {
             this.tokenKey = Const.XXL_SSO_TOKEN;
         }
         if (this.tokenTimeout <= 0 ) {
-            this.tokenTimeout = Const.EXPIRE_TIME_FOR_10_YEAR;
+            this.tokenTimeout = Const.EXPIRE_SECOND_FOR_10_YEAR;
         }
     }
 
@@ -144,7 +144,7 @@ public class XxlSsoHelper {
     /**
      * get token timeout
      *
-     * @return token timeout, by milliseconds
+     * @return token timeout, by seconds
      */
     public long getTokenTimeout() {
         return tokenTimeout;
@@ -172,8 +172,8 @@ public class XxlSsoHelper {
             return tokenResponse;
         }
 
-        // update expire-time
-        loginInfo.setExpireTime(System.currentTimeMillis() + getInstance().getTokenTimeout());
+        // update expire-time ( seconds )
+        loginInfo.setExpireTime(System.currentTimeMillis() / 1000 + getInstance().getTokenTimeout());
 
         // set store-LoginInfo
         Response<String> setResponse = getInstance().getLoginStore().set(loginInfo);
@@ -223,9 +223,9 @@ public class XxlSsoHelper {
      */
     public static Response<String> loginUpdate(LoginInfo loginInfo) {
 
-        // update expire-time
+        // update expire-time ( seconds )
         if (loginInfo != null) {
-            loginInfo.setExpireTime(System.currentTimeMillis() + getInstance().getTokenTimeout());
+            loginInfo.setExpireTime(System.currentTimeMillis() / 1000 + getInstance().getTokenTimeout());
         }
 
         // update store-LoginInfo

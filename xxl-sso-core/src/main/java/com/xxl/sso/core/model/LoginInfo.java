@@ -44,7 +44,7 @@ public class LoginInfo implements Serializable {
      * @param extraInfo         extra info
      * @param roleList          role list
      * @param permissionList    permission list
-     * @param expireTime        expire time, ms
+     * @param expireTime        expire time, seconds
      * @param signature         login signature
      */
     public LoginInfo(String userId,
@@ -104,7 +104,7 @@ public class LoginInfo implements Serializable {
     // ---------------------- setting ----------------------
 
     /**
-     * expire time, ms; login state is invalid after this time
+     * expire time, seconds; login state is invalid after this time
      */
     private long expireTime;
 

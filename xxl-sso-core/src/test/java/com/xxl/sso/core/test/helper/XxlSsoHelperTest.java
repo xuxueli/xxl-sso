@@ -29,7 +29,7 @@ public class XxlSsoHelperTest {
                 "",
                 "xxl_sso_user"));
         bootstrap.setTokenKey(Const.XXL_SSO_TOKEN);
-        bootstrap.setTokenTimeout(604800000);
+        bootstrap.setTokenTimeout(604800);
 
         bootstrap.start();
     }
@@ -52,7 +52,7 @@ public class XxlSsoHelperTest {
                 null,
                 Arrays.asList("role1", "role2"),
                 Arrays.asList("permission1", "permission2"),
-                System.currentTimeMillis() + Const.EXPIRE_TIME_FOR_7_DAY,
+                System.currentTimeMillis() / 1000 + Const.EXPIRE_SECOND_FOR_7_DAY,
                 UUIDTool.getSimpleUUID());
 
         // login
@@ -67,7 +67,7 @@ public class XxlSsoHelperTest {
         loginInfo.setUserName("lisi");
         loginInfo.setRoleList(Arrays.asList("role3", "role4"));
         loginInfo.setPermissionList(Arrays.asList("permission3", "permission4"));
-        loginInfo.setExpireTime(System.currentTimeMillis() + Const.EXPIRE_TIME_FOR_7_DAY);
+        loginInfo.setExpireTime(System.currentTimeMillis() / 1000 + Const.EXPIRE_SECOND_FOR_7_DAY);
 
         Response<String> loginUpdateResponse = XxlSsoHelper.loginUpdate(loginInfo);
         logger.info("Login Update Response = " + loginUpdateResponse);

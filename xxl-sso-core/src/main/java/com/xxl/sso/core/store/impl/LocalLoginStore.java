@@ -75,7 +75,7 @@ public class LocalLoginStore implements LoginStore {
         }
 
         // valid expire-time
-        if (loginInfo.getExpireTime() < System.currentTimeMillis()) {
+        if (loginInfo.getExpireTime() < System.currentTimeMillis() / 1000) {
             return Response.ofFail("expireTime invalid.");
         }
 
@@ -102,7 +102,7 @@ public class LocalLoginStore implements LoginStore {
         String storeKey = parseStoreKey(loginInfo.getUserId());
 
         // valid expire-time
-        if (loginInfo.getExpireTime() < System.currentTimeMillis()) {
+        if (loginInfo.getExpireTime() < System.currentTimeMillis() / 1000) {
             return Response.ofFail("expireTime invalid.");
         }
 
@@ -165,7 +165,7 @@ public class LocalLoginStore implements LoginStore {
         }
 
         // valid expire time
-        if (loginInfo.getExpireTime() < System.currentTimeMillis()) {
+        if (loginInfo.getExpireTime() < System.currentTimeMillis() / 1000) {
             loginStore.remove(storeKey);
             return Response.ofFail("loginInfo is timeout");
         }
