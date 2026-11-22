@@ -119,8 +119,8 @@ public class RedisLoginStore implements LoginStore {
             return Response.ofFail("expireTime invalid.");
         }
 
-        // generate redis timeout (seconds)
-        long seconds = (loginInfo.getExpireTime() - System.currentTimeMillis()) / 1000;
+        // generate redis timeout (seconds), at least 1s to avoid invalid zero TTL
+        long seconds = Math.max(1, (loginInfo.getExpireTime() - System.currentTimeMillis()) / 1000);
 
         // generate storeKey
         String storeKey = parseStoreKey(loginInfo.getUserId());
@@ -163,8 +163,8 @@ public class RedisLoginStore implements LoginStore {
         loginInfoStore.setPermissionList(loginInfo.getPermissionList());
         loginInfoStore.setExpireTime(loginInfo.getExpireTime());
 
-        // generate redis timeout (seconds)
-        long seconds = (loginInfo.getExpireTime() - System.currentTimeMillis()) / 1000;
+        // generate redis timeout (seconds), at least 1s to avoid invalid zero TTL
+        long seconds = Math.max(1, (loginInfo.getExpireTime() - System.currentTimeMillis()) / 1000);
 
         // write
         jedisTool.set(storeKey, loginInfoStore, seconds);

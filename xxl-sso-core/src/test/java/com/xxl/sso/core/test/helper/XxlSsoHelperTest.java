@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -115,6 +116,31 @@ public class XxlSsoHelperTest {
         Response<String> logoutResp = XxlSsoHelper.logout(validToken);
         assertTrue(logoutResp.isSuccess());
         assertFalse(XxlSsoHelper.loginCheck(validToken).isSuccess());
+    }
+
+    @Test
+    public void hasRoleAndPermissionWithNullLoginInfoTest() {
+        // loginInfo is null, fail when role / permission is required
+        assertFalse(XxlSsoHelper.hasRole(null, "role1").isSuccess());
+        assertFalse(XxlSsoHelper.hasPermission(null, "user:add").isSuccess());
+
+        // blank role / permission means no limit
+        assertTrue(XxlSsoHelper.hasRole(null, "").isSuccess());
+        assertTrue(XxlSsoHelper.hasPermission(null, null).isSuccess());
+    }
+
+    @Test
+    public void casBuildLoginUrlTest() {
+        String loginUrl = XxlSsoHelper.casGenerateLoginUrl(
+                "http://127.0.0.1:8081",
+                "/login",
+                "http://127.0.0.1:8083/index?xxl_sso_ticket=abc&name=zhangsan");
+
+        // original query is dropped, redirect_url is encoded
+        assertEquals(
+                "http://127.0.0.1:8081/login?redirect_url=http%3A%2F%2F127.0.0.1%3A8083%2Findex",
+                loginUrl);
+        assertFalse(loginUrl.contains("xxl_sso_ticket=abc"));
     }
 
 

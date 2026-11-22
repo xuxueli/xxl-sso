@@ -15,6 +15,9 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 public class LoginStoreTest {
     private static Logger logger = LoggerFactory.getLogger(LoginStoreTest.class);
 
@@ -96,6 +99,37 @@ public class LoginStoreTest {
         loginStore.stop();
     }
 
+
+    @Test
+    public void localStoreCapacityTest() {
+        // capacity = 2, LRU evicts the oldest entry
+        LocalLoginStore loginStore = new LocalLoginStore(2);
+        for (int i = 0; i < 3; i++) {
+            LoginInfo loginInfo = new LoginInfo("cap-" + i, UUIDTool.getSimpleUUID());
+            loginInfo.setExpireTime(System.currentTimeMillis() + Const.EXPIRE_TIME_FOR_7_DAY);
+            assertTrue(loginStore.set(loginInfo).isSuccess());
+        }
+
+        assertFalse(loginStore.get("cap-0").isSuccess());
+        assertTrue(loginStore.get("cap-1").isSuccess());
+        assertTrue(loginStore.get("cap-2").isSuccess());
+    }
+
+    @Test
+    public void redisShortExpireTimeTest() {
+        // remaining time less than 1s will be truncated to 0 second, must fallback to 1s
+        RedisLoginStore loginStore = new RedisLoginStore("127.0.0.1:6379", null, null, "xxl-sso:short:");
+        loginStore.start();
+        try {
+            LoginInfo loginInfo = new LoginInfo("short-" + UUIDTool.getSimpleUUID(), UUIDTool.getSimpleUUID());
+            loginInfo.setExpireTime(System.currentTimeMillis() + 900);
+
+            assertTrue(loginStore.set(loginInfo).isSuccess());
+            assertTrue(loginStore.get(loginInfo.getUserId()).isSuccess());
+        } finally {
+            loginStore.stop();
+        }
+    }
 
     @Test
     public void testTicket() {

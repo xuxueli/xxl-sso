@@ -62,7 +62,7 @@ public class CasLoginController {
         if (loginCheckResult!=null && loginCheckResult.isSuccess()) {
 
             // 2.1、login success, redirect back
-            Response<String> redirectResult = XxlSsoHelper.generateRedirectUrl(request, redirectUrl);
+            Response<String> redirectResult = XxlSsoHelper.casGenerateRedirectUrl(request, redirectUrl);
             String redirectUrlFinal = redirectResult.isSuccess() ? redirectResult.getData() : "";
             if (StringTool.isBlank(redirectUrlFinal)) {
                 redirectUrlFinal = "/";
@@ -129,7 +129,7 @@ public class CasLoginController {
         }
 
         // 5、redirect back
-        Response<String> redirectResult = XxlSsoHelper.generateRedirectUrl(request, redirectUrl);
+        Response<String> redirectResult = XxlSsoHelper.casGenerateRedirectUrl(request, redirectUrl);
         if (!redirectResult.isSuccess()) {
             return Response.ofFail(redirectResult.getMsg());
         }

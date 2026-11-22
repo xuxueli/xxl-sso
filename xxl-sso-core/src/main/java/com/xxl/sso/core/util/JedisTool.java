@@ -105,10 +105,18 @@ public class JedisTool {
     /**
      * start jedis pool or cluster client
      *
+     * <p>幂等：已启动时直接返回，避免重复创建连接池导致资源泄漏。</p>
+     *
      * @throws IllegalArgumentException when nodes is blank or malformed
      * @throws RuntimeException when client initialization fails
      */
     public void start() {
+
+        // idempotent, avoid recreating pool / cluster and leaking old resource
+        if (jedisPool != null || jedisCluster != null) {
+            logger.debug(">>>>>>>>>>> JedisTool already started, skip start.");
+            return;
+        }
 
         // process param
         if (nodes!=null && !nodes.trim().isEmpty()) {
@@ -164,6 +172,8 @@ public class JedisTool {
 
     /**
      * stop and release pool / cluster resource; exceptions are logged and ignored
+     *
+     * <p>停止后清空客户端引用，允许再次调用 {@link #start()}。</p>
      */
     public void stop() {
         try {
@@ -176,6 +186,9 @@ public class JedisTool {
             logger.info(">>>>>>>>>>> JedisTool stop finish.");
         } catch (Exception e) {
             logger.error(">>>>>>>>>>> JedisTool stop error.", e);
+        } finally {
+            jedisCluster = null;
+            jedisPool = null;
         }
     }
 

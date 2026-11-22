@@ -190,15 +190,15 @@ public class XxlSsoReactiveHelper {
     }
 
 
-    // ---------------------- for cas ticket ----------------------
+    // ---------------------- for cas ----------------------
 
     /**
-     * create ticket, from token in cookie
+     * create cas ticket, from token in cookie
      *
      * @param exchange      exchange
      * @return              Response.data is ticket
      */
-    public static Response<String> createTicket(ServerWebExchange exchange) {
+    public static Response<String> casCreateTicket(ServerWebExchange exchange) {
 
         // get cookie
         String token = getCookieValue(exchange.getRequest(), XxlSsoHelper.getInstance().getTokenKey());
@@ -218,12 +218,12 @@ public class XxlSsoReactiveHelper {
     }
 
     /**
-     * valid ticket and write cookie, from parameter
+     * valid cas ticket and write cookie, from parameter
      *
      * @param exchange      exchange
      * @return              loginInfo
      */
-    public static Response<LoginInfo> validTicket(ServerWebExchange exchange) {
+    public static Response<LoginInfo> casValidTicket(ServerWebExchange exchange) {
 
         // parse ticket
         String ticket = exchange.getRequest().getQueryParams().getFirst(Const.XXL_SSO_TICKET);
@@ -275,7 +275,6 @@ public class XxlSsoReactiveHelper {
 
 
     // ---------------------- cookie tool ----------------------
-
     /**
      * add cookie
      *

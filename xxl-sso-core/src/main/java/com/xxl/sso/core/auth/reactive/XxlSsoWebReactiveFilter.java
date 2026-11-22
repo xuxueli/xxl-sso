@@ -4,13 +4,13 @@ import com.xxl.sso.core.constant.Const;
 import com.xxl.sso.core.helper.XxlSsoReactiveHelper;
 import com.xxl.sso.core.model.LoginInfo;
 import com.xxl.sso.core.path.impl.AntPathMatcher;
+import com.xxl.sso.core.util.ReactiveWebTool;
 import com.xxl.tool.core.StringTool;
 import com.xxl.tool.json.GsonTool;
 import com.xxl.tool.response.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.buffer.DataBuffer;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.server.reactive.ServerHttpResponse;
@@ -153,10 +153,8 @@ public class XxlSsoWebReactiveFilter implements WebFilter {
             // 4、login fail message
             String loginFailMsg = GsonTool.toJson(Response.of(Const.CODE_LOGIN_FAIL, "not login for path:"+ exchange.getRequest().getPath().pathWithinApplication().value()));
 
-            // isJson
-            String header = exchange.getRequest().getHeaders().getFirst(HttpHeaders.CONTENT_TYPE);
-            boolean isJson = header!=null && header.contains("json");
-            if (isJson) {
+            // is ajax / json request
+            if (ReactiveWebTool.isAjax(exchange)) {
 
                 // write response
                 return writeJson(exchange, loginFailMsg);

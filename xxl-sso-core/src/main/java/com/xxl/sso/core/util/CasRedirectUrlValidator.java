@@ -1,9 +1,12 @@
 package com.xxl.sso.core.util;
 
+import com.xxl.sso.core.constant.Const;
 import com.xxl.sso.core.path.impl.AntPathMatcher;
 import com.xxl.tool.core.CollectionTool;
 import com.xxl.tool.core.StringTool;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -64,6 +67,8 @@ public class CasRedirectUrlValidator {
         }
         this.patternList = patterns;
     }
+
+    // ---------------------- cas server: redirectUrl (server -> client) ----------------------
 
     /**
      * 校验跳转地址
@@ -126,5 +131,37 @@ public class CasRedirectUrlValidator {
 
         return url + (url.indexOf('?') >= 0 ? "&" : "?") + key + "=" + value;
     }
+
+    // ---------------------- cas server: loginUrl (client -> server) ----------------------
+
+    /**
+     * 构建 CAS 登录地址
+     *
+     * <p>
+     * 丢弃原始地址的 query（避免回跳时票据参数累积导致重定向循环），并对 {@code redirect_url}
+     * 做 URL 编码，防止原始地址中的 {@code &}、{@code =} 等字符截断参数。
+     * </p>
+     *
+     * @param serverAddress CAS 服务端地址
+     * @param loginPath     CAS 登录路径
+     * @param originUrl     原始请求地址
+     * @return              追加编码后 {@code redirect_url} 的登录地址
+     */
+    public static String buildLoginUrl(String serverAddress, String loginPath, String originUrl) {
+        String redirectUrl = originUrl;
+        int queryIndex = redirectUrl.indexOf('?');
+        if (queryIndex > -1) {
+            redirectUrl = redirectUrl.substring(0, queryIndex);
+        }
+
+        return serverAddress
+                .concat(loginPath)
+                .concat("?")
+                .concat(Const.CLIENT_REDIRECT_URL)
+                .concat("=")
+                .concat(URLEncoder.encode(redirectUrl, StandardCharsets.UTF_8));
+    }
+
+
 
 }

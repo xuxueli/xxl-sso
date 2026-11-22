@@ -5,6 +5,7 @@ import com.xxl.sso.core.exception.XxlSsoException;
 import com.xxl.sso.core.helper.XxlSsoHelper;
 import com.xxl.sso.core.model.LoginInfo;
 import com.xxl.sso.core.path.impl.AntPathMatcher;
+import com.xxl.sso.core.util.WebTool;
 import com.xxl.tool.core.StringTool;
 import com.xxl.tool.json.GsonTool;
 import com.xxl.tool.response.Response;
@@ -153,7 +154,7 @@ public class XxlSsoCasFilter implements Filter {
         // 3、login check (ticket + cookie)
         Response<LoginInfo> loginCheckResult = XxlSsoHelper.loginCheckWithCookie(request, response);                // check cookie
         if (!(loginCheckResult!=null && loginCheckResult.isSuccess())) {
-            loginCheckResult = XxlSsoHelper.validTicket(request, response);         // check ticket
+            loginCheckResult = XxlSsoHelper.casValidTicket(request, response);         // check ticket
         }
 
         // parse login info
@@ -168,10 +169,8 @@ public class XxlSsoCasFilter implements Filter {
             // 4、login fail message
             String loginFailMsg = GsonTool.toJson(Response.of(Const.CODE_LOGIN_FAIL, "not login for path:"+ request.getServletPath()));
 
-            // isJson
-            String header = request.getHeader("content-type");
-            boolean isJson=  header!=null && header.contains("json");
-            if (isJson) {
+            // is ajax / json request
+            if (WebTool.isAjax(request)) {
 
                 // write response
                 response.setStatus(HttpServletResponse.SC_OK);
@@ -183,13 +182,8 @@ public class XxlSsoCasFilter implements Filter {
                 // origin url
                 String originUrl = request.getRequestURL().toString();
 
-                // redirect login-path
-                String finalLoginPath = serverAddress
-                        .concat(loginPath)
-                        .concat("?")
-                        .concat(Const.CLIENT_REDIRECT_URL)
-                        .concat("=")
-                        .concat(originUrl);
+                // redirect login-path (encoded redirect_url, drop original query)
+                String finalLoginPath = XxlSsoHelper.casGenerateLoginUrl(serverAddress, loginPath, originUrl);
 
                 response.sendRedirect(finalLoginPath);
                 return;

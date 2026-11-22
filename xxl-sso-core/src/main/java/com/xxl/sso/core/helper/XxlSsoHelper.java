@@ -390,40 +390,29 @@ public class XxlSsoHelper {
     }
 
 
-    // ---------------------- for cas ticket ----------------------
+    // ---------------------- for cas ----------------------
 
     /**
-     * create ticket, from token in cookie
+     * generate cas login url
      *
      * <p>
-     * ticket 有效期固定 60 秒；LoginStore 需实现 {@link LoginStore#createTicket(String, String, long)}，
-     * 否则返回不支持错误。
+     * 与 {@link #casGenerateRedirectUrl(HttpServletRequest, String)} 配套使用：
+     *      客户端跳转 CAS 登录页时，由本方法拼接登录地址；
+     *      登录成功后由 {@code casGenerateRedirectUrl} 校验回跳地址并追加票据。
+     *      地址处理细节统一由 {@link CasRedirectUrlValidator} 实现。
      * </p>
      *
-     * @param request   request
-     * @return          Response.data is ticket
+     * @param serverAddress cas server address
+     * @param loginPath     cas login path
+     * @param originUrl     original request url
+     * @return              cas login url with encoded redirect_url
      */
-    public static Response<String> createTicket(HttpServletRequest request) {
-
-        // get cookie
-        String token = CookieTool.getValue(request, getInstance().getTokenKey());
-
-        // parse token
-        LoginInfo loginInfoForToken = TokenHelper.parseToken(token);
-        if (loginInfoForToken == null) {
-            return Response.ofFail("create ticket fail, not login.");
-        }
-
-        // generate ticket
-        String ticket = loginInfoForToken.getUserId().concat("_").concat(UUIDTool.getSimpleUUID());
-
-        // valid ticket
-        long ticketTimeout = 60;
-        return getInstance().getLoginStore().createTicket(ticket, token, ticketTimeout);
+    public static String casGenerateLoginUrl(String serverAddress, String loginPath, String originUrl) {
+        return CasRedirectUrlValidator.buildLoginUrl(serverAddress, loginPath, originUrl);
     }
 
     /**
-     * generate redirect url, valid redirect url and append ticket
+     * generate cas redirect url, valid redirect url and append ticket
      *
      * <p>
      * 白名单为空时不校验；配置白名单后，地址不合法或未命中时返回失败，不会签发任何票据。
@@ -433,7 +422,7 @@ public class XxlSsoHelper {
      * @param redirectUrl   client redirect url
      * @return              Response.data is redirect url
      */
-    public static Response<String> generateRedirectUrl(HttpServletRequest request, String redirectUrl) {
+    public static Response<String> casGenerateRedirectUrl(HttpServletRequest request, String redirectUrl) {
 
         // valid redirect url
         if (!getInstance().redirectValidator.isAllowed(redirectUrl)) {
@@ -441,7 +430,7 @@ public class XxlSsoHelper {
         }
 
         // create ticket
-        Response<String> createTicketResult = createTicket(request);
+        Response<String> createTicketResult = casCreateTicket(request);
         if (!createTicketResult.isSuccess()) {
             return createTicketResult;
         }
@@ -457,7 +446,37 @@ public class XxlSsoHelper {
     }
 
     /**
-     * valid ticket and write cookie, from parameter
+     * create cas ticket, from token in cookie
+     *
+     * <p>
+     * ticket 有效期固定 180 秒；LoginStore 需实现 {@link LoginStore#createTicket(String, String, long)}，
+     * 否则返回不支持错误。
+     * </p>
+     *
+     * @param request   request
+     * @return          Response.data is ticket
+     */
+    public static Response<String> casCreateTicket(HttpServletRequest request) {
+
+        // get cookie
+        String token = CookieTool.getValue(request, getInstance().getTokenKey());
+
+        // parse token
+        LoginInfo loginInfoForToken = TokenHelper.parseToken(token);
+        if (loginInfoForToken == null) {
+            return Response.ofFail("create ticket fail, not login.");
+        }
+
+        // generate ticket
+        String ticket = loginInfoForToken.getUserId().concat("_").concat(UUIDTool.getSimpleUUID());
+
+        // valid ticket
+        long ticketTimeout = 60 * 3;
+        return getInstance().getLoginStore().createTicket(ticket, token, ticketTimeout);
+    }
+
+    /**
+     * valid cas ticket and write cookie, from parameter
      *
      * <p>
      * 票据一次性使用，校验成功后立即从 LoginStore 中删除；登录态校验通过后写入 token Cookie。
@@ -467,7 +486,7 @@ public class XxlSsoHelper {
      * @param response      response
      * @return              loginInfo; fail when ticket is blank, invalid or expired
      */
-    public static Response<LoginInfo> validTicket(HttpServletRequest request, HttpServletResponse response) {
+    public static Response<LoginInfo> casValidTicket(HttpServletRequest request, HttpServletResponse response) {
 
         // parse ticket
         String ticket = request.getParameter(Const.XXL_SSO_TICKET);
@@ -510,6 +529,9 @@ public class XxlSsoHelper {
             // not limit, default has role.
             return Response.ofSuccess();
         }
+        if (loginInfo == null) {
+            return Response.ofFail("not login.");
+        }
         if (CollectionTool.isEmpty(loginInfo.getRoleList())) {
             return Response.ofFail("has no role[2]");
         }
@@ -534,6 +556,9 @@ public class XxlSsoHelper {
         if (StringTool.isBlank(permission)) {
             // not limit, default has permission
             return Response.ofSuccess();
+        }
+        if (loginInfo == null) {
+            return Response.ofFail("not login.");
         }
         if (CollectionTool.isEmpty(loginInfo.getPermissionList())) {
             return Response.ofFail("has no permission[2]");

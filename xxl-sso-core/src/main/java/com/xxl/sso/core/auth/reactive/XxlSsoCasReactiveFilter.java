@@ -2,16 +2,17 @@ package com.xxl.sso.core.auth.reactive;
 
 import com.xxl.sso.core.constant.Const;
 import com.xxl.sso.core.exception.XxlSsoException;
+import com.xxl.sso.core.helper.XxlSsoHelper;
 import com.xxl.sso.core.helper.XxlSsoReactiveHelper;
 import com.xxl.sso.core.model.LoginInfo;
 import com.xxl.sso.core.path.impl.AntPathMatcher;
+import com.xxl.sso.core.util.ReactiveWebTool;
 import com.xxl.tool.core.StringTool;
 import com.xxl.tool.json.GsonTool;
 import com.xxl.tool.response.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.buffer.DataBuffer;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.server.reactive.ServerHttpResponse;
@@ -151,7 +152,7 @@ public class XxlSsoCasReactiveFilter implements WebFilter {
         // 3、login check (ticket + cookie)
         Response<LoginInfo> loginCheckResult = XxlSsoReactiveHelper.loginCheckWithCookie(exchange);                // check cookie
         if (!(loginCheckResult!=null && loginCheckResult.isSuccess())) {
-            loginCheckResult = XxlSsoReactiveHelper.validTicket(exchange);         // check ticket
+            loginCheckResult = XxlSsoReactiveHelper.casValidTicket(exchange);         // check ticket
         }
 
         // parse login info
@@ -166,10 +167,8 @@ public class XxlSsoCasReactiveFilter implements WebFilter {
             // 4、login fail message
             String loginFailMsg = GsonTool.toJson(Response.of(Const.CODE_LOGIN_FAIL, "not login for path:"+ exchange.getRequest().getPath().pathWithinApplication().value()));
 
-            // isJson
-            String header = exchange.getRequest().getHeaders().getFirst(HttpHeaders.CONTENT_TYPE);
-            boolean isJson = header!=null && header.contains("json");
-            if (isJson) {
+            // is ajax / json request
+            if (ReactiveWebTool.isAjax(exchange)) {
 
                 // write response
                 return writeJson(exchange, loginFailMsg);
@@ -177,19 +176,9 @@ public class XxlSsoCasReactiveFilter implements WebFilter {
 
                 // origin url
                 String originUrl = exchange.getRequest().getURI().toString();
-                int originUrlIdx = originUrl.indexOf('?');
-                if (originUrlIdx > -1) {
-                    // remove query-string, avoid ticket-param accumulation causing infinite-redirect-loop
-                    originUrl = originUrl.substring(0, originUrlIdx);
-                }
 
-                // redirect login-path
-                String finalLoginPath = serverAddress
-                        .concat(loginPath)
-                        .concat("?")
-                        .concat(Const.CLIENT_REDIRECT_URL)
-                        .concat("=")
-                        .concat(originUrl);
+                // redirect login-path (encoded redirect_url, drop original query)
+                String finalLoginPath = XxlSsoHelper.casGenerateLoginUrl(serverAddress, loginPath, originUrl);
 
                 ServerHttpResponse response = exchange.getResponse();
                 response.setStatusCode(HttpStatus.FOUND);

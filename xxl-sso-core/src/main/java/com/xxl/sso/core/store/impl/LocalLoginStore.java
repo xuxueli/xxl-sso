@@ -2,23 +2,22 @@ package com.xxl.sso.core.store.impl;
 
 import com.xxl.sso.core.model.LoginInfo;
 import com.xxl.sso.core.store.LoginStore;
+import com.xxl.tool.cache.CacheTool;
+import com.xxl.tool.cache.iface.Cache;
 import com.xxl.tool.core.StringTool;
 import com.xxl.tool.response.Response;
-
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 
 /**
  * local login store
  *
  * <p>
- * 基于 {@link ConcurrentHashMap} 的进程内实现，不支持 CAS 票据（调用票据方法会抛
+ * 使用 LRU 策略限制容量，容量满时淘汰最久未使用的登录态，避免本地缓存无界增长。不支持 CAS 票据（调用票据方法会抛
  * {@link com.xxl.sso.core.exception.XxlSsoException}）。
  * </p>
  *
  * <p>
- * 适用于单机或演示场景；多实例部署时登录态不共享，应改用 Redis 实现。
- * 登录态不会主动清理，仅在 {@link #get(String)} 命中过期数据时惰性删除。
+ * 适用于单机场景；多实例部署时登录态不共享，应改用 Redis 实现。
+ * 并发安全由 {@link Cache} 实现保证。
  * </p>
  *
  * @author xuxueli 2018-04-02 20:03:11
@@ -26,9 +25,31 @@ import java.util.concurrent.ConcurrentMap;
 public class LocalLoginStore implements LoginStore {
 
     /**
-     * userId -> LoginInfo
+     * default cache capacity
      */
-    private final ConcurrentMap<String, LoginInfo> loginStore = new ConcurrentHashMap<>();
+    public static final int DEFAULT_CAPACITY = 10000;
+
+    /**
+     * userId -> LoginInfo, LRU with capacity limit
+     */
+    private final Cache<String, LoginInfo> loginStore;
+
+    /**
+     * create local login store with {@link #DEFAULT_CAPACITY}
+     */
+    public LocalLoginStore() {
+        this(DEFAULT_CAPACITY);
+    }
+
+    /**
+     * create local login store
+     *
+     * @param capacity cache capacity, must be positive
+     * @throws IllegalArgumentException when capacity is not positive
+     */
+    public LocalLoginStore(int capacity) {
+        this.loginStore = CacheTool.<String, LoginInfo>newLRUCache(capacity).build();
+    }
 
     /**
      * parse store key from userId

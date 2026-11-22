@@ -6,8 +6,7 @@ import com.xxl.sso.core.exception.XxlSsoException;
 import com.xxl.sso.core.helper.XxlSsoHelper;
 import com.xxl.sso.core.model.LoginInfo;
 import com.xxl.sso.core.path.impl.AntPathMatcher;
-import com.xxl.tool.core.CollectionTool;
-import com.xxl.tool.core.StringTool;
+import com.xxl.tool.core.CollectionTool;import com.xxl.tool.core.StringTool;
 import com.xxl.tool.response.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -174,7 +173,7 @@ public class XxlSsoCasInterceptor implements HandlerInterceptor {
         // 3、login check (ticket + cookie)
         Response<LoginInfo> loginCheckResult = XxlSsoHelper.loginCheckWithCookie(request, response);                // check cookie
         if (!(loginCheckResult!=null && loginCheckResult.isSuccess())) {
-            loginCheckResult = XxlSsoHelper.validTicket(request, response);         // check ticket
+            loginCheckResult = XxlSsoHelper.casValidTicket(request, response);         // check ticket
         }
 
         // parse login info
@@ -195,14 +194,9 @@ public class XxlSsoCasInterceptor implements HandlerInterceptor {
                 throw new XxlSsoException(Const.CODE_LOGIN_FAIL, "not login for path:"+ request.getServletPath());
             }
 
-            // is page, redirect 2 cas-login
+            // is page, redirect 2 cas-login (encoded redirect_url, drop original query)
             String originUrl = request.getRequestURL().toString();
-            String finalLoginPath = serverAddress
-                    .concat(loginPath)
-                    .concat("?")
-                    .concat(Const.CLIENT_REDIRECT_URL)
-                    .concat("=")
-                    .concat(originUrl);
+            String finalLoginPath = XxlSsoHelper.casGenerateLoginUrl(serverAddress, loginPath, originUrl);
             response.sendRedirect(finalLoginPath);
             return false;
         }

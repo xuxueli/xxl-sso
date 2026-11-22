@@ -1,5 +1,6 @@
 package com.xxl.sso.core.bootstrap;
 
+import com.xxl.sso.core.exception.XxlSsoException;
 import com.xxl.sso.core.helper.XxlSsoHelper;
 import com.xxl.sso.core.store.LoginStore;
 import org.slf4j.Logger;
@@ -97,8 +98,15 @@ public class XxlSsoBootstrap {
 
     /**
      * start store and init helper
+     *
+     * @throws XxlSsoException when loginStore is not configured
      */
     public void start() {
+
+        // fail fast with a clear message instead of NPE
+        if (loginStore == null) {
+            throw new XxlSsoException("xxl-sso loginStore can not be null.");
+        }
 
         // 1、loginStore start
         loginStore.start();
@@ -111,8 +119,15 @@ public class XxlSsoBootstrap {
 
     /**
      * stop store and release resource
+     *
+     * <p>未配置 LoginStore 时直接返回，便于应用停机流程容错。</p>
      */
     public void stop() {
+
+        // nothing to stop
+        if (loginStore == null) {
+            return;
+        }
 
         // 1、loginStore stop
         loginStore.stop();
