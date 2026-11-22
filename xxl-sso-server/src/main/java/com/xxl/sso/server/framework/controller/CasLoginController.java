@@ -62,7 +62,8 @@ public class CasLoginController {
         if (loginCheckResult!=null && loginCheckResult.isSuccess()) {
 
             // 2.1、login success, redirect back
-            String redirectUrlFinal = genereteRedirectUrl(request, redirectUrl);
+            Response<String> redirectResult = XxlSsoHelper.generateRedirectUrl(request, redirectUrl);
+            String redirectUrlFinal = redirectResult.isSuccess() ? redirectResult.getData() : "";
             if (StringTool.isBlank(redirectUrlFinal)) {
                 redirectUrlFinal = "/";
             }
@@ -77,30 +78,6 @@ public class CasLoginController {
         }
     }
 
-    /**
-     * generate redirect url, back 2 client
-     *
-     * @param request
-     * @param redirectUrl
-     * @return
-     */
-    private String genereteRedirectUrl(HttpServletRequest request, String redirectUrl){
-
-        // valid
-        if (StringTool.isBlank(redirectUrl)) {
-            return "";
-        }
-
-        // parse ticket
-        Response<String> createTicketResult = XxlSsoHelper.createTicket(request);
-        if (!createTicketResult.isSuccess()) {
-            return "";
-        }
-        String ticket = createTicketResult.getData();
-
-        // build redirect url
-        return redirectUrl.trim() + "?" + Const.XXL_SSO_TICKET + "=" + ticket;
-    }
 
     /**
      * Do login
@@ -147,7 +124,8 @@ public class CasLoginController {
         }
 
         // 5、redirect back
-        String redirectUrlFinal = genereteRedirectUrl(request, redirectUrl);
+        Response<String> redirectResult = XxlSsoHelper.generateRedirectUrl(request, redirectUrl);
+        String redirectUrlFinal = redirectResult.isSuccess() ? redirectResult.getData() : "";
         if (StringTool.isBlank(redirectUrlFinal)) {
             redirectUrlFinal = request.getContextPath() + "/";
         }

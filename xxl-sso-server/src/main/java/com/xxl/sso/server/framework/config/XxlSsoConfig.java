@@ -31,6 +31,9 @@ public class XxlSsoConfig {
     @Value("${xxl-sso.store.redis.keyprefix}")
     private String redisKeyprefix;
 
+    @Value("${xxl-sso.cas.redirect-whitelist:}")
+    private String casWhitelist;
+
 
     /**
      * 1、配置 XxlSsoBootstrap
@@ -45,6 +48,7 @@ public class XxlSsoConfig {
                 redisKeyprefix));
         bootstrap.setTokenKey(tokenKey);
         bootstrap.setTokenTimeout(tokenTimeout);
+        bootstrap.setCasWhitelist(casWhitelist);
 
         return bootstrap;
     }

@@ -4,6 +4,7 @@ import com.xxl.sso.core.constant.Const;
 import com.xxl.sso.core.model.LoginInfo;
 import com.xxl.sso.core.store.LoginStore;
 import com.xxl.sso.core.token.TokenHelper;
+import com.xxl.sso.core.util.CasRedirectUrlValidator;
 import com.xxl.tool.core.CollectionTool;
 import com.xxl.tool.core.StringTool;
 import com.xxl.tool.http.CookieTool;
@@ -30,7 +31,19 @@ public class XxlSsoHelper {
      * @param loginStore login store
      */
     public static void init(LoginStore loginStore, String tokenKey, long tokenTimeout){
-        instance = new XxlSsoHelper(loginStore, tokenKey, tokenTimeout);
+        init(loginStore, tokenKey, tokenTimeout, null);
+    }
+
+    /**
+     * init
+     *
+     * @param loginStore    login store
+     * @param tokenKey      token key
+     * @param tokenTimeout  token timeout, by milliseconds
+     * @param casWhitelist  cas redirect whitelist, support AntPathMatcher
+     */
+    public static void init(LoginStore loginStore, String tokenKey, long tokenTimeout, String casWhitelist){
+        instance = new XxlSsoHelper(loginStore, tokenKey, tokenTimeout, casWhitelist);
     }
 
     /**
@@ -60,10 +73,20 @@ public class XxlSsoHelper {
      */
     private long tokenTimeout;
 
+    /**
+     * cas redirect url validator
+     */
+    private final CasRedirectUrlValidator redirectValidator;
+
     public XxlSsoHelper(LoginStore loginStore, String tokenKey, long tokenTimeout) {
+        this(loginStore, tokenKey, tokenTimeout, null);
+    }
+
+    public XxlSsoHelper(LoginStore loginStore, String tokenKey, long tokenTimeout, String casWhitelist) {
         this.loginStore = loginStore;
         this.tokenKey = tokenKey;
         this.tokenTimeout = tokenTimeout;
+        this.redirectValidator = new CasRedirectUrlValidator(casWhitelist);
 
         // valid
         if (StringTool.isBlank(this.tokenKey)) {
@@ -323,6 +346,40 @@ public class XxlSsoHelper {
     }
 
     /**
+     * generate redirect url, valid redirect url and append ticket
+     *
+     * <p>
+     * 白名单为空时不校验；配置白名单后，地址不合法或未命中时返回失败，不会签发任何票据。
+     * </p>
+     *
+     * @param request       request
+     * @param redirectUrl   client redirect url
+     * @return              Response.data is redirect url
+     */
+    public static Response<String> generateRedirectUrl(HttpServletRequest request, String redirectUrl) {
+
+        // valid redirect url
+        if (!getInstance().redirectValidator.isAllowed(redirectUrl)) {
+            return Response.ofFail("cas redirect url is invalid.");
+        }
+
+        // create ticket
+        Response<String> createTicketResult = createTicket(request);
+        if (!createTicketResult.isSuccess()) {
+            return createTicketResult;
+        }
+
+        // build redirect url
+        String redirectUrlFinal = CasRedirectUrlValidator.appendQueryParam
+                (redirectUrl.trim(),
+                        Const.XXL_SSO_TICKET,
+                        createTicketResult.getData());
+
+        // build redirect url
+        return Response.ofSuccess(redirectUrlFinal);
+    }
+
+    /**
      * valid ticket and write cookie, from parameter
      *
      * @param request       request
@@ -351,7 +408,7 @@ public class XxlSsoHelper {
             CookieTool.set(response, getInstance().getTokenKey(), token, false);
         }
 
-        return loginCheck(token);
+        return result;
     }
 
     // ---------------------- permission ----------------------

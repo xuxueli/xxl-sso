@@ -198,11 +198,15 @@ public class RedisLoginStore implements LoginStore {
         // parse storeKey
         String storeKey = parseTicketStoreKey(ticket);
 
-        // get
+        // valid ticket
         String token = (String) jedisTool.get(storeKey);
         if (StringTool.isBlank(token)) {
             return Response.ofFail("ticket not found.");
         }
+
+        // remove after verify-success;
+        // consume once, avoid ticket replay
+        jedisTool.del(storeKey);
 
         return Response.ofSuccess(token);
     }

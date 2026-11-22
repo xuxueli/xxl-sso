@@ -19,6 +19,11 @@ public class XxlSsoBootstrap {
     private String tokenKey;
     private long tokenTimeout;
 
+    /**
+     * CAS 登录跳转白名单，支持 AntPathMatcher，逗号分隔
+     */
+    private String casWhitelist;
+
     public void setLoginStore(LoginStore loginStore) {
         this.loginStore = loginStore;
     }
@@ -29,6 +34,10 @@ public class XxlSsoBootstrap {
 
     public void setTokenTimeout(long tokenTimeout) {
         this.tokenTimeout = tokenTimeout;
+    }
+
+    public void setCasWhitelist(String casWhitelist) {
+        this.casWhitelist = casWhitelist;
     }
 
     public LoginStore getLoginStore() {
@@ -44,7 +53,7 @@ public class XxlSsoBootstrap {
         loginStore.start();
 
         // 2、helper init
-        XxlSsoHelper.init(loginStore, tokenKey, tokenTimeout);
+        XxlSsoHelper.init(loginStore, tokenKey, tokenTimeout, casWhitelist);
 
         logger.info(">>>>>>>>>>> xxl-sso XxlSsoBootstrap started.");
     }

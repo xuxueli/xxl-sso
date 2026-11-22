@@ -516,10 +516,25 @@ Native登录认证 OpenAPI 接口列表：
 #### 第一步、部署 CAS认证中心 
 CAS单点登录 依赖 CAS认证中心，CAS认证中心提供单点登录基础能力；因此需要先行启动 CAS认证中心（xxl-sso-server）。
 
-#### 第一步、示例项目引入Maven依赖
+配置文件位置：xxl-sso-server/src/main/resources/application.properties
+
+```
+### xxl-sso 登录凭证/token传输key, 用于cookie、header登录凭证传输；
+xxl-sso.token.key=xxl-sso-token
+### xxl-sso 登录凭证/token超时时间，单位毫秒；
+xxl-sso.token.timeout=604800000
+### xxl-sso 登录态持久化配置，如下为Redis组件相关配置；
+xxl-sso.store.redis.nodes=127.0.0.1:6379
+xxl-sso.store.redis.user=
+xxl-sso.store.redis.keyprefix=xxl_sso_user
+### CAS 登录跳转白名单，为空不校验，逗号分隔，支持 AntPathMatcher；
+xxl-sso.cas.redirect-whitelist=http://xxlssoclient1.com:8081/**,http://*.example.com:8081/app/**
+```
+
+#### 第二步、示例项目引入Maven依赖
 参考章节 “1.4 下载”，pom引入 “xxl-sso-core” 相关maven依赖；
 
-#### 第二步、添加 XXL-SSO 配置
+#### 第三步、添加 XXL-SSO 配置
 配置文件位置：xxl-sso-sample-interceptor-cas/src/main/resources/application.properties
 
 ```
@@ -543,7 +558,7 @@ xxl.sso.server.logout.path=/logout
 xxl-sso.client.excluded.paths=
 ```
 
-#### 第三步、添加 XXL-SSO 组件
+#### 第四步、添加 XXL-SSO 组件
 配置组件位置：xxl-sso-sample-interceptor-cas/src/main/java/com/xxl/sso/sample/config/XxlSsoConfig
 
 ```
@@ -581,11 +596,11 @@ public void addInterceptors(InterceptorRegistry registry) {
 }
 ```
 
-#### 第四步、代码中进行 XXL-SSO 登录验证、权限验证
+#### 第五步、代码中进行 XXL-SSO 登录验证、权限验证
 忽略。
 > 该示例场景与章节 “2.3、接入项目示例（Web常规登录） 》 第四步、代码中进行 XXL-SSO 登录验证、权限验证” 使用方式一致，如有诉求可参考上文章节，此处不赘述。
 
-#### 第五步、验证
+#### 第六步、验证
 经过上述配置之后，启动示例项目。整体项目模块，以及可访问域名地址如下。
 **启动项目**：
 - CAS认证中心: xxl-sso-server
@@ -903,14 +918,15 @@ Response<String> result = XxlSsoHelper.hasPermission(LoginInfo loginInfo, String
 - 4、【修复】票据超时时间单位问题修复；
 - 5、【升级】升级多项依赖至较新版本；
 
-### v2.4.2 Release Notes [ING]
+### v2.5.0 Release Notes [2026-11-22]
 - 1、【AI】AI编程规范：新增 Agents.md，提供Agent编程规范，约束并提升Agent开发质量；
-- 2、【安全】登出安全增强：登陆请求二次进行token验证，防止恶意登出；合并PR-91；
-- 3、【ING】安全增强；
-- 4、【ING】增强用户增强安全性：登陆用户数据中，新增客户端信息如ip、ua等，防止token被窃取；
-- 5、【ING】SSO 请求Token，下划线间隔改为中划线方式，避免Nginx等默认不支持问题；
-- 6、【升级】升级多项依赖至较新版本；CI 构建 Actions 升级至较新版本；
-
+- 2、【安全】CAS客户端来源防护：CAS登录跳转新增客户端来源白名单校验（支持AntPathMatcher），规避开放重定向导致票据泄露风险；
+- 3、【安全】CAS票据安全防护：CAS登陆票据改为一次性使用，防止重放攻击；
+- 4、【安全】登出安全增强：登陆请求二次进行token验证，防止恶意登出；合并PR-91；
+- 5、【ING】增强用户增强安全性：登陆用户数据中，新增客户端信息如ip、ua等，防止token被窃取；
+- 6、【ING】SSO 请求Token，下划线间隔改为中划线方式，避免Nginx等默认不支持问题；
+- 7、【升级】升级多项依赖至较新版本；CI 构建 Actions 升级至较新版本；
+- 8、【优化】AntPathMatcher升级，提升路径匹配效率；
 
 
 ### TODO LIST
