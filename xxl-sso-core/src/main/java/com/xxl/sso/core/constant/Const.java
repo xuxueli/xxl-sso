@@ -3,6 +3,10 @@ package com.xxl.sso.core.constant;
 /**
  * const
  *
+ * <p>
+ * 统一定义 Cookie/Header/RequestAttribute key、CAS 参数、错误码与登录有效期常量，禁止在业务代码中硬编码。
+ * </p>
+ *
  * @author xuxueli 2018-04-02 19:18:04
  */
 public class Const {
@@ -72,23 +76,23 @@ public class Const {
 
 
     /**
-     * expire seconds for 1 day
+     * expire milliseconds for 1 day
      */
     public static final long EXPIRE_TIME_1_DAY = 1000 * 60 * 60 * 24;
     /**
-     * expire seconds for 7 day
+     * expire milliseconds for 7 day
      */
     public static final long EXPIRE_TIME_FOR_7_DAY = EXPIRE_TIME_1_DAY * 7;
     /**
-     * expire seconds for 30 day
+     * expire milliseconds for 30 day
      */
     public static final long EXPIRE_TIME_FOR_30_DAY = EXPIRE_TIME_1_DAY * 30;
     /**
-     * expire seconds for 1 year
+     * expire milliseconds for 1 year
      */
     public static final long EXPIRE_TIME_FOR_1_YEAR = EXPIRE_TIME_1_DAY * 365;
     /**
-     * expire seconds for 10 year
+     * expire milliseconds for 10 year
      */
     public static final long EXPIRE_TIME_FOR_10_YEAR = EXPIRE_TIME_1_DAY * 365 * 10;
 

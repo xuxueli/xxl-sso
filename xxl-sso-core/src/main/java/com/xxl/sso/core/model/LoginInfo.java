@@ -7,20 +7,46 @@ import java.util.Map;
 /**
  * xxl sso login info
  *
+ * <p>
+ * 统一登录用户模型：{@code userId + signature} 会写入 token，其余字段（用户名、角色、权限、过期时间）
+ * 仅保存在服务端 LoginStore，不随 token 下发。
+ * </p>
+ *
  * @author xuxueli 2018-04-02 19:59:49
  */
 public class LoginInfo implements Serializable {
     private static final long serialVersionUID = 42L;
 
 
+    /**
+     * create empty login info
+     */
     public LoginInfo() {
     }
-    // for token
+
+    /**
+     * create token-carried login info
+     *
+     * @param userId        user id
+     * @param signature     login signature
+     */
     public LoginInfo(String userId, String signature) {
         this.userId = userId;
         this.signature = signature;
     }
-    // for login
+
+    /**
+     * create full login info
+     *
+     * @param userId            user id
+     * @param userName          user name
+     * @param realName          real name
+     * @param extraInfo         extra info
+     * @param roleList          role list
+     * @param permissionList    permission list
+     * @param expireTime        expire time, ms
+     * @param signature         login signature
+     */
     public LoginInfo(String userId,
                      String userName,
                      String realName,
@@ -42,7 +68,7 @@ public class LoginInfo implements Serializable {
     // ---------------------- user info ----------------------
 
     /**
-     * user id
+     * user id, unique
      */
     private String userId;
 
@@ -57,7 +83,7 @@ public class LoginInfo implements Serializable {
     private String realName;
 
     /**
-     * extra info
+     * extra info, nullable
      */
     private Map<String, String> extraInfo;
 
@@ -65,12 +91,12 @@ public class LoginInfo implements Serializable {
     // ---------------------- role / permission ----------------------
 
     /**
-     * role list
+     * role list, nullable
      */
     private List<String> roleList;
 
     /**
-     * permission list
+     * permission list, nullable
      */
     private List<String> permissionList;
 
@@ -78,12 +104,12 @@ public class LoginInfo implements Serializable {
     // ---------------------- setting ----------------------
 
     /**
-     * expire time, ms
+     * expire time, ms; login state is invalid after this time
      */
     private long expireTime;
 
     /**
-     * signature
+     * login signature; carried by token and compared with stored value on login check
      */
     private String signature;
 

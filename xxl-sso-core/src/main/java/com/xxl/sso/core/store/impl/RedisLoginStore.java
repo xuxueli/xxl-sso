@@ -8,12 +8,39 @@ import com.xxl.tool.core.StringTool;
 import com.xxl.tool.response.Response;
 
 /**
+ * redis login store
+ *
+ * <p>
+ * 基于 {@link JedisTool} 的 Redis 实现，登录态 key 形如 {@code {prefix}:{userId}}，
+ * 票据 key 形如 {@code {prefix}:ticket:{ticket}}；依赖 Redis TTL 完成过期控制。
+ * </p>
+ *
+ * <p>
+ * 并发安全由 Jedis 客户端与连接池保证；{@link #start()} / {@link #stop()} 负责连接资源的创建与释放。
+ * </p>
+ *
  * @author xuxueli 2018-04-02 20:03:11
  */
 public class RedisLoginStore implements LoginStore {
 
-    private JedisTool jedisTool;
-    private String storeKeyPrefix;
+    /**
+     * redis client
+     */
+    private final JedisTool jedisTool;
+
+    /**
+     * store key prefix, endswith ":"
+     */
+    private final String storeKeyPrefix;
+
+    /**
+     * create redis login store
+     *
+     * @param nodes             redis nodes, like "127.0.0.1:6379" or "host1:port1,host2:port2"
+     * @param user              redis user, nullable
+     * @param password          redis password, nullable
+     * @param storeKeyPrefix    store key prefix, fallback to {@link Const#XXL_SSO_STORE_PREFIX} when blank
+     */
     public RedisLoginStore(String nodes, String user, String password, String storeKeyPrefix) {
         // init
         this.jedisTool = new JedisTool(nodes, user, password);
@@ -30,10 +57,10 @@ public class RedisLoginStore implements LoginStore {
      * <pre>
      *     key: "xxl_sso_user:" + {user001}
      *     value: loginInfo
-     * </pre>>
+     * </pre>
      *
-     * @param userId
-     * @return
+     * @param userId    user id
+     * @return          store key
      */
     private String parseStoreKey(String userId){
         return storeKeyPrefix + userId;
@@ -45,10 +72,10 @@ public class RedisLoginStore implements LoginStore {
      * <pre>
      *     key: "xxl_sso_user:" + "ticket:" + {ticket}
      *     value: token
-     * </pre>>
+     * </pre>
      *
-     * @param ticket
-     * @return
+     * @param ticket    ticket
+     * @return          ticket store key; {@code null} when ticket is null
      */
     private String parseTicketStoreKey(String ticket){
         if (ticket == null) {
@@ -58,16 +85,25 @@ public class RedisLoginStore implements LoginStore {
         return storeKeyPrefix + "ticket:" + ticket;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void start() {
         jedisTool.start();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void stop() {
         jedisTool.stop();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Response<String> set(LoginInfo loginInfo) {
 
@@ -94,6 +130,9 @@ public class RedisLoginStore implements LoginStore {
         return Response.ofSuccess();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Response<String> update(LoginInfo loginInfo) {
 
@@ -132,6 +171,9 @@ public class RedisLoginStore implements LoginStore {
         return Response.ofSuccess();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Response<String> remove(String userId) {
 
@@ -148,6 +190,9 @@ public class RedisLoginStore implements LoginStore {
         return Response.ofSuccess();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Response<LoginInfo> get(String userId) {
 
@@ -174,6 +219,9 @@ public class RedisLoginStore implements LoginStore {
         return Response.ofSuccess(loginInfo);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Response<String> createTicket(String ticket, String token, long ticketTimeout) {
 
@@ -193,6 +241,9 @@ public class RedisLoginStore implements LoginStore {
         return Response.ofSuccess(ticket);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Response<String> validTicket(String ticket) {
         // parse storeKey

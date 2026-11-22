@@ -53,6 +53,11 @@ public class XxlSsoNativeInterceptor implements HandlerInterceptor {
      */
     private String excludedPaths;
 
+    /**
+     * create native interceptor
+     *
+     * @param excludedPaths excluded paths, ant pattern, comma separated; nullable
+     */
     public XxlSsoNativeInterceptor(String excludedPaths) {
         this.excludedPaths = excludedPaths;
         logger.info("XxlSsoNativeInterceptor init.");
@@ -64,8 +69,8 @@ public class XxlSsoNativeInterceptor implements HandlerInterceptor {
     /**
      * is match excluded path
      *
-     * @param request
-     * @return
+     * @param request   http request
+     * @return          {@code true} when current servlet path is excluded
      */
     private boolean isMatchExcludedPaths(HttpServletRequest request) {
         // get url
@@ -93,6 +98,15 @@ public class XxlSsoNativeInterceptor implements HandlerInterceptor {
 
     // ---------------------- do auth ----------------------
 
+    /**
+     * auth interceptor: validate @XxlSso login / permission / role, write json on login fail
+     *
+     * @param request   request
+     * @param response  response
+     * @param handler   handler
+     * @return          {@code true} to proceed
+     * @throws Exception permission or role fail
+     */
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 

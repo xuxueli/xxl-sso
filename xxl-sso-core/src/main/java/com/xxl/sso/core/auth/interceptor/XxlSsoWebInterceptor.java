@@ -61,6 +61,12 @@ public class XxlSsoWebInterceptor implements HandlerInterceptor {
     private String loginPath;
 
 
+    /**
+     * create web interceptor
+     *
+     * @param excludedPaths excluded paths, ant pattern, comma separated; nullable
+     * @param loginPath     login path, fallback to {@link Const#LOGIN_URL} when blank
+     */
     public XxlSsoWebInterceptor(String excludedPaths, String loginPath) {
         this.excludedPaths = excludedPaths;
         this.loginPath = loginPath;
@@ -71,6 +77,11 @@ public class XxlSsoWebInterceptor implements HandlerInterceptor {
         }
         logger.info("XxlSsoWebInterceptor init.");
     }
+    /**
+     * create web interceptor without excluded paths
+     *
+     * @param loginPath login path, fallback to {@link Const#LOGIN_URL} when blank
+     */
     public XxlSsoWebInterceptor(String loginPath) {
         this(null, loginPath);
     }
@@ -81,8 +92,8 @@ public class XxlSsoWebInterceptor implements HandlerInterceptor {
     /**
      * is match excluded path
      *
-     * @param request
-     * @return
+     * @param request   http request
+     * @return          {@code true} when current servlet path is excluded
      */
     public boolean isMatchExcludedPaths(HttpServletRequest request) {
 
@@ -117,6 +128,15 @@ public class XxlSsoWebInterceptor implements HandlerInterceptor {
 
     // ---------------------- do auth ----------------------
 
+    /**
+     * auth interceptor: validate @XxlSso login / permission / role, redirect or throw on fail
+     *
+     * @param request   request
+     * @param response  response
+     * @param handler   handler
+     * @return          {@code true} to proceed
+     * @throws Exception auth fail or redirect fail
+     */
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
@@ -165,15 +185,6 @@ public class XxlSsoWebInterceptor implements HandlerInterceptor {
             // isJson, throw exception
             boolean isJson = method.getMethodAnnotation(ResponseBody.class) != null;
             if (isJson) {
-
-                /*// login fail message
-                String loginFailMsg = GsonTool.toJson(Response.of(Const.CODE_LOGIN_FAIL, "not login for path:"+ request.getServletPath()));
-
-                // write response
-                response.setStatus(HttpServletResponse.SC_OK);
-                response.setContentType("application/json;charset=UTF-8");
-                response.getWriter().println(loginFailMsg);
-                return false;*/
 
                 // not login
                 throw new XxlSsoException(Const.CODE_LOGIN_FAIL, "not login for path:"+ request.getServletPath());

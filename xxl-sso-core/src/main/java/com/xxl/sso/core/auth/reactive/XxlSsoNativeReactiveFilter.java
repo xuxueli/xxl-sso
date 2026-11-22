@@ -42,6 +42,11 @@ public class XxlSsoNativeReactiveFilter implements WebFilter {
      */
     private final String excludedPaths;
 
+    /**
+     * create native reactive filter
+     *
+     * @param excludedPaths excluded paths, ant pattern, comma separated; nullable
+     */
     public XxlSsoNativeReactiveFilter(String excludedPaths) {
         this.excludedPaths = excludedPaths;
 
@@ -54,8 +59,8 @@ public class XxlSsoNativeReactiveFilter implements WebFilter {
     /**
      * is match excluded path
      *
-     * @param exchange
-     * @return
+     * @param exchange  web exchange
+     * @return          {@code true} when current request path is excluded
      */
     private boolean isMatchExcludedPaths(ServerWebExchange exchange) {
         // get url
@@ -84,9 +89,9 @@ public class XxlSsoNativeReactiveFilter implements WebFilter {
     /**
      * write json response
      *
-     * @param exchange
-     * @param body
-     * @return
+     * @param exchange  web exchange
+     * @param body      json body
+     * @return          completion signal
      */
     private Mono<Void> writeJson(ServerWebExchange exchange, String body) {
         ServerHttpResponse response = exchange.getResponse();
@@ -100,6 +105,13 @@ public class XxlSsoNativeReactiveFilter implements WebFilter {
 
     // ---------------------- auth filter ----------------------
 
+    /**
+     * auth filter: pass excluded path, then validate header token, write json on login fail
+     *
+     * @param exchange  web exchange
+     * @param chain     filter chain
+     * @return          completion signal
+     */
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
 

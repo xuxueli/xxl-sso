@@ -49,6 +49,11 @@ public class XxlSsoNativeFilter implements Filter {
      */
     private final String excludedPaths;
 
+    /**
+     * create native filter
+     *
+     * @param excludedPaths excluded paths, ant pattern, comma separated; nullable
+     */
     public XxlSsoNativeFilter(String excludedPaths) {
         this.excludedPaths = excludedPaths;
     }
@@ -65,8 +70,8 @@ public class XxlSsoNativeFilter implements Filter {
     /**
      * is match excluded path
      *
-     * @param request
-     * @return
+     * @param request   http request
+     * @return          {@code true} when current servlet path is excluded
      */
     private boolean isMatchExcludedPaths(HttpServletRequest request) {
         // get url
@@ -95,6 +100,15 @@ public class XxlSsoNativeFilter implements Filter {
 
     // ---------------------- auth filter ----------------------
 
+    /**
+     * auth filter: pass excluded path, then validate header token, write json on login fail
+     *
+     * @param servletRequest    request
+     * @param servletResponse   response
+     * @param chain             filter chain
+     * @throws IOException      write response fail
+     * @throws ServletException servlet error
+     */
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) servletRequest;

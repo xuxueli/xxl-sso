@@ -55,6 +55,13 @@ public class XxlSsoCasReactiveFilter implements WebFilter {
      */
     private String excludedPaths;
 
+    /**
+     * create cas reactive filter
+     *
+     * @param serverAddress cas server address, required
+     * @param loginPath     cas login path, fallback to {@link Const#LOGIN_URL} when blank
+     * @param excludedPaths excluded paths, ant pattern, comma separated; nullable
+     */
     public XxlSsoCasReactiveFilter(String serverAddress, String loginPath, String excludedPaths) {
         this.serverAddress = serverAddress;
         this.loginPath = loginPath;
@@ -79,8 +86,8 @@ public class XxlSsoCasReactiveFilter implements WebFilter {
     /**
      * is match excluded path
      *
-     * @param exchange
-     * @return
+     * @param exchange  web exchange
+     * @return          {@code true} when current request path is excluded
      */
     private boolean isMatchExcludedPaths(ServerWebExchange exchange) {
         // get url
@@ -109,9 +116,9 @@ public class XxlSsoCasReactiveFilter implements WebFilter {
     /**
      * write json response
      *
-     * @param exchange
-     * @param body
-     * @return
+     * @param exchange  web exchange
+     * @param body      json body
+     * @return          completion signal
      */
     private Mono<Void> writeJson(ServerWebExchange exchange, String body) {
         ServerHttpResponse response = exchange.getResponse();
@@ -125,6 +132,13 @@ public class XxlSsoCasReactiveFilter implements WebFilter {
 
     // ---------------------- auth filter ----------------------
 
+    /**
+     * auth filter: pass excluded path, then validate cookie token or cas ticket, redirect to cas login on fail
+     *
+     * @param exchange  web exchange
+     * @param chain     filter chain
+     * @return          completion signal
+     */
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
 

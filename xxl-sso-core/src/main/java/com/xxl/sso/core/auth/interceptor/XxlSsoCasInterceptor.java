@@ -66,6 +66,13 @@ public class XxlSsoCasInterceptor implements HandlerInterceptor {
      */
     private String excludedPaths;
 
+    /**
+     * create cas interceptor
+     *
+     * @param serverAddress cas server address, required
+     * @param loginPath     cas login path, fallback to {@link Const#LOGIN_URL} when blank
+     * @param excludedPaths excluded paths, ant pattern, comma separated; nullable
+     */
     public XxlSsoCasInterceptor(String serverAddress, String loginPath, String excludedPaths) {
         this.serverAddress = serverAddress;
         this.loginPath = loginPath;
@@ -90,8 +97,8 @@ public class XxlSsoCasInterceptor implements HandlerInterceptor {
     /**
      * is match excluded path
      *
-     * @param request
-     * @return
+     * @param request   http request
+     * @return          {@code true} when current servlet path is excluded
      */
     private boolean isMatchExcludedPaths(HttpServletRequest request) {
         // get url
@@ -120,6 +127,15 @@ public class XxlSsoCasInterceptor implements HandlerInterceptor {
 
     // ---------------------- auth ----------------------
 
+    /**
+     * auth interceptor: validate @XxlSso login / permission / role, redirect to cas login on fail
+     *
+     * @param request   request
+     * @param response  response
+     * @param handler   handler
+     * @return          {@code true} to proceed
+     * @throws Exception auth fail or redirect fail
+     */
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         /**

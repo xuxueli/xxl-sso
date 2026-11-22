@@ -15,6 +15,16 @@ import java.util.Set;
 /**
  * Redis client base on jedis
  *
+ * <p>
+ * 统一封装 Jedis 单机（连接池）与集群模式，按节点数量自动选择：单节点使用 {@link JedisPool}，
+ * 多节点使用 {@link JedisCluster}。值统一通过 JavaSerializer 序列化后以 byte[] 写入。
+ * </p>
+ *
+ * <p>
+ * 异常策略为「记录日志并降级」：{@link #get(String)} 失败返回 {@code null}，
+ * {@link #set(String, Object, long)} / {@link #del(String)} 失败不抛异常，调用方需自行处理失败场景。
+ * </p>
+ *
  * @author xuxueli 2015-7-10 18:34:07
  */
 public class JedisTool {
@@ -24,20 +34,52 @@ public class JedisTool {
     // ---------------------- param ----------------------
 
     /**
-     * nodes=127.0.0.1:6379
-     * user=
-     * password=
+     * nodes, like "127.0.0.1:6379" or "host1:port1,host2:port2"
      */
     private String nodes;
+
+    /**
+     * redis user, nullable
+     */
     private String user;
+
+    /**
+     * redis password, nullable
+     */
     private String password;
 
+    /**
+     * connection timeout, ms
+     */
     private int connectionTimeout = 2000;
+
+    /**
+     * socket read timeout, ms
+     */
     private int soTimeout = 2000;
+
+    /**
+     * max redirect attempts for cluster
+     */
     private int maxAttempts = 3;
+
+    /**
+     * parsed cluster nodes
+     */
     private Set<HostAndPort> clusterNodes = new HashSet<>();
+
+    /**
+     * value serializer
+     */
     private JavaSerializer serializer = new JavaSerializer();
 
+    /**
+     * create jedis tool
+     *
+     * @param nodes     redis nodes, like "127.0.0.1:6379" or "host1:port1,host2:port2"
+     * @param user      redis user, nullable
+     * @param password  redis password, nullable
+     */
     public JedisTool(String nodes, String user, String password) {
         this.nodes = nodes;
         if (StringTool.isNotBlank(user)) {
@@ -50,11 +92,21 @@ public class JedisTool {
 
     // ---------------------- start / stop ----------------------
 
+    /**
+     * single-node connection pool, used when nodes size == 1
+     */
     private JedisPool jedisPool;
+
+    /**
+     * cluster client, used when nodes size > 1
+     */
     private JedisCluster jedisCluster;
 
     /**
-     * start
+     * start jedis pool or cluster client
+     *
+     * @throws IllegalArgumentException when nodes is blank or malformed
+     * @throws RuntimeException when client initialization fails
      */
     public void start() {
 
@@ -111,7 +163,7 @@ public class JedisTool {
     }
 
     /**
-     * stop
+     * stop and release pool / cluster resource; exceptions are logged and ignored
      */
     public void stop() {
         try {
@@ -131,11 +183,15 @@ public class JedisTool {
     // ---------------------- util ----------------------
 
     /**
-     * set
+     * set value with expire seconds
+     *
+     * <p>
+     * {@code seconds < 0} 表示不设置过期时间；异常仅记录日志，不向调用方抛出。
+     * </p>
      *
      * @param key       key
-     * @param value     value
-     * @param seconds   seconds
+     * @param value     value, serialized by JavaSerializer
+     * @param seconds   expire seconds, negative means no expire
      */
     public void set(String key, Object value, long seconds) {
         if (jedisCluster!=null) {
@@ -165,10 +221,10 @@ public class JedisTool {
     }
 
     /**
-     * get
+     * get value
      *
      * @param key   key
-     * @return  value
+     * @return  deserialized value; {@code null} when key does not exist or read fails
      */
     public Object get(String key) {
         if (jedisCluster!=null) {
@@ -198,9 +254,9 @@ public class JedisTool {
     }
 
     /**
-     * delete
+     * delete key
      *
-     * @param key   key
+     * @param key   key; exceptions are logged and ignored
      */
     public void del(String key) {
         if (jedisCluster!=null) {

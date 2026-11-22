@@ -63,6 +63,13 @@ public class XxlSsoCasFilter implements Filter {
      */
     private String excludedPaths;
 
+    /**
+     * create cas filter
+     *
+     * @param serverAddress cas server address, required
+     * @param loginPath     cas login path, fallback to {@link Const#LOGIN_URL} when blank
+     * @param excludedPaths excluded paths, ant pattern, comma separated; nullable
+     */
     public XxlSsoCasFilter(String serverAddress, String loginPath, String excludedPaths) {
         this.serverAddress = serverAddress;
         this.loginPath = loginPath;
@@ -92,8 +99,8 @@ public class XxlSsoCasFilter implements Filter {
     /**
      * is match excluded path
      *
-     * @param request
-     * @return
+     * @param request   http request
+     * @return          {@code true} when current servlet path is excluded
      */
     private boolean isMatchExcludedPaths(HttpServletRequest request) {
         // get url
@@ -122,6 +129,15 @@ public class XxlSsoCasFilter implements Filter {
 
     // ---------------------- auth filter ----------------------
 
+    /**
+     * auth filter: pass excluded path, then validate cookie token or cas ticket, redirect to cas login on fail
+     *
+     * @param servletRequest    request
+     * @param servletResponse   response
+     * @param chain             filter chain
+     * @throws IOException      write or redirect fail
+     * @throws ServletException servlet error
+     */
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) servletRequest;

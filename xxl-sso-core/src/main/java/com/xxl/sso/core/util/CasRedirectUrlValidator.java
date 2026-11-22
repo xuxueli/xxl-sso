@@ -33,6 +33,13 @@ public class CasRedirectUrlValidator {
      */
     private final List<String> patternList;
 
+    /**
+     * create cas redirect url validator
+     *
+     * @param casWhitelist whitelist expressions, comma separated, must start with http:// or https://;
+     *                     blank means no whitelist validation
+     * @throws IllegalArgumentException when any expression is not a valid http(s) url pattern
+     */
     public CasRedirectUrlValidator(String casWhitelist) {
         // 路径为空，表示不校验
         if (StringTool.isBlank(casWhitelist)) {

@@ -17,6 +17,14 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 /**
+ * xxl-sso helper
+ *
+ * <p>
+ * 面向 Servlet 容器（Filter / Spring MVC Interceptor）的登录态门面类，统一提供登录、续期、注销、
+ * 登录态校验与 CAS 票据能力；内部单例由 {@link com.xxl.sso.core.bootstrap.XxlSsoBootstrap} 初始化，
+ * 禁止业务代码自行 new。
+ * </p>
+ *
  * @author xuxueli 2018-04-08 21:30:54
  */
 public class XxlSsoHelper {
@@ -27,29 +35,32 @@ public class XxlSsoHelper {
     private static XxlSsoHelper instance;
 
     /**
-     * init
-     * @param loginStore login store
+     * init helper without cas whitelist
+     *
+     * @param loginStore    login store
+     * @param tokenKey      token key, fallback to {@link Const#XXL_SSO_TOKEN} when blank
+     * @param tokenTimeout  token timeout, by milliseconds, fallback to {@link Const#EXPIRE_TIME_FOR_10_YEAR} when not positive
      */
     public static void init(LoginStore loginStore, String tokenKey, long tokenTimeout){
         init(loginStore, tokenKey, tokenTimeout, null);
     }
 
     /**
-     * init
+     * init helper
      *
      * @param loginStore    login store
-     * @param tokenKey      token key
-     * @param tokenTimeout  token timeout, by milliseconds
-     * @param casWhitelist  cas redirect whitelist, support AntPathMatcher
+     * @param tokenKey      token key, fallback to {@link Const#XXL_SSO_TOKEN} when blank
+     * @param tokenTimeout  token timeout, by milliseconds, fallback to {@link Const#EXPIRE_TIME_FOR_10_YEAR} when not positive
+     * @param casWhitelist  cas redirect whitelist, support AntPathMatcher; blank means no whitelist validation
      */
     public static void init(LoginStore loginStore, String tokenKey, long tokenTimeout, String casWhitelist){
         instance = new XxlSsoHelper(loginStore, tokenKey, tokenTimeout, casWhitelist);
     }
 
     /**
-     * get instance
+     * get singleton instance
      *
-     * @return instance
+     * @return helper instance, {@code null} before {@link com.xxl.sso.core.bootstrap.XxlSsoBootstrap#start()}
      */
     public static XxlSsoHelper getInstance(){
         return instance;
@@ -78,10 +89,25 @@ public class XxlSsoHelper {
      */
     private final CasRedirectUrlValidator redirectValidator;
 
+    /**
+     * create helper without cas whitelist
+     *
+     * @param loginStore    login store
+     * @param tokenKey      token key, fallback to {@link Const#XXL_SSO_TOKEN} when blank
+     * @param tokenTimeout  token timeout, by milliseconds, fallback to {@link Const#EXPIRE_TIME_FOR_10_YEAR} when not positive
+     */
     public XxlSsoHelper(LoginStore loginStore, String tokenKey, long tokenTimeout) {
         this(loginStore, tokenKey, tokenTimeout, null);
     }
 
+    /**
+     * create helper
+     *
+     * @param loginStore    login store
+     * @param tokenKey      token key, fallback to {@link Const#XXL_SSO_TOKEN} when blank
+     * @param tokenTimeout  token timeout, by milliseconds, fallback to {@link Const#EXPIRE_TIME_FOR_10_YEAR} when not positive
+     * @param casWhitelist  cas redirect whitelist, support AntPathMatcher; blank means no whitelist validation
+     */
     public XxlSsoHelper(LoginStore loginStore, String tokenKey, long tokenTimeout, String casWhitelist) {
         this.loginStore = loginStore;
         this.tokenKey = tokenKey;
@@ -97,14 +123,29 @@ public class XxlSsoHelper {
         }
     }
 
+    /**
+     * get login store
+     *
+     * @return login store
+     */
     public LoginStore getLoginStore() {
         return loginStore;
     }
 
+    /**
+     * get token key
+     *
+     * @return token key, used as cookie-key and header-key
+     */
     public String getTokenKey() {
         return tokenKey;
     }
 
+    /**
+     * get token timeout
+     *
+     * @return token timeout, by milliseconds
+     */
     public long getTokenTimeout() {
         return tokenTimeout;
     }
@@ -115,8 +156,13 @@ public class XxlSsoHelper {
     /**
      * login ( store LoginInfo and generate token )
      *
-     * @param loginInfo     login data
-     * @return              Response#data is token
+     * <p>
+     * 先按 userId + signature 生成 token，再刷新 {@code expireTime} 并写入 LoginStore；
+     * 存储失败时返回存储层错误，不会向调用方返回 token。
+     * </p>
+     *
+     * @param loginInfo     login data, must contain userId and signature
+     * @return              Response#data is token; fail when loginInfo is invalid or store write fails
      */
     public static Response<String> login(LoginInfo loginInfo) {
 
@@ -140,11 +186,12 @@ public class XxlSsoHelper {
     }
 
     /**
-     * login with token (write LoginStore and response-cookie )
+     * login with cookie (write LoginStore and response-cookie )
      *
      * @param loginInfo     login data
-     * @param response      response
-     * @return  Response#data is token
+     * @param response      http response, used to write token cookie
+     * @param ifRemember    true - persistent cookie; false - session cookie
+     * @return              Response#data is token
      */
     public static Response<String> loginWithCookie(LoginInfo loginInfo, HttpServletResponse response, boolean ifRemember) {
 
@@ -164,7 +211,12 @@ public class XxlSsoHelper {
     // ---------------------- login-update ----------------------
 
     /**
-     * login update ( update LoginInfo in LoginStore)
+     * login update ( update LoginInfo in LoginStore )
+     *
+     * <p>
+     * 刷新 {@code expireTime} 后整体更新存储中的登录态；{@code loginInfo} 为 {@code null} 时直接交由
+     * 存储层返回失败，不会抛出异常。
+     * </p>
      *
      * @param loginInfo     login data
      * @return              response
@@ -186,7 +238,13 @@ public class XxlSsoHelper {
     /**
      * logout with token
      *
+     * <p>
+     * 先校验 token 再按 userId 移除服务端登录态，避免伪造 token 注销他人会话；
+     * token 为空时视为未登录，直接返回成功。
+     * </p>
+     *
      * @param token     token
+     * @return          response, fail when token is invalid or login state does not exist
      */
     public static Response<String> logout(String token) {
         if (StringTool.isBlank(token)) {
@@ -248,8 +306,13 @@ public class XxlSsoHelper {
     /**
      * login check with token
      *
+     * <p>
+     * 解析 token 后从 LoginStore 读取登录态，并校验 token 与存储中的 signature 是否一致；
+     * token 非法、登录态不存在或 signature 不匹配时均返回失败。
+     * </p>
+     *
      * @param token     token
-     * @return          loginInfo
+     * @return          loginInfo; fail when token is invalid or login state does not exist
      */
     public static Response<LoginInfo> loginCheck(String token) {
 
@@ -265,6 +328,10 @@ public class XxlSsoHelper {
             return loginInfoResponse;
         }
         LoginInfo loginInfo = loginInfoResponse.getData();
+        // store impl may return success with null data
+        if (loginInfo == null) {
+            return Response.ofFail("not login, loginInfo not exists");
+        }
 
         // valid version
         if (!loginInfoForToken.getSignature().equals(loginInfo.getSignature())){
@@ -289,8 +356,13 @@ public class XxlSsoHelper {
     /**
      * login check with request-cookie
      *
+     * <p>
+     * 校验失败时同步清理无效 Cookie，避免后续请求继续携带过期 token。
+     * </p>
+     *
      * @param request       request
-     * @return              response
+     * @param response      response, used to remove invalid cookie
+     * @return              loginInfo
      */
     public static Response<LoginInfo> loginCheckWithCookie(HttpServletRequest request, HttpServletResponse response) {
         // get cookie
@@ -322,6 +394,11 @@ public class XxlSsoHelper {
 
     /**
      * create ticket, from token in cookie
+     *
+     * <p>
+     * ticket 有效期固定 60 秒；LoginStore 需实现 {@link LoginStore#createTicket(String, String, long)}，
+     * 否则返回不支持错误。
+     * </p>
      *
      * @param request   request
      * @return          Response.data is ticket
@@ -382,9 +459,13 @@ public class XxlSsoHelper {
     /**
      * valid ticket and write cookie, from parameter
      *
+     * <p>
+     * 票据一次性使用，校验成功后立即从 LoginStore 中删除；登录态校验通过后写入 token Cookie。
+     * </p>
+     *
      * @param request       request
      * @param response      response
-     * @return              loginInfo
+     * @return              loginInfo; fail when ticket is blank, invalid or expired
      */
     public static Response<LoginInfo> validTicket(HttpServletRequest request, HttpServletResponse response) {
 
@@ -416,8 +497,12 @@ public class XxlSsoHelper {
     /**
      * has role valid
      *
+     * <p>
+     * {@code role} 为空表示不做角色限制，直接返回成功。
+     * </p>
+     *
      * @param loginInfo     loginInfo
-     * @param role          role
+     * @param role          required role
      * @return              response
      */
     public static Response<String> hasRole(LoginInfo loginInfo, String role) {
@@ -437,8 +522,12 @@ public class XxlSsoHelper {
     /**
      * has permission valid
      *
+     * <p>
+     * {@code permission} 为空表示不做权限限制，直接返回成功。
+     * </p>
+     *
      * @param loginInfo     loginInfo
-     * @param permission    permission
+     * @param permission    required permission
      * @return              response
      */
     public static Response<String> hasPermission(LoginInfo loginInfo, String permission) {

@@ -7,6 +7,18 @@ import org.slf4j.LoggerFactory;
 
 
 /**
+ * xxl-sso bootstrap
+ *
+ * <p>
+ * 生命周期入口：装配登录存储与 token 配置，按「Store 启动 → Helper 初始化」顺序完成启动，停止时释放 Store 资源。
+ * 仅负责装配与生命周期，不承载登录业务逻辑。
+ * </p>
+ *
+ * <p>
+ * 重复调用 {@link #start()} / {@link #stop()} 会重复执行底层 Store 的启动与释放，
+ * 使用方应在应用启动、停止回调中各调用一次。
+ * </p>
+ *
  * @author xuxueli 2018-04-09 11:38:15
  */
 public class XxlSsoBootstrap {
@@ -15,8 +27,19 @@ public class XxlSsoBootstrap {
 
     // --------------------------------- base conf ---------------------------------
 
+    /**
+     * login store
+     */
     private LoginStore loginStore;
+
+    /**
+     * token key, used as cookie-key and header-key
+     */
     private String tokenKey;
+
+    /**
+     * token timeout, by milliseconds
+     */
     private long tokenTimeout;
 
     /**
@@ -24,22 +47,47 @@ public class XxlSsoBootstrap {
      */
     private String casWhitelist;
 
+    /**
+     * set login store
+     *
+     * @param loginStore    login store
+     */
     public void setLoginStore(LoginStore loginStore) {
         this.loginStore = loginStore;
     }
 
+    /**
+     * set token key
+     *
+     * @param tokenKey  token key, fallback to {@link com.xxl.sso.core.constant.Const#XXL_SSO_TOKEN} when blank
+     */
     public void setTokenKey(String tokenKey) {
         this.tokenKey = tokenKey;
     }
 
+    /**
+     * set token timeout
+     *
+     * @param tokenTimeout  token timeout, by milliseconds
+     */
     public void setTokenTimeout(long tokenTimeout) {
         this.tokenTimeout = tokenTimeout;
     }
 
+    /**
+     * set cas redirect whitelist
+     *
+     * @param casWhitelist  cas redirect whitelist, support AntPathMatcher, comma separated; blank means no validation
+     */
     public void setCasWhitelist(String casWhitelist) {
         this.casWhitelist = casWhitelist;
     }
 
+    /**
+     * get login store
+     *
+     * @return login store
+     */
     public LoginStore getLoginStore() {
         return loginStore;
     }
@@ -47,6 +95,9 @@ public class XxlSsoBootstrap {
     // --------------------------------- start / stop ---------------------------------
 
 
+    /**
+     * start store and init helper
+     */
     public void start() {
 
         // 1、loginStore start
@@ -58,6 +109,9 @@ public class XxlSsoBootstrap {
         logger.info(">>>>>>>>>>> xxl-sso XxlSsoBootstrap started.");
     }
 
+    /**
+     * stop store and release resource
+     */
     public void stop() {
 
         // 1、loginStore stop

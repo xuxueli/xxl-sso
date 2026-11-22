@@ -9,22 +9,40 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 /**
+ * local login store
+ *
+ * <p>
+ * 基于 {@link ConcurrentHashMap} 的进程内实现，不支持 CAS 票据（调用票据方法会抛
+ * {@link com.xxl.sso.core.exception.XxlSsoException}）。
+ * </p>
+ *
+ * <p>
+ * 适用于单机或演示场景；多实例部署时登录态不共享，应改用 Redis 实现。
+ * 登录态不会主动清理，仅在 {@link #get(String)} 命中过期数据时惰性删除。
+ * </p>
+ *
  * @author xuxueli 2018-04-02 20:03:11
  */
 public class LocalLoginStore implements LoginStore {
 
+    /**
+     * userId -> LoginInfo
+     */
     private final ConcurrentMap<String, LoginInfo> loginStore = new ConcurrentHashMap<>();
 
     /**
-     * parse store key from token
+     * parse store key from userId
      *
-     * @param userId
-     * @return
+     * @param userId    user id
+     * @return          store key
      */
     private String parseStoreKey(String userId){
         return userId;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Response<String> set(LoginInfo loginInfo) {
 
@@ -48,6 +66,9 @@ public class LocalLoginStore implements LoginStore {
         return Response.ofSuccess();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Response<String> update(LoginInfo loginInfo) {
 
@@ -83,6 +104,9 @@ public class LocalLoginStore implements LoginStore {
         return Response.ofSuccess();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Response<String> remove(String userId) {
 
@@ -99,6 +123,9 @@ public class LocalLoginStore implements LoginStore {
         return Response.ofSuccess();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Response<LoginInfo> get(String userId) {
 

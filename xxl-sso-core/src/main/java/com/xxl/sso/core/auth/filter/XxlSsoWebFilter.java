@@ -58,6 +58,12 @@ public class XxlSsoWebFilter implements Filter {
     private String loginPath;
 
 
+    /**
+     * create web filter
+     *
+     * @param excludedPaths excluded paths, ant pattern, comma separated; nullable
+     * @param loginPath     login path, fallback to {@link Const#LOGIN_URL} when blank
+     */
     public XxlSsoWebFilter(String excludedPaths, String loginPath) {
         this.excludedPaths = excludedPaths;
         this.loginPath = loginPath;
@@ -80,8 +86,8 @@ public class XxlSsoWebFilter implements Filter {
     /**
      * is match excluded path
      *
-     * @param request
-     * @return
+     * @param request   http request
+     * @return          {@code true} when current servlet path is excluded
      */
     private boolean isMatchExcludedPaths(HttpServletRequest request) {
         // get url
@@ -110,6 +116,15 @@ public class XxlSsoWebFilter implements Filter {
 
     // ---------------------- auth filter ----------------------
 
+    /**
+     * auth filter: pass excluded path, then validate cookie token, redirect or write json on login fail
+     *
+     * @param servletRequest    request
+     * @param servletResponse   response
+     * @param chain             filter chain
+     * @throws IOException      write or redirect fail
+     * @throws ServletException servlet error
+     */
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) servletRequest;

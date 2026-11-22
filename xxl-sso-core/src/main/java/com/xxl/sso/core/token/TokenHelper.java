@@ -9,6 +9,16 @@ import com.xxl.tool.response.Response;
 /**
  * token helper
  *
+ * <p>
+ * 负责 LoginInfo 与 token 的编解码：token 仅携带 {@code userId + signature}，
+ * 使用 Gson 序列化后做 Base64Url 编码，不包含角色、权限等完整登录态。
+ * </p>
+ *
+ * <p>
+ * 本类只做基本合法性校验；token 过期、签名比对、存储校验由
+ * {@link com.xxl.sso.core.helper.XxlSsoHelper} 完成。
+ * </p>
+ *
  * @author xuxueli 2018-11-15 15:45:08
  */
 public class TokenHelper {
@@ -16,8 +26,8 @@ public class TokenHelper {
     /**
      * generate token from LoginInfo
      *
-     * @param loginInfo
-     * @return
+     * @param loginInfo     login data, must contain userId and signature
+     * @return              Response#data is Base64Url token; fail when loginInfo is invalid
      */
     public static Response<String> generateToken(LoginInfo loginInfo){
         // valid loginInfo
@@ -37,10 +47,10 @@ public class TokenHelper {
     }
 
     /**
-     * parse token 2 LoginInfo
+     * parse token to LoginInfo
      *
-     * @param token
-     * @return
+     * @param token     Base64Url token
+     * @return          parsed LoginInfo; {@code null} when token is blank or malformed
      */
     public static LoginInfo parseToken(String token){
         try {
