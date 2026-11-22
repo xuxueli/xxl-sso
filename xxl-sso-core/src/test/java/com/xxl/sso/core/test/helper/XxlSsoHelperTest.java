@@ -13,6 +13,9 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 public class XxlSsoHelperTest {
     private static Logger logger = LoggerFactory.getLogger(XxlSsoHelperTest.class);
 
@@ -88,6 +91,30 @@ public class XxlSsoHelperTest {
 
         // do stop
         start();
+    }
+
+    @Test
+    public void logout_test() {
+        // do start
+        start();
+
+        // login
+        LoginInfo loginInfo = new LoginInfo("1001", UUIDTool.getSimpleUUID());
+        Response<String> loginResponse = XxlSsoHelper.login(loginInfo);
+        assertTrue(loginResponse.isSuccess());
+
+        // token
+        String validToken = loginResponse.getData();
+
+        // logout with blank or invalid token
+        assertTrue(XxlSsoHelper.logout("").isSuccess());
+        assertFalse(XxlSsoHelper.logout("not-a-valid-token").isSuccess());
+        assertTrue(XxlSsoHelper.loginCheck(validToken).isSuccess());
+
+        // logout with validToken
+        Response<String> logoutResp = XxlSsoHelper.logout(validToken);
+        assertTrue(logoutResp.isSuccess());
+        assertFalse(XxlSsoHelper.loginCheck(validToken).isSuccess());
     }
 
 

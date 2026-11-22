@@ -167,10 +167,10 @@ public class XxlSsoHelper {
      */
     public static Response<String> logout(String token) {
         if (StringTool.isBlank(token)) {
-            return Response.ofSuccess();
+            return Response.ofSuccess();    // not login; no need to logout.
         }
 
-        // Verify token signature against store before removing session.
+        // verify token before remove store-LoginInfo; avoid attackers remove other users' loginInfo by random token.
         Response<LoginInfo> loginCheckResult = loginCheck(token);
         if (!loginCheckResult.isSuccess()) {
             return Response.of(loginCheckResult.getCode(), loginCheckResult.getMsg());
