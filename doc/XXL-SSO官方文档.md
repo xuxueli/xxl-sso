@@ -933,6 +933,7 @@ Response<String> result = XxlSsoHelper.hasPermission(LoginInfo loginInfo, String
 - 12、【升级】升级多项依赖至较新版本；CI 构建 Actions 升级至较新版本；AntPathMatcher升级，提升路径匹配效率；
 
 ### v2.5.1 Release Notes [ING]
+- 1、【ING】loginInfo#expireTime字段命名及校验逻辑收敛；
 
 
 ### TODO LIST
