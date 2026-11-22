@@ -66,6 +66,11 @@ public class CasLoginController {
             String redirectUrlFinal = redirectResult.isSuccess() ? redirectResult.getData() : "";
             if (StringTool.isBlank(redirectUrlFinal)) {
                 redirectUrlFinal = "/";
+
+                // append errorMsg
+                if (!redirectResult.isSuccess() && StringTool.isNotBlank(redirectResult.getMsg())) {
+                    redirectUrlFinal += "?errorMsg=" + redirectResult.getMsg();
+                }
             }
 
             return "redirect:" + redirectUrlFinal;
@@ -120,12 +125,17 @@ public class CasLoginController {
         // 4、login (write store + cookie)
         Response<String> loginResult = XxlSsoHelper.loginWithCookie(loginInfo, response, ifRem);
         if (!loginResult.isSuccess()) {
-            return Response.ofFail(accountResult.getMsg());
+            return Response.ofFail(loginResult.getMsg());
         }
 
         // 5、redirect back
         Response<String> redirectResult = XxlSsoHelper.generateRedirectUrl(request, redirectUrl);
-        String redirectUrlFinal = redirectResult.isSuccess() ? redirectResult.getData() : "";
+        if (!redirectResult.isSuccess()) {
+            return Response.ofFail(redirectResult.getMsg());
+        }
+
+        // 6、build redirectUrlFinal
+        String redirectUrlFinal = redirectResult.getData();
         if (StringTool.isBlank(redirectUrlFinal)) {
             redirectUrlFinal = request.getContextPath() + "/";
         }
