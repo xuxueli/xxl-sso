@@ -905,10 +905,12 @@ Response<String> result = XxlSsoHelper.hasPermission(LoginInfo loginInfo, String
 
 ### v2.4.2 Release Notes [ING]
 - 1、【AI】AI编程规范：新增 Agents.md，提供Agent编程规范，约束并提升Agent开发质量；
-- 2、【ING】增强用户增强安全性：登陆用户数据中，新增客户端信息如ip、ua等，防止token被窃取；
-- 3、【ING】SSO 请求Token，下划线间隔改为中划线方式，避免Nginx等默认不支持问题；
-- 4、【ING】安全增强；
-- 5、【升级】升级多项依赖至较新版本；CI 构建 Actions 升级至较新版本；
+- 2、【安全】登出安全增强：登陆请求二次进行token验证，防止恶意登出；合并PR-91；
+- 3、【ING】安全增强；
+- 4、【ING】增强用户增强安全性：登陆用户数据中，新增客户端信息如ip、ua等，防止token被窃取；
+- 5、【ING】SSO 请求Token，下划线间隔改为中划线方式，避免Nginx等默认不支持问题；
+- 6、【升级】升级多项依赖至较新版本；CI 构建 Actions 升级至较新版本；
+
 
 
 ### TODO LIST
